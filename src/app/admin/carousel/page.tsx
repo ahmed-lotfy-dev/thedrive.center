@@ -3,9 +3,10 @@ export const dynamic = "force-dynamic";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { heroSlideQueries } from "@/db/queries/hero-slides";
-import { Plus, Trash2, Edit } from "lucide-react";
+import { Plus, Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { DeleteHeroSlideButton } from "@/features/admin/components/DeleteHeroSlideButton";
 
 export default async function CarouselAdminPage() {
   const slides = await heroSlideQueries.findAll();
@@ -13,12 +14,12 @@ export default async function CarouselAdminPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold font-cairo text-primary">
-          صور العرض (Carousel)
-        </h1>
-        <Button className="gap-2">
-          <Plus className="w-4 h-4" />
-          إضافة صورة جديدة
+        <h1 className="text-3xl font-bold font-cairo text-primary">إدارة صور الهيرو</h1>
+        <Button className="gap-2" asChild>
+          <Link href="/admin/carousel/new">
+            <Plus className="w-4 h-4" />
+            إضافة شريحة
+          </Link>
         </Button>
       </div>
 
@@ -27,12 +28,7 @@ export default async function CarouselAdminPage() {
           slides.map((slide) => (
             <Card key={slide.id} className="overflow-hidden group relative">
               <div className="relative h-48 w-full bg-muted">
-                <Image
-                  src={slide.imageUrl}
-                  alt={slide.title || "Slide"}
-                  fill
-                  className="object-cover transition-transform group-hover:scale-105"
-                />
+                <Image src={slide.imageUrl} alt={slide.title || "شريحة هيرو"} fill className="object-cover transition-transform group-hover:scale-105" />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                   <Button variant="secondary" size="sm" asChild>
                     <Link href={`/admin/carousel/${slide.id}/edit`}>
@@ -40,24 +36,28 @@ export default async function CarouselAdminPage() {
                       تعديل
                     </Link>
                   </Button>
-                  <Button variant="destructive" size="icon">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <DeleteHeroSlideButton id={slide.id} />
                 </div>
               </div>
               <CardContent className="p-4">
-                <h3 className="font-bold text-lg mb-1">
-                  {slide.title || "بدون عنوان"}
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {slide.description || "لا يوجد وصف"}
-                </p>
+                <h3 className="font-bold text-lg mb-1">{slide.title || "شريحة بدون عنوان"}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">{slide.description || "بدون وصف"}</p>
+                <div className="mt-3 flex gap-2">
+                  {slide.isActive ? (
+                    <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-xs">مفعلة</span>
+                  ) : (
+                    <span className="rounded-full bg-slate-200 text-slate-700 px-2 py-0.5 text-xs">مخفية</span>
+                  )}
+                  {(slide.order ?? 0) >= 100 && (
+                    <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-xs">مميزة</span>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))
         ) : (
           <div className="col-span-full py-12 text-center text-muted-foreground bg-muted/20 rounded-lg border-2 border-dashed">
-            لا توجد صور للعرض حالياً.
+            لا توجد شرائح حتى الآن.
           </div>
         )}
       </div>

@@ -16,7 +16,7 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         type: "string",
-        required: false,
+        required: true,
         defaultValue: "user",
         input: false, // don't allow user to set role during signup
       },

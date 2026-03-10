@@ -3,49 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Package,
-  CalendarDays,
-  Images,
-  Settings,
-  LogOut,
-  Home
-} from "lucide-react";
+import { LayoutDashboard, CalendarDays, Images, LogOut, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 
 const sidebarItems = [
-  {
-    title: "لوحة التحكم",
-    href: "/admin",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "المنتجات",
-    href: "/admin/products",
-    icon: Package,
-  },
-  {
-    title: "الأقسام",
-    href: "/admin/categories",
-    icon: Images, // Using Images icon temporarily or find a better one like Layers/List
-  },
-  {
-    title: "المواعيد",
-    href: "/admin/appointments",
-    icon: CalendarDays,
-  },
-  {
-    title: "صور العرض",
-    href: "/admin/carousel",
-    icon: Images,
-  },
-  //   {
-  //     title: "الإعدادات",
-  //     href: "/admin/settings",
-  //     icon: Settings,
-  //   },
+  { title: "نظرة عامة", href: "/admin", icon: LayoutDashboard },
+  { title: "الحجوزات", href: "/admin/appointments", icon: CalendarDays },
+  { title: "صور الهيرو", href: "/admin/carousel", icon: Images },
 ];
 
 export function AdminSidebar() {
@@ -56,8 +21,8 @@ export function AdminSidebar() {
       fetchOptions: {
         onSuccess: () => {
           window.location.href = "/";
-        }
-      }
+        },
+      },
     });
   };
 
@@ -65,9 +30,9 @@ export function AdminSidebar() {
     <div className="w-64 border-l bg-sidebar text-sidebar-foreground h-screen sticky top-0 flex flex-col shadow-xl">
       <div className="p-6 border-b border-sidebar-border flex items-center gap-3">
         <div className="bg-primary/20 p-2 rounded-lg">
-          <span className="text-2xl">⚡</span>
+          <span className="text-sm font-bold">TD</span>
         </div>
-        <span className="font-bold text-lg font-cairo tracking-wide">لوحة الإدارة</span>
+        <span className="font-bold text-lg font-cairo tracking-wide">إدارة الموقع</span>
       </div>
 
       <nav className="flex-1 p-4 space-y-2">
@@ -93,7 +58,7 @@ export function AdminSidebar() {
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-2"
           >
             <Home className="w-5 h-5 opacity-70" />
-            <span>العودة للموقع</span>
+            <span>عودة للموقع</span>
           </Link>
 
           <Button
@@ -102,7 +67,7 @@ export function AdminSidebar() {
             onClick={handleSignOut}
           >
             <LogOut className="w-5 h-5" />
-            <span>تسجيل الخروج</span>
+            <span>تسجيل خروج</span>
           </Button>
         </div>
       </nav>

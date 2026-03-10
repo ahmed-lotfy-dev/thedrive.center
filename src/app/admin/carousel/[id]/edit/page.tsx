@@ -5,6 +5,17 @@ import { heroSlideQueries } from "@/db/queries/hero-slides";
 import { notFound, redirect } from "next/navigation";
 import { updateHeroSlide } from "@/server/actions/hero-slides";
 
+type HeroSlideFormValues = {
+  title?: string;
+  description?: string;
+  imageUrl: string;
+  linkUrl?: string;
+  buttonText?: string;
+  order: number;
+  isActive: boolean;
+  isFeatured: boolean;
+};
+
 export default async function EditHeroSlidePage({
   params,
 }: {
@@ -17,10 +28,19 @@ export default async function EditHeroSlidePage({
     notFound();
   }
 
-  // Adapter function to match the form submission signature
-  async function handleSubmit(values: any) {
+  async function handleSubmit(values: HeroSlideFormValues) {
     "use server";
-    await updateHeroSlide(id, values);
+    const normalizedOrder = values.isFeatured ? Math.max(values.order, 100) : values.order % 100;
+
+    await updateHeroSlide(id, {
+      title: values.title || null,
+      description: values.description || null,
+      imageUrl: values.imageUrl,
+      linkUrl: values.linkUrl || null,
+      buttonText: values.buttonText || null,
+      order: normalizedOrder,
+      isActive: values.isActive,
+    });
     redirect("/admin/carousel");
   }
 
@@ -37,6 +57,7 @@ export default async function EditHeroSlidePage({
           buttonText: slide.buttonText || "",
           order: slide.order || 0,
           isActive: slide.isActive || false,
+          isFeatured: (slide.order || 0) >= 100,
         }}
         onSubmit={handleSubmit}
       />

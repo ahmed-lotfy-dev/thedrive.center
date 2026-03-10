@@ -4,31 +4,22 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// Define the schema for the hero slide
 const formSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
-  imageUrl: z.string().min(1, "Image URL is required"),
+  imageUrl: z.string().min(1, "رابط الصورة مطلوب"),
   linkUrl: z.string().optional(),
   buttonText: z.string().optional(),
   order: z.coerce.number().default(0),
   isActive: z.boolean().default(true),
+  isFeatured: z.boolean().default(false),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -43,15 +34,16 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
   const router = useRouter();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema) as any,
+    resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       title: "",
       description: "",
       imageUrl: "",
       linkUrl: "",
-      buttonText: "تسوق الآن",
+      buttonText: "احجز الآن",
       order: 0,
       isActive: true,
+      isFeatured: false,
     },
   });
 
@@ -68,9 +60,9 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>العنوان (Title)</FormLabel>
+                <FormLabel>عنوان الشريحة</FormLabel>
                 <FormControl>
-                  <Input placeholder="عنوان الشريحة" {...field} value={field.value || ""} />
+                  <Input placeholder="مثال: فحص شامل قبل شراء العربية" {...field} value={field.value || ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -82,11 +74,11 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
             name="order"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>الترتيب (Order)</FormLabel>
+                <FormLabel>الترتيب</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
-                <FormDescription>ترتيب ظهور الشريحة (الأرقام الأكبر أولاً)</FormDescription>
+                <FormDescription>الرقم الأكبر يظهر أولاً.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -97,7 +89,7 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
             name="imageUrl"
             render={({ field }) => (
               <FormItem className="col-span-1 md:col-span-2">
-                <FormLabel>رابط الصورة (Image URL)</FormLabel>
+                <FormLabel>رابط الصورة</FormLabel>
                 <FormControl>
                   <Input placeholder="/hero-image.png" {...field} />
                 </FormControl>
@@ -111,9 +103,9 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
             name="description"
             render={({ field }) => (
               <FormItem className="col-span-1 md:col-span-2">
-                <FormLabel>الوصف (Description)</FormLabel>
+                <FormLabel>وصف الشريحة</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="وصف قصير للشريحة" {...field} value={field.value || ""} />
+                  <Textarea placeholder="وصف قصير يظهر فوق الصورة" {...field} value={field.value || ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -125,9 +117,9 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
             name="linkUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>رابط الزر (Link URL)</FormLabel>
+                <FormLabel>رابط الزر</FormLabel>
                 <FormControl>
-                  <Input placeholder="/shop" {...field} value={field.value || ""} />
+                  <Input placeholder="/book" {...field} value={field.value || ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -139,9 +131,9 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
             name="buttonText"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>نص الزر (Button Text)</FormLabel>
+                <FormLabel>نص الزر</FormLabel>
                 <FormControl>
-                  <Input placeholder="تسوق الآن" {...field} value={field.value || ""} />
+                  <Input placeholder="احجز الآن" {...field} value={field.value || ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -157,8 +149,24 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
                   <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
                 <div className="space-y-1 leading-none mr-2">
-                  <FormLabel>نشط (Active)</FormLabel>
-                  <FormDescription>إظهار هذه الشريحة في الصفحة الرئيسية</FormDescription>
+                  <FormLabel>مفعلة</FormLabel>
+                  <FormDescription>تظهر في الصفحة الرئيسية</FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isFeatured"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rounded-md border p-4 shadow">
+                <FormControl>
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+                <div className="space-y-1 leading-none mr-2">
+                  <FormLabel>مميزة</FormLabel>
+                  <FormDescription>تثبت في أول الكاروسيل تلقائياً</FormDescription>
                 </div>
               </FormItem>
             )}
@@ -167,7 +175,7 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
 
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" onClick={() => router.back()}>
-            إلغاء
+            رجوع
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}

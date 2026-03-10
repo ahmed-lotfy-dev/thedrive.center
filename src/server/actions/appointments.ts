@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -7,27 +7,35 @@ import { revalidatePath } from "next/cache";
 import { appointmentQueries } from "@/db/queries/appointments";
 
 const appointmentSchema = z.object({
-  guestName: z.string().min(1, "الاسم مطلوب").optional(),
-  guestEmail: z.string().email("البريد الإلكتروني غير صحيح").optional().or(z.literal("")),
-  guestPhone: z.string().min(10, "رقم الهاتف مطلوب"),
-  serviceType: z.string().min(1, "نوع الخدمة مطلوب"),
-  machineType: z.string().min(1, "نوع الجهاز مطلوب"),
-  date: z.string().min(1, "التاريخ مطلوب"),
+  guestName: z.string().min(1, "Name is required").optional(),
+  guestEmail: z.string().email("Invalid email").optional().or(z.literal("")),
+  guestPhone: z.string().min(10, "Phone is required"),
+  serviceType: z.string().min(1, "Service type is required"),
+  machineType: z.string().min(1, "Vehicle type is required"),
+  date: z.string().min(1, "Date is required"),
   notes: z.string().optional(),
-  address: z.string().min(1, "العنوان مطلوب"),
+  address: z.string().min(1, "Address is required"),
 });
+
+function isAdminRole(role?: string) {
+  return role === "admin" || role === "owner";
+}
 
 export async function createAppointment(data: z.infer<typeof appointmentSchema>) {
   try {
-    // Validate input
     const validated = appointmentSchema.parse(data);
 
-    // Check if user is authenticated
     const session = await auth.api.getSession({
       headers: await headers(),
     });
 
-    // Prepare appointment data
+    if (!session?.user && !validated.guestName) {
+      return {
+        success: false,
+        error: "Name is required for guest bookings",
+      };
+    }
+
     const appointmentData = {
       userId: session?.user?.id || null,
       guestName: session?.user?.name || validated.guestName || null,
@@ -40,17 +48,15 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
       address: validated.address,
     };
 
-    // Use query layer to create appointment
     const appointment = await appointmentQueries.create(appointmentData);
 
-    // Revalidate admin appointments page
     revalidatePath("/admin/appointments");
     revalidatePath("/book");
 
     return {
       success: true,
       data: appointment,
-      message: "تم حجز الموعد بنجاح",
+      message: "Appointment booked successfully",
     };
   } catch (error) {
     console.error("Error creating appointment:", error);
@@ -62,7 +68,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     }
     return {
       success: false,
-      error: "حدث خطأ أثناء حجز الموعد",
+      error: "Failed to book appointment",
     };
   }
 }
@@ -73,16 +79,14 @@ export async function getAppointments() {
       headers: await headers(),
     });
 
-    // TODO: Re-enable admin check after implementing proper middleware
-    // The role field needs to be properly typed in Better Auth session
-    // if (!session?.user || session.user.role !== "admin") {
-    //   return {
-    //     success: false,
-    //     error: "غير مصرح لك بالوصول",
-    //   };
-    // }
+    const userRole = (session?.user as { role?: string } | undefined)?.role;
+    if (!session?.user || !isAdminRole(userRole)) {
+      return {
+        success: false,
+        error: "Unauthorized",
+      };
+    }
 
-    // Use query layer to fetch all appointments
     const allAppointments = await appointmentQueries.findAll();
 
     return {
@@ -93,7 +97,7 @@ export async function getAppointments() {
     console.error("Error fetching appointments:", error);
     return {
       success: false,
-      error: "حدث خطأ أثناء جلب المواعيد",
+      error: "Failed to fetch appointments",
     };
   }
 }
@@ -104,27 +108,26 @@ export async function updateAppointmentStatus(id: string, status: string) {
       headers: await headers(),
     });
 
-    // TODO: Re-enable admin check after implementing proper middleware
-    // if (!session?.user || session.user.role !== "admin") {
-    //   return {
-    //     success: false,
-    //     error: "غير مصرح لك بالوصول",
-    //   };
-    // }
+    const userRole = (session?.user as { role?: string } | undefined)?.role;
+    if (!session?.user || !isAdminRole(userRole)) {
+      return {
+        success: false,
+        error: "Unauthorized",
+      };
+    }
 
-    // Use query layer to update status
     const updated = await appointmentQueries.updateStatus(id, status);
 
     return {
       success: true,
       data: updated,
-      message: "تم تحديث حالة الموعد بنجاح",
+      message: "Appointment status updated",
     };
   } catch (error) {
     console.error("Error updating appointment:", error);
     return {
       success: false,
-      error: "حدث خطأ أثناء تحديث الموعد",
+      error: "Failed to update appointment",
     };
   }
 }

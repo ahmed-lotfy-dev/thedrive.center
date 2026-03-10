@@ -8,14 +8,18 @@ export const heroSlideQueries = {
    * You might want to sort by 'order' field if you have one, but schema shows 'order' field exists
    */
   findAll: async () => {
-    return db.select().from(heroSlides).orderBy(desc(heroSlides.createdAt));
+    return db.select().from(heroSlides).orderBy(desc(heroSlides.order), desc(heroSlides.createdAt));
   },
 
   /**
    * Find active slides ordered by order field
    */
   findActive: async () => {
-    return db.select().from(heroSlides).where(eq(heroSlides.isActive, true)).orderBy(desc(heroSlides.order));
+    return db
+      .select()
+      .from(heroSlides)
+      .where(eq(heroSlides.isActive, true))
+      .orderBy(desc(heroSlides.order), desc(heroSlides.createdAt));
   },
 
   /**

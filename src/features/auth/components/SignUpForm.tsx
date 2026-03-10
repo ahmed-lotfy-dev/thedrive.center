@@ -9,29 +9,19 @@ import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-const signUpSchema = z.object({
-  name: z.string({ message: "الاسم مطلوب" })
-    .min(2, "الاسم يجب أن يكون حرفين على الأقل"),
-  email: z.string({ message: "البريد الإلكتروني مطلوب" })
-    .min(1, "البريد الإلكتروني مطلوب")
-    .email("البريد الإلكتروني غير صحيح"),
-  password: z.string({ message: "كلمة المرور مطلوبة" })
-    .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل"),
-  confirmPassword: z.string({ message: "تأكيد كلمة المرور مطلوب" })
-    .min(1, "تأكيد كلمة المرور مطلوب"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "كلمات المرور غير متطابقة",
-  path: ["confirmPassword"],
-});
+const signUpSchema = z
+  .object({
+    name: z.string({ message: "الاسم مطلوب" }).min(2, "الاسم قصير جدا"),
+    email: z.string({ message: "البريد الإلكتروني مطلوب" }).min(1, "البريد الإلكتروني مطلوب").email("البريد الإلكتروني غير صحيح"),
+    password: z.string({ message: "كلمة المرور مطلوبة" }).min(8, "كلمة المرور لازم تكون 8 أحرف على الأقل"),
+    confirmPassword: z.string({ message: "تأكيد كلمة المرور مطلوب" }).min(1, "تأكيد كلمة المرور مطلوب"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "كلمتا المرور غير متطابقتين",
+    path: ["confirmPassword"],
+  });
 
 interface SignUpFormProps {
   onSwitch: () => void;
@@ -52,26 +42,29 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
 
   const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
     setLoading(true);
-    await authClient.signUp.email({
-      email: values.email,
-      password: values.password,
-      name: values.name,
-    }, {
-      onSuccess: () => {
-        window.location.href = "/";
+    await authClient.signUp.email(
+      {
+        email: values.email,
+        password: values.password,
+        name: values.name,
       },
-      onError: (ctx) => {
-        alert(ctx.error.message);
-        setLoading(false);
-      },
-    });
+      {
+        onSuccess: () => {
+          window.location.href = "/";
+        },
+        onError: (ctx) => {
+          alert(ctx.error.message);
+          setLoading(false);
+        },
+      }
+    );
   };
 
   return (
     <>
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold font-cairo text-primary">إنشاء حساب جديد</CardTitle>
-        <CardDescription>سجل الآن للتمتع بكافة المميزات</CardDescription>
+        <CardDescription>اعمل حسابك وابدأ حجز خدمات المركز</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -81,9 +74,9 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>الاسم الكامل</FormLabel>
+                  <FormLabel>الاسم</FormLabel>
                   <FormControl>
-                    <Input placeholder="الاسم" {...field} className="text-right" />
+                    <Input placeholder="مثال: أحمد محمد" {...field} className="text-right" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,7 +89,7 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
                 <FormItem>
                   <FormLabel>البريد الإلكتروني</FormLabel>
                   <FormControl>
-                    <Input placeholder="name@example.com" {...field} className="text-right" />
+                    <Input placeholder="example@mail.com" {...field} className="text-right" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,7 +102,7 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
                 <FormItem>
                   <FormLabel>كلمة المرور</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="******" {...field} className="text-right" />
+                    <Input type="password" placeholder="اكتب كلمة المرور" {...field} className="text-right" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,7 +115,7 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
                 <FormItem>
                   <FormLabel>تأكيد كلمة المرور</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="******" {...field} className="text-right" />
+                    <Input type="password" placeholder="اعد كتابة كلمة المرور" {...field} className="text-right" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -136,7 +129,7 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
       </CardContent>
       <CardFooter className="flex justify-center">
         <Button variant="link" onClick={onSwitch} className="text-muted-foreground">
-          لديك حساب بالفعل؟ تسجيل الدخول
+          عندك حساب بالفعل؟ سجل دخول
         </Button>
       </CardFooter>
     </>

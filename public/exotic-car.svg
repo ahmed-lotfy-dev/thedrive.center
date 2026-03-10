@@ -1,0 +1,49 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="carBody" x1="260" y1="430" x2="1280" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F766E"/>
+      <stop offset="0.5" stop-color="#14B8A6"/>
+      <stop offset="1" stop-color="#5EEAD4"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="650" y1="320" x2="980" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#94A3B8" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#334155" stop-opacity="0.7"/>
+    </linearGradient>
+    <radialGradient id="wheelGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(800 700) rotate(90) scale(180 650)">
+      <stop stop-color="#14B8A6" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#14B8A6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="0" y="0" width="1600" height="900" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <ellipse cx="800" cy="700" rx="520" ry="160" fill="url(#wheelGlow)"/>
+  <g filter="url(#blur)">
+    <ellipse cx="800" cy="690" rx="420" ry="48" fill="#0F766E" fill-opacity="0.25"/>
+  </g>
+
+  <path d="M280 560C325 460 460 400 620 390H1010C1140 390 1240 470 1280 560H280Z" fill="url(#carBody)"/>
+  <path d="M400 560C480 478 560 430 710 422H980C1060 422 1138 474 1210 560H400Z" fill="#0B3D39" fill-opacity="0.38"/>
+  <path d="M640 338C710 284 786 260 940 262C993 263 1038 284 1076 326L1138 390H572L640 338Z" fill="url(#glass)"/>
+  <path d="M695 336C760 292 818 275 926 276C963 276 995 290 1026 318L1062 350H670L695 336Z" fill="#CBD5E1" fill-opacity="0.38"/>
+  <path d="M280 560H1280L1228 610H340L280 560Z" fill="#0A1E2A"/>
+
+  <circle cx="525" cy="598" r="78" fill="#0F172A"/>
+  <circle cx="525" cy="598" r="50" fill="#1E293B"/>
+  <circle cx="525" cy="598" r="20" fill="#94A3B8"/>
+
+  <circle cx="1095" cy="598" r="78" fill="#0F172A"/>
+  <circle cx="1095" cy="598" r="50" fill="#1E293B"/>
+  <circle cx="1095" cy="598" r="20" fill="#94A3B8"/>
+
+  <rect x="1188" y="510" width="38" height="22" rx="10" fill="#F97316"/>
+  <rect x="352" y="506" width="34" height="20" rx="10" fill="#E2E8F0"/>
+
+  <text x="800" y="770" text-anchor="middle" fill="#E2E8F0" font-family="Cairo, sans-serif" font-size="34" font-weight="700">Aventador Style</text>
+</svg>

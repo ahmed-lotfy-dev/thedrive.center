@@ -12,23 +12,23 @@ export function AboutUs() {
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold font-heading uppercase tracking-widest">
                 <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                من نحن
+                ??? ????
               </div>
               <h2 className="text-4xl md:text-6xl font-bold font-heading text-primary leading-tight">
-                المركز الهندسي <br />
-                <span className="text-accent underline decoration-accent/30 underline-offset-8">لخدمات الصيانة والبيع</span>
+                ?? ????? ????
+                <br />
+                <span className="text-accent underline decoration-accent/30 underline-offset-8">???? ??????? ???? ????????</span>
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed font-sans max-w-xl">
-                نحن المركز الهندسي، متخصصون في توفير حلول متكاملة لقطع غيار الغسالات ومحطات تنقية المياه.
-                خبرتنا تمتد لسنوات في تقديم أفضل المنتجات الأصلية وخدمات الصيانة الاحترافية.
+                ???? ????? ?? ??? ???????? ??? ????? ???????? ???? ????? ???? ????? ????? ????? ??? ??? ??????.
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
               {[
-                { icon: MapPin, title: "عنواننا", detail: "شارع ١٠، المنشية الجديدة، المحلة الكبرى" },
-                { icon: Phone, title: "هاتفنا", detail: "012 2809 3434 | 010 2447 9427" },
-                { icon: Mail, title: "بريدنا", detail: "info@almarkaz-alhandasy.com" },
+                { icon: MapPin, title: "???????", detail: "?????? ?????? - ???? 10" },
+                { icon: Phone, title: "???????", detail: "012 2809 3434 | 010 2447 9427" },
+                { icon: Mail, title: "??????", detail: "info@thedrivecenter.com" },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
                   <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
@@ -55,14 +55,13 @@ export function AboutUs() {
             <div className="relative aspect-square w-full max-w-lg mx-auto rounded-3xl overflow-hidden shadow-2xl">
               <div className="absolute inset-0 bg-gradient-to-tr from-primary to-accent opacity-20" />
               <div className="absolute inset-0 flex items-center justify-center text-accent/20">
-                <span className="text-[200px] font-bold">AH</span>
+                <span className="text-[200px] font-bold">DC</span>
               </div>
               <div className="absolute bottom-8 left-8 right-8 glass-card p-8 rounded-2xl animate-in slide-in-from-bottom-4 duration-500">
-                <h4 className="text-2xl font-bold font-heading mb-2">ثقة وخبرة</h4>
-                <p className="text-sm opacity-80 font-sans leading-relaxed">أكثر من 10 سنوات من التميز في خدمة شركائنا وعملائنا في جميع أنحاء الغربية.</p>
+                <h4 className="text-2xl font-bold font-heading mb-2">??? ?????</h4>
+                <p className="text-sm opacity-80 font-sans leading-relaxed">???? ???? ?? ????? ????? ????? ??????? ????? ?????.</p>
               </div>
             </div>
-            {/* Decorative dots */}
             <div className="absolute -top-6 -right-6 w-32 h-32 bg-[radial-gradient(#0369A1_2px,transparent_2px)] [background-size:16px_16px] opacity-30" />
             <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[radial-gradient(#0369A1_2px,transparent_2px)] [background-size:16px_16px] opacity-30" />
           </div>

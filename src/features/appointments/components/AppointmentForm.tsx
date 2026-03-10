@@ -11,24 +11,10 @@ import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -38,9 +24,9 @@ import { authClient } from "@/lib/auth-client";
 const formSchema = z.object({
   guestName: z.string().min(1, "الاسم مطلوب"),
   guestEmail: z.string().email("البريد الإلكتروني غير صحيح").optional().or(z.literal("")),
-  guestPhone: z.string().min(10, "رقم الهاتف مطلوب"),
+  guestPhone: z.string().min(10, "رقم الموبايل مطلوب"),
   serviceType: z.string().min(1, "نوع الخدمة مطلوب"),
-  machineType: z.string().min(1, "نوع الجهاز مطلوب"),
+  machineType: z.string().min(1, "نوع العربية مطلوب"),
   date: z.date(),
   notes: z.string().optional(),
   address: z.string().min(1, "العنوان مطلوب"),
@@ -69,21 +55,20 @@ export function AppointmentForm() {
   async function onSubmit(values: FormValues) {
     setIsSubmitting(true);
     try {
-      // Convert date to ISO string for server action
       const result = await createAppointment({
         ...values,
         date: values.date.toISOString(),
       });
 
       if (result.success) {
-        toast.success(result.message || "تم حجز الموعد بنجاح");
+        toast.success(result.message || "تم إرسال الحجز");
         form.reset();
         router.refresh();
       } else {
-        toast.error(result.error || "حدث خطأ أثناء حجز الموعد");
+        toast.error(result.error || "حصل خطأ أثناء إرسال الحجز");
       }
-    } catch (error) {
-      toast.error("حدث خطأ غير متوقع");
+    } catch {
+      toast.error("تعذر إرسال الطلب");
     } finally {
       setIsSubmitting(false);
     }
@@ -98,8 +83,8 @@ export function AppointmentForm() {
               <Wrench className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold font-cairo">احجز موعد صيانة</h2>
-              <p className="text-muted-foreground">املأ البيانات التالية وسنتواصل معك قريباً</p>
+              <h2 className="text-2xl font-bold font-cairo">بيانات الحجز</h2>
+              <p className="text-muted-foreground">املأ البيانات وسنتواصل معك لتأكيد الموعد</p>
             </div>
           </div>
         </div>
@@ -110,9 +95,9 @@ export function AppointmentForm() {
             name="guestName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>الاسم الكامل *</FormLabel>
+                <FormLabel>الاسم *</FormLabel>
                 <FormControl>
-                  <Input placeholder="أحمد محمد" {...field} />
+                  <Input placeholder="مثال: أحمد محمد" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,7 +109,7 @@ export function AppointmentForm() {
             name="guestPhone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>رقم الهاتف *</FormLabel>
+                <FormLabel>رقم الموبايل *</FormLabel>
                 <FormControl>
                   <Input placeholder="01234567890" dir="ltr" {...field} />
                 </FormControl>
@@ -141,7 +126,7 @@ export function AppointmentForm() {
             <FormItem>
               <FormLabel>البريد الإلكتروني (اختياري)</FormLabel>
               <FormControl>
-                <Input placeholder="example@email.com" type="email" dir="ltr" {...field} />
+                <Input placeholder="example@mail.com" type="email" dir="ltr" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -154,18 +139,17 @@ export function AppointmentForm() {
             name="machineType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>نوع الجهاز *</FormLabel>
+                <FormLabel>نوع العربية *</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="اختر نوع الجهاز" />
+                      <SelectValue placeholder="اختر نوع العربية" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="washing_machine">غسالة</SelectItem>
-                    <SelectItem value="refrigerator">ثلاجة</SelectItem>
-                    <SelectItem value="water_filter">فلتر مياه</SelectItem>
-                    <SelectItem value="other">أخرى</SelectItem>
+                    <SelectItem value="washing_machine">ملاكي</SelectItem>
+                    <SelectItem value="refrigerator">SUV</SelectItem>
+                    <SelectItem value="water_filter">نقل خفيف</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -182,13 +166,13 @@ export function AppointmentForm() {
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="اختر نوع الخدمة" />
+                      <SelectValue placeholder="اختر الخدمة" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="repair">إصلاح</SelectItem>
-                    <SelectItem value="installation">تركيب</SelectItem>
-                    <SelectItem value="maintenance">صيانة دورية</SelectItem>
+                    <SelectItem value="repair">ضبط زوايا</SelectItem>
+                    <SelectItem value="installation">ترصيص واتزان</SelectItem>
+                    <SelectItem value="maintenance">فحص شامل قبل البيع/الشراء</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -202,22 +186,15 @@ export function AppointmentForm() {
           name="date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>تاريخ الموعد المفضل *</FormLabel>
+              <FormLabel>تاريخ الموعد المطلوب *</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-right font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
+                      variant="outline"
+                      className={cn("w-full pl-3 text-right font-normal", !field.value && "text-muted-foreground")}
                     >
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: ar })
-                      ) : (
-                        <span>اختر تاريخاً</span>
-                      )}
+                      {field.value ? format(field.value, "PPP", { locale: ar }) : <span>اختر التاريخ</span>}
                       <CalendarIcon className="mr-auto h-4 w-4 opacity-50" />
                     </Button>
                   </FormControl>
@@ -227,18 +204,14 @@ export function AppointmentForm() {
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) =>
-                      date < new Date() || date < new Date("1900-01-01")
-                    }
+                    disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
                     initialFocus
                     locale={ar}
                     dir="rtl"
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>
-                سنحاول الالتزام بهذا الموعد أو التواصل معك لتنسيق موعد بديل.
-              </FormDescription>
+              <FormDescription>المواعيد المتاحة تبدأ من تاريخ اليوم فقط.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -251,7 +224,7 @@ export function AppointmentForm() {
             <FormItem>
               <FormLabel>العنوان *</FormLabel>
               <FormControl>
-                <Textarea placeholder="المنطقة، الشارع، رقم المبنى..." {...field} />
+                <Textarea placeholder="اكتب عنوانك بالتفصيل..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -265,7 +238,7 @@ export function AppointmentForm() {
             <FormItem>
               <FormLabel>ملاحظات إضافية (اختياري)</FormLabel>
               <FormControl>
-                <Textarea placeholder="أي تفاصيل إضافية عن المشكلة..." {...field} />
+                <Textarea placeholder="أي تفاصيل مهمة عن الحالة..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

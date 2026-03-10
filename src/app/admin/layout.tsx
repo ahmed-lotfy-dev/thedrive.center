@@ -1,41 +1,34 @@
-"use client";
-
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { authClient } from "@/lib/auth-client";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function AdminLayout({
+function isAdminRole(role?: string) {
+  return role === "admin" || role === "owner";
+}
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, isPending } = authClient.useSession();
-  const router = useRouter();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  useEffect(() => {
-    if (!isPending && !session) {
-      // router.push("/sign-in"); // Temporary: For now we let everyone in or handle this better later with Roles
-    }
-  }, [session, isPending, router]);
-
-  if (isPending) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    )
+  if (!session?.user) {
+    redirect("/sign-in");
   }
 
-  // Ideally check for role === 'admin' here
+  const userRole = (session.user as { role?: string }).role;
+  if (!isAdminRole(userRole)) {
+    redirect("/");
+  }
 
   return (
     <div className="flex min-h-screen bg-muted/20">
       <AdminSidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        {children}
-      </main>
+      <main className="flex-1 p-8 overflow-y-auto">{children}</main>
     </div>
   );
 }
