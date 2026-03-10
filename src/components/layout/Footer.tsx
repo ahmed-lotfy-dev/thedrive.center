@@ -55,16 +55,32 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 text-left">
             <h3 className="text-sm font-semibold">بيانات المركز</h3>
-            <div className="grid gap-3 text-sm text-muted-foreground">
+            <div className="grid gap-3 text-left text-sm text-muted-foreground">
               <p className="inline-flex items-start gap-2">
                 <MapPin className="size-4 mt-0.5 text-accent shrink-0" />
                 <span>{BUSINESS_ADDRESS}، {BUSINESS_CITY}</span>
               </p>
               <p className="inline-flex items-center gap-2">
                 <Phone className="size-4 text-accent shrink-0" />
-                <span className="text-left w-full" dir="ltr">٠١٢ ٢٨٠٩ ٣٤٣٤ - ٠١٠ ٢٤٤٧ ٩٤٢٧</span>
+                <span className="text-left whitespace-nowrap" dir="ltr">
+                  <a
+                    href="tel:+201228093434"
+                    className="hover:text-primary transition-colors"
+                    aria-label="اتصال: ٠١٢ ٢٨٠٩ ٣٤٣٤"
+                  >
+                    ٠١٢ ٢٨٠٩ ٣٤٣٤
+                  </a>
+                  {" - "}
+                  <a
+                    href="tel:+201024479427"
+                    className="hover:text-primary transition-colors"
+                    aria-label="اتصال: ٠١٠ ٢٤٤٧ ٩٤٢٧"
+                  >
+                    ٠١٠ ٢٤٤٧ ٩٤٢٧
+                  </a>
+                </span>
               </p>
               <p className="inline-flex items-center gap-2">
                 <Clock3 className="size-4 text-accent shrink-0" />
