@@ -29,12 +29,14 @@ export function Footer() {
       <div className="container mx-auto px-4 py-10">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-3">
-              <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
-                TD
-              </span>
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.webp"
+                alt="The Drive Logo"
+                className="h-14 w-auto object-contain rounded-md"
+              />
               <div className="leading-tight">
-                <p className="font-semibold">{GOOGLE_BUSINESS_NAME}</p>
+                <h1 className="text-xl font-bold">{GOOGLE_BUSINESS_NAME}</h1>
                 <p className="text-xs text-muted-foreground">مركز ضبط زوايا وترصيص</p>
               </div>
             </div>
@@ -57,16 +59,16 @@ export function Footer() {
             <h3 className="text-sm font-semibold">بيانات المركز</h3>
             <div className="grid gap-3 text-sm text-muted-foreground">
               <p className="inline-flex items-start gap-2">
-                <MapPin className="size-4 mt-0.5 text-accent" />
+                <MapPin className="size-4 mt-0.5 text-accent shrink-0" />
                 <span>{BUSINESS_ADDRESS}، {BUSINESS_CITY}</span>
               </p>
-              <p className="inline-flex items-center gap-2" dir="ltr">
-                <Phone className="size-4 text-accent" />
-                <span>012 2809 3434 - 010 2447 9427</span>
+              <p className="inline-flex items-center gap-2">
+                <Phone className="size-4 text-accent shrink-0" />
+                <span className="text-left w-full" dir="ltr">٠١٢ ٢٨٠٩ ٣٤٣٤ - ٠١٠ ٢٤٤٧ ٩٤٢٧</span>
               </p>
               <p className="inline-flex items-center gap-2">
-                <Clock3 className="size-4 text-accent" />
-                <span>يوميا من 9 صباحا إلى 10 مساء</span>
+                <Clock3 className="size-4 text-accent shrink-0" />
+                <span>يوميا من ٩ صباحا إلى ١٠ مساء</span>
               </p>
             </div>
           </div>
@@ -86,13 +88,13 @@ export function Footer() {
                   <Star className="size-4" />
                 </Link>
               </Button>
-              <Button asChild size="sm" variant="outline" className="rounded-full">
+              <Button asChild size="sm" variant="outline" className="rounded-full hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2]">
                 <Link href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer">
                   Facebook
                   <Facebook className="size-4" />
                 </Link>
               </Button>
-              <Button asChild size="sm" variant="outline" className="rounded-full">
+              <Button asChild size="sm" variant="outline" className="rounded-full hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white">
                 <Link href={TIKTOK_URL} target="_blank" rel="noopener noreferrer">
                   TikTok
                   <Music2 className="size-4" />

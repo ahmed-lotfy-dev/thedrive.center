@@ -47,17 +47,19 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-4">
       <div
         className={cn(
-          "mx-auto flex h-16 max-w-7xl items-center justify-between rounded-2xl border px-5 transition-all duration-300",
+          "mx-auto flex h-16 md:h-20 max-w-7xl items-center justify-between rounded-2xl border pl-5 pr-2 transition-all duration-300",
           isScrolled ? "bg-background/95 shadow-md backdrop-blur-md" : "bg-background/80 backdrop-blur-sm"
         )}
       >
-        <Link href="/" className="flex items-center gap-3">
-          <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
-            TD
-          </span>
+        <Link href="/" className="flex items-center gap-4">
+          <img
+            src="/logo.webp"
+            alt="The Drive Logo"
+            className="h-12 md:h-16 w-auto object-contain rounded-md"
+          />
           <div className="leading-tight">
-            <p className="text-sm font-semibold">The Drive</p>
-            <p className="text-[11px] text-muted-foreground">مركز ضبط زوايا وترصيص</p>
+            <h1 className="text-xl font-bold">The Drive</h1>
+            <p className="text-[11px] text-muted-foreground mr-1">مركز ضبط زوايا وترصيص</p>
           </div>
         </Link>
 
