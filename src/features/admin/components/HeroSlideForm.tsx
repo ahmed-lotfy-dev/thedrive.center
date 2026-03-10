@@ -23,6 +23,7 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+type FormInputValues = z.input<typeof formSchema>;
 
 interface HeroSlideFormProps {
   initialData?: FormValues & { id: string };
@@ -33,7 +34,7 @@ interface HeroSlideFormProps {
 export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: HeroSlideFormProps) {
   const router = useRouter();
 
-  const form = useForm<FormValues>({
+  const form = useForm<FormInputValues, unknown, FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       title: "",
@@ -76,7 +77,14 @@ export function HeroSlideForm({ initialData, onSubmit, isSubmitting = false }: H
               <FormItem>
                 <FormLabel>الترتيب</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input
+                    type="number"
+                    name={field.name}
+                    ref={field.ref}
+                    onBlur={field.onBlur}
+                    value={typeof field.value === "number" ? field.value : 0}
+                    onChange={(event) => field.onChange(event.target.value)}
+                  />
                 </FormControl>
                 <FormDescription>الرقم الأكبر يظهر أولاً.</FormDescription>
                 <FormMessage />
