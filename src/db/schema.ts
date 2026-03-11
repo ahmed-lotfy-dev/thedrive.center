@@ -1,4 +1,4 @@
-﻿import { pgTable, text, timestamp, uuid, integer, boolean, decimal } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, integer, boolean, decimal } from "drizzle-orm/pg-core";
 
 // --- Better Auth Core Tables ---
 
@@ -87,6 +87,26 @@ export const appointments = pgTable("appointments", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const cars = pgTable("cars", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(), // e.g. "BMW X6 M-Power"
+  description: text("description"), // Detailed description of the work done
+  coverImageUrl: text("cover_image_url").notNull(), // Cloudflare R2 URL for the main image
+  videoUrl: text("video_url"), // Cloudflare R2 URL for the single video as requested
+  serviceType: text("service_type").notNull(), // E.g., 'alignment_balancing', 'inspection', 'steering_coding'
+  featured: boolean("featured").default(false), // To show on the homepage if needed
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const carMedia = pgTable("car_media", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  carId: uuid("car_id").references(() => cars.id, { onDelete: "cascade" }).notNull(),
+  url: text("url").notNull(), // Cloudflare R2 URL for gallery images
+  type: text("type").notNull(), // 'image' or 'video' but the user mostly asked for " صور وفيديو كل عربيه" so we can keep multiple photos here
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
 export const heroSlides = pgTable("hero_slides", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title"),

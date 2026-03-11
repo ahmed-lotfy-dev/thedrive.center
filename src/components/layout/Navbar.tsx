@@ -37,6 +37,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: "الرئيسية" },
+    { href: "/cars", label: "معرض الأعمال" },
     { href: "/book", label: "احجز موعد" },
   ];
 
@@ -51,12 +52,22 @@ export function Navbar() {
           isScrolled ? "bg-background/95 shadow-md backdrop-blur-md" : "bg-background/80 backdrop-blur-sm"
         )}
       >
-        <Link href="/" className="flex items-center gap-4">
-          <img
-            src="/logo.webp"
-            alt="The Drive Logo"
-            className="h-12 md:h-16 w-auto object-contain rounded-md"
-          />
+        <Link href="/" className="flex items-center gap-4 group">
+          <div className="flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-slate-900 text-white shadow-md transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 md:w-9 md:h-9 text-emerald-100">
+               {/* Outer Wheel */}
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="8" />
+              {/* Center Hub */}
+              <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+              {/* Spokes */}
+              <path d="M12 14.5v5.5" />
+              <path d="M9.8 10.8 L4.5 9" />
+              <path d="M14.2 10.8 L19.5 9" />
+              {/* Top marking for alignment theme */}
+              <path d="M12 2 v2" strokeWidth="2.5" stroke="currentColor" className="text-emerald-400" />
+            </svg>
+          </div>
           <div className="leading-tight">
             <h1 className="text-xl font-bold">The Drive</h1>
             <p className="text-[11px] text-muted-foreground mr-1">مركز ضبط زوايا وترصيص</p>

@@ -22,6 +22,7 @@ export const auth = betterAuth({
       },
     },
   },
+  trustedOrigins: process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : [],
   advanced: {
     database: {
       generateId: "uuid",

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, Star, Facebook, Music2 } from "lucide-react";
@@ -35,11 +35,22 @@ export function LocationSection() {
           </div>
 
           <div className="grid gap-3">
-            <div className="surface p-4 inline-flex items-start gap-3 tilt-hover">
-              <MapPin className="mt-0.5 size-5 text-accent" />
-              <div>
-                <p className="text-sm text-muted-foreground">العنوان</p>
-                <p className="font-medium">{BUSINESS_ADDRESS}، {BUSINESS_REGION}</p>
+            <div className="surface p-4 inline-flex items-start gap-3 tilt-hover flex-col md:flex-row w-full">
+              <div className="flex items-start gap-3 w-full">
+                <MapPin className="mt-0.5 size-5 text-accent shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm text-muted-foreground">العنوان</p>
+                  <p className="font-medium">{BUSINESS_ADDRESS}، {BUSINESS_REGION}</p>
+                  
+                  {/* Driving Hint */}
+                  <div className="mt-3 rounded-lg bg-emerald-50 text-emerald-800 p-3 text-sm border border-emerald-100 flex items-start gap-2">
+                    <span className="text-emerald-600 font-bold shrink-0 mt-0.5">💡 نصيحة للوصول أسرع:</span>
+                    <p className="leading-relaxed text-emerald-700/90">
+                      في مدخل المحلة الكبرى، لعدم أخذ مسافة طويلة لا تدخل من مدخل الشعبية الأساسي. 
+                      يفضل أخذ أول مدخل يمين (مدخل الشعبية الخارجي) قبل الكمين مباشرةً.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
