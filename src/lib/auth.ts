@@ -10,7 +10,10 @@ export const auth = betterAuth({
     enabled: true,
   },
   socialProviders: {
-    // Add providers like google, github here if needed
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    },
   },
   user: {
     additionalFields: {
@@ -18,7 +21,13 @@ export const auth = betterAuth({
         type: "string",
         required: true,
         defaultValue: "user",
-        input: false, // don't allow user to set role during signup
+        input: false,
+      },
+      onboarded: {
+        type: "boolean",
+        required: true,
+        defaultValue: false,
+        input: false,
       },
     },
   },

@@ -11,6 +11,7 @@ export const user = pgTable("user", {
   createdAt: timestamp("createdAt").notNull(),
   updatedAt: timestamp("updatedAt").notNull(),
   role: text("role").default("user"),
+  onboarded: boolean("onboarded").default(false),
 });
 
 export const session = pgTable("session", {
@@ -118,3 +119,18 @@ export const heroSlides = pgTable("hero_slides", {
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export const customerCars = pgTable("customer_cars", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  make: text("make").notNull(),
+  model: text("model").notNull(),
+  year: integer("year"),
+  plateNumber: text("plate_number"),
+  color: text("color"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
