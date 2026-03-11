@@ -112,19 +112,21 @@ export default function RootLayout({
     telephone: "+201228093434",
   };
 
+  const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
+
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <GlobalScrollEffects />
-          <Navbar />
+          {!isMaintenanceMode && <Navbar />}
           <script
             type="application/ld+json"
             suppressHydrationWarning
             dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
           />
           {children}
-          <Footer />
+          {!isMaintenanceMode && <Footer />}
           <Toaster dir="rtl" />
         </ThemeProvider>
       </body>

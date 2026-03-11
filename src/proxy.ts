@@ -10,6 +10,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(newPathname, request.url));
   }
 
+  // 1. FEATURE FLAG: Maintenance Mode
+  const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
+  const isPublicAsset = pathname.startsWith("/_next") || pathname.startsWith("/api") || pathname.includes(".");
+  // We allow access to dashboard, onboarding, and sign-in even in maintenance mode so the admin can work
+  const isExcludedPath = pathname.startsWith("/dashboard") || pathname.startsWith("/onboarding") || pathname.startsWith("/sign-in");
+
+  if (isMaintenanceMode && pathname !== "/" && !isPublicAsset && !isExcludedPath) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   // Get session for onboarding check
   // Note: auth.api.getSession typically works in Edge via headers in Better-Auth
   const session = await auth.api.getSession({
@@ -38,6 +48,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+     "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
