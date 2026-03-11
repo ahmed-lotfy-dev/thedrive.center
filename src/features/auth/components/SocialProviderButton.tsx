@@ -23,7 +23,7 @@ export function SocialProviderButton({
   return (
     <Button
       variant="outline"
-      className="w-full h-14 rounded-2xl border-emerald-500/30 hover:bg-emerald-500/5 hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 cursor-pointer transition-all flex items-center justify-center gap-4 text-lg font-bold group bg-white/5 dark:bg-black/20 backdrop-blur-sm shadow-lg shadow-emerald-500/5"
+      className="w-full h-14 rounded-2xl border-emerald-500/30 hover:bg-emerald-500/5 hover:border-emerald-500 hover:text-emerald-500 cursor-pointer transition-all flex items-center justify-center gap-4 text-lg font-bold group bg-white/5 dark:bg-black/20 backdrop-blur-sm shadow-lg shadow-emerald-500/5"
       onClick={onClick}
       disabled={isLoading || disabled}
     >

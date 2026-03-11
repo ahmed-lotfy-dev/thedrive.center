@@ -49,7 +49,7 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
         <Button 
           variant="link" 
           onClick={onSwitch} 
-          className="text-muted-foreground hover:text-cyan-500 transition-colors font-bold text-base"
+          className="text-muted-foreground hover:text-cyan-500 transition-colors font-bold text-base cursor-pointer"
         >
           عندك حساب بالفعل؟ سجل دخولك من هنا
         </Button>

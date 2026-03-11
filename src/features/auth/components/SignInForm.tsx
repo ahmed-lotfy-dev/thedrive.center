@@ -49,7 +49,7 @@ export function SignInForm({ onSwitch }: SignInFormProps) {
         <Button 
           variant="link" 
           onClick={onSwitch} 
-          className="text-muted-foreground hover:text-emerald-500 transition-colors font-bold text-base"
+          className="text-muted-foreground hover:text-emerald-500 transition-colors font-bold text-base cursor-pointer"
         >
           ماعندكش حساب؟ سجل حساب جديد بالضغط هنا
         </Button>
