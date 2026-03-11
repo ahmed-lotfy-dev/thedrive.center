@@ -21,9 +21,6 @@ export default function AuthPage() {
               <h1 className="mt-5 text-4xl font-semibold leading-tight text-balance">
                 دخول سريع لمتابعة حجوزاتك وخدمات عربيتك
               </h1>
-              <p className="mt-3 text-muted-foreground leading-relaxed">
-                نفس جودة تصميم الموقع الرئيسي، مع تجربة دخول واضحة وسهلة على الموبايل والديسكتوب.
-              </p>
             </div>
 
             <div className="mt-8 grid gap-3 text-sm">
