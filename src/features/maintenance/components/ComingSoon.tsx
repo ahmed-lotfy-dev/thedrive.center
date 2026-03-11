@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Sparkles, Construction, Facebook, Phone, Music } from "lucide-react";
+import { Sparkles, Construction, Facebook, Phone, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ComingSoon() {
@@ -45,9 +45,9 @@ export function ComingSoon() {
         {/* Social Links / Call to Action */}
         <div className="flex flex-wrap justify-center gap-6">
           <Button asChild size="lg" className="h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white px-8 text-lg font-bold shadow-xl shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95">
-            <a href="tel:+201228093434">
-              <Phone className="ml-2 w-5 h-5 font-bold" />
-              اتصل بنا الآن
+            <a href="https://wa.me/201017131414" target="_blank" rel="noopener noreferrer">
+              <MessageSquare className="ml-2 w-5 h-5 font-bold" />
+              تواصل معنا واتساب
             </a>
           </Button>
           
