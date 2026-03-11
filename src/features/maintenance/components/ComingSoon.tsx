@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Sparkles, Construction, Facebook, Phone, MessageSquare } from "lucide-react";
+import { Sparkles, Construction, Facebook, Phone, MessageSquare, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ComingSoon() {
@@ -55,6 +55,11 @@ export function ComingSoon() {
              <Button variant="outline" size="icon" className="w-16 h-16 rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 text-white transition-all hover:-translate-y-1">
                <a href={process.env.NEXT_PUBLIC_FACEBOOK_URL} target="_blank" rel="noopener noreferrer">
                  <Facebook className="w-7 h-7" />
+               </a>
+             </Button>
+             <Button variant="outline" size="icon" className="w-16 h-16 rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 text-white transition-all hover:-translate-y-1">
+               <a href={process.env.NEXT_PUBLIC_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+                 <Instagram className="w-7 h-7" />
                </a>
              </Button>
              <Button variant="outline" size="icon" className="w-16 h-16 rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 text-white transition-all hover:-translate-y-1">

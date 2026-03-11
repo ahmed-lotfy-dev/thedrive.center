@@ -15,6 +15,7 @@ export const BUSINESS_REGION = process.env.NEXT_PUBLIC_BUSINESS_REGION || "ال�
 
 export const FACEBOOK_URL = process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://facebook.com/";
 export const TIKTOK_URL = process.env.NEXT_PUBLIC_TIKTOK_URL || "https://www.tiktok.com/";
+export const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/";
 
 export function getDirectionsUrl() {
   if (GOOGLE_PLACE_ID) {
