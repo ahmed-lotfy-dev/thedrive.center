@@ -7,13 +7,13 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
-export async function submitOnboarding(formData: FormData) {
+export async function submitOnboarding(prevState: any, formData: FormData) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session || !session.user) {
-    throw new Error("غير مصرح لك بالوصول. يرجى تسجيل الدخول أولاً.");
+    return { error: "غير مصرح لك بالوصول. يرجى تسجيل الدخول أولاً." };
   }
 
   const userId = session.user.id;
@@ -25,24 +25,37 @@ export async function submitOnboarding(formData: FormData) {
 
   const year = yearStr ? parseInt(yearStr, 10) : null;
 
-  if (!make || !model) {
-    throw new Error("برجاء إدخال ماركة وموديل السيارة.");
+  if (!make || !model || !plateNumber) {
+    return { error: "برجاء إدخال ماركة وموديل السيارة ورقم اللوحة." };
   }
 
-  // Insert car details
-  await db.insert(customerCars).values({
-    userId,
-    make,
-    model,
-    year,
-    plateNumber,
-    color,
-  });
+  // Clean the plate number string to ensure consistent formatting
+  const cleanPlateNumber = plateNumber.trim().toUpperCase();
 
-  // Mark user as onboarded
-  await db.update(user)
-    .set({ onboarded: true })
-    .where(eq(user.id, userId));
+  try {
+    // Insert car details
+    await db.insert(customerCars).values({
+      userId,
+      make,
+      model,
+      year,
+      plateNumber: cleanPlateNumber,
+      color,
+    });
+
+    // Mark user as onboarded
+    await db.update(user)
+      .set({ onboarded: true })
+      .where(eq(user.id, userId));
+
+  } catch (error: any) {
+    // Check for PostgreSQL unique violation error code (23505)
+    if (error.code === '23505') {
+       return { error: "رقم اللوحة هذا مسجل مسبقاً في النظام. يرجى المراجعة." };
+    }
+    console.error("Onboarding error:", error);
+    return { error: "حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى." };
+  }
 
   redirect("/");
 }

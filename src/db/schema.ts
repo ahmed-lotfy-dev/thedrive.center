@@ -67,6 +67,7 @@ export const siteSettings = pgTable("site_settings", {
 export const appointments = pgTable("appointments", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id").references(() => user.id),
+  carId: uuid("car_id").references(() => customerCars.id),
   guestName: text("guest_name"),
   guestEmail: text("guest_email"),
   guestPhone: text("guest_phone"),
@@ -128,7 +129,7 @@ export const customerCars = pgTable("customer_cars", {
   make: text("make").notNull(),
   model: text("model").notNull(),
   year: integer("year"),
-  plateNumber: text("plate_number"),
+  plateNumber: text("plate_number").notNull().unique(),
   color: text("color"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
