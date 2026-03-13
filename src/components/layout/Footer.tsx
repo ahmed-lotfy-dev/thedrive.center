@@ -13,7 +13,7 @@ import {
   getDirectionsUrl,
   getReviewsUrl,
 } from "@/lib/google-business";
-import { Clock3, Facebook, MapPin, Music2, Phone, Star } from "lucide-react";
+import { ArrowUpRight, Clock3, Facebook, MapPin, Music2, Phone, Star } from "lucide-react";
 
 export function Footer() {
   const pathname = usePathname();
@@ -123,13 +123,28 @@ export function Footer() {
       <div className="border-t border-border/50 py-6">
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-muted-foreground">
           <p>© {new Date().getFullYear()} {GOOGLE_BUSINESS_NAME}. جميع الحقوق محفوظة.</p>
-          <div className="flex items-center gap-4">
-             <span>المحلة الكبرى - مصر</span>
-             <span className="h-4 w-px bg-border/50 hidden md:block" />
-             <p className="flex items-center gap-1 group">
-               <span>صنع بشغف في</span>
-               <span className="text-emerald-500 font-bold group-hover:scale-110 transition-transform">Egypt</span>
-             </p>
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+             <div className="flex items-center gap-4">
+                <span>المحلة الكبرى - مصر</span>
+                <span className="h-4 w-px bg-border/50 hidden md:block" />
+                <p className="flex items-center gap-1 group">
+                  <span>صنع بشغف في</span>
+                  <span className="text-emerald-500 font-bold group-hover:scale-110 transition-transform">Egypt</span>
+                </p>
+             </div>
+             
+             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950/5 dark:bg-white/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all group">
+                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Designed & Developed by</span>
+                <Link 
+                  href="https://github.com/ahmed-shoman-dev" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-foreground dark:text-white font-black hover:text-emerald-500 transition-colors flex items-center gap-1"
+                >
+                  Ahmed Shoman
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all -translate-y-0.5" />
+                </Link>
+             </div>
           </div>
         </div>
       </div>

@@ -54,7 +54,7 @@ export function ScrollingCar() {
   return (
     <div 
       ref={containerRef}
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-[100] overflow-hidden"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-100 overflow-hidden"
     >
       <div 
         ref={carRef}

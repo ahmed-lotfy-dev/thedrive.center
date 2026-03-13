@@ -67,8 +67,8 @@ export function AboutUs() {
                 <p className="text-sm opacity-80 font-bold leading-relaxed">أن نكون الوجهة الأولى والموثوقة لكل مالك سيارة يبحث عن الدقة والاحترافية.</p>
               </div>
             </div>
-            <div className="absolute -top-6 -right-6 w-32 h-32 bg-[radial-gradient(#0369A1_2px,transparent_2px)] [background-size:16px_16px] opacity-30" />
-            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[radial-gradient(#0369A1_2px,transparent_2px)] [background-size:16px_16px] opacity-30" />
+            <div className="absolute -top-6 -right-6 w-32 h-32 bg-[radial-gradient(#0369A1_2px,transparent_2px)] bg-size-[16px_16px] opacity-30" />
+            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[radial-gradient(#0369A1_2px,transparent_2px)] bg-size-[16px_16px] opacity-30" />
           </div>
         </div>
       </div>
