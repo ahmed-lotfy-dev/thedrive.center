@@ -92,6 +92,7 @@ export const appointments = pgTable("appointments", {
 export const cars = pgTable("cars", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(), // e.g. "BMW X6 M-Power"
+  slug: text("slug").notNull().unique(), // URL-friendly slug
   description: text("description"), // Detailed description of the work done
   coverImageUrl: text("cover_image_url").notNull(), // Cloudflare R2 URL for the main image
   videoUrl: text("video_url"), // Cloudflare R2 URL for the single video as requested

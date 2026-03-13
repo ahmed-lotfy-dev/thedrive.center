@@ -45,7 +45,7 @@ export default async function PortfolioDashboardPage() {
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                  <Button asChild variant="secondary" size="icon" className="rounded-full">
-                    <Link href={`/cars/${car.id}`} target="_blank">
+                    <Link href={`/cars/${car.slug}`} target="_blank">
                        <ExternalLink className="w-4 h-4" />
                     </Link>
                  </Button>

@@ -42,7 +42,7 @@ export default async function CarsGalleryPage() {
         {allCars.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {allCars.map((car) => (
-              <Link key={car.id} href={`/cars/${car.id}`} className="group block">
+              <Link key={car.id} href={`/cars/${car.slug}`} className="group block">
                 <Card className="overflow-hidden border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 rounded-4xl group-hover:-translate-y-2">
                   <div className="relative aspect-16/10 overflow-hidden">
                     <Image

@@ -5,6 +5,7 @@ import { cars, carMedia } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import crypto from "crypto";
 
 const carSchema = z.object({
   title: z.string().min(3, "العنوان مطلوب"),
@@ -29,11 +30,23 @@ export async function createPortfolioEntry(formData: FormData) {
     return { error: result.error.flatten().fieldErrors };
   }
 
-  const { galleryUrls, ...carData } = result.data;
+  const { galleryUrls, title, ...carData } = result.data;
+
+  // Generate a URL-friendly slug: spaces and non-word characters to hyphens
+  const baseSlug = title
+    .trim()
+    .toLowerCase()
+    .replace(/[^\u0621-\u064A\u0660-\u0669a-z0-9]+/g, "-") // Keep Arabic letters, English letters, and numbers
+    .replace(/^-+|-+$/g, ""); // Remove trailing/leading hyphens
+  
+  const uniqueId = crypto.randomBytes(3).toString("hex");
+  const slug = `${baseSlug ? baseSlug + "-" : "car-"}${uniqueId}`;
 
   // 1. Create the main car entry
   const [newCar] = await db.insert(cars).values({
     ...carData,
+    title,
+    slug,
     featured: true,
   }).returning();
 
