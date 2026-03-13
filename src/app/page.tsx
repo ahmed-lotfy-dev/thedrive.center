@@ -5,7 +5,6 @@ import { FAQ } from "@/features/landing/components/FAQ";
 import { CTA } from "@/features/landing/components/CTA";
 import { LocationSection } from "@/features/landing/components/LocationSection";
 import { ComingSoon } from "@/features/maintenance/components/ComingSoon";
-import { ScrollingCar } from "@/features/landing/components/ScrollingCar";
 
 export default function Home() {
   const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
@@ -16,7 +15,6 @@ export default function Home() {
 
   return (
     <main dir="rtl" className="overflow-x-hidden pb-10">
-      <ScrollingCar />
       <Hero />
       <Services />
       <Process />
