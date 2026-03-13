@@ -44,25 +44,25 @@ export function ComingSoon() {
 
         {/* Social Links / Call to Action */}
         <div className="flex flex-wrap justify-center gap-6">
-          <Button asChild size="lg" className="h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white px-8 text-lg font-bold shadow-xl shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95">
+          <Button asChild size="lg" className="h-[64px] rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white px-8 text-lg font-bold shadow-xl shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95">
             <a href="https://wa.me/201017131414" target="_blank" rel="noopener noreferrer">
               <MessageSquare className="ml-2 w-5 h-5 font-bold" />
               تواصل معنا واتساب
             </a>
           </Button>
 
-          <div className="flex items-center gap-6">
-            <Button variant="outline" size="icon" className="w-20 h-20 rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-[#1877F2] hover:border-[#1877F2] text-white transition-all hover:-translate-y-1 overflow-hidden group">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" size="icon" className="w-[64px] h-[64px] rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-[#1877F2] hover:border-[#1877F2] text-white transition-all hover:-translate-y-1 overflow-hidden group">
               <a href={process.env.NEXT_PUBLIC_FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full p-4">
                 <Facebook className="w-full h-full group-hover:scale-110 transition-transform" strokeWidth={1.5} />
               </a>
             </Button>
-            <Button variant="outline" size="icon" className="w-20 h-20 rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-linear-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] text-white transition-all hover:-translate-y-1 overflow-hidden group">
+            <Button variant="outline" size="icon" className="w-[64px] h-[64px] rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-linear-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] text-white transition-all hover:-translate-y-1 overflow-hidden group">
               <a href={process.env.NEXT_PUBLIC_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full p-4">
                 <Instagram className="w-full h-full group-hover:scale-110 transition-transform" strokeWidth={1.5} />
               </a>
             </Button>
-            <Button variant="outline" size="icon" className="w-20 h-20 rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-black hover:border-black text-white transition-all hover:-translate-y-1 overflow-hidden group">
+            <Button variant="outline" size="icon" className="w-[64px] h-[64px] rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-black hover:border-black text-white transition-all hover:-translate-y-1 overflow-hidden group">
               <a href={process.env.NEXT_PUBLIC_TIKTOK_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full p-4">
                 {/* Custom TikTok SVG for maximum accuracy */}
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full group-hover:scale-110 transition-transform">
