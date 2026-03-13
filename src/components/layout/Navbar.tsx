@@ -67,7 +67,7 @@ export function Navbar() {
               </div>
             </div>
             <div className="leading-tight hidden sm:block">
-              <h1 className="text-xl md:text-3xl font-black tracking-tighter text-foreground dark:text-white group-hover:text-emerald-500 transition-colors uppercase italic italic-bold">The Drive</h1>
+              <h1 className="text-xl md:text-3xl font-black tracking-tighter text-foreground dark:text-white group-hover:text-emerald-500 transition-colors uppercase italic italic-bold">The Drive Center</h1>
               <div className="flex items-center gap-2">
                 <span className="w-8 h-px bg-emerald-500/50" />
                 <p className="text-[9px] md:text-[10px] text-muted-foreground font-black tracking-[0.2em] uppercase">Precision Service</p>

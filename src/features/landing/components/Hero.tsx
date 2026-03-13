@@ -25,7 +25,7 @@ export function Hero() {
             </div>
             
             <h1 className="text-4xl sm:text-5xl lg:text-[4rem] font-extrabold text-foreground leading-[1.15] tracking-tight text-balance animate-in fade-in slide-in-from-bottom-6 duration-700 delay-150">
-              مركز <span className="text-transparent bg-clip-text bg-linear-to-l from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400 drop-shadow-sm">The Drive</span><br />
+              مركز <span className="text-transparent bg-clip-text bg-linear-to-l from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400 drop-shadow-sm">The Drive Center</span><br />
               لضبط الزوايا والترصيص
             </h1>
             
@@ -73,7 +73,7 @@ export function Hero() {
               <div className="relative w-full aspect-4/3 lg:aspect-square max-h-[500px] rounded-4xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-4 border-white/50 dark:border-white/10 bg-black/5 group">
                 <Image
                   src="/active-hero-image.jpg"
-                  alt="مركز خدمة The Drive"
+                  alt="مركز خدمة The Drive Center"
                   fill
                   priority
                   className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-105"

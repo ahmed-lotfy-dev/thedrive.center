@@ -18,7 +18,7 @@ export function AboutUs() {
               </div>
               <h2 className="text-4xl md:text-6xl font-black text-foreground dark:text-white leading-tight">
                 عن مركز <br />
-                <span className="text-emerald-500 underline decoration-emerald-500/30 underline-offset-8 italic">The Drive</span>
+                <span className="text-emerald-500 underline decoration-emerald-500/30 underline-offset-8 italic">The Drive Center</span>
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed font-sans max-w-xl">
                 هدفنا الرئيسي هو توفير أقصى درجات الأمان والثبات لسيارتك، من خلال استخدام أحدث التكنولوجيا العالمية في الفحص والضبط.

@@ -1,5 +1,5 @@
 export const GOOGLE_BUSINESS_NAME =
-  process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_NAME || "مركز لضبط الزوايا والترصيص The Drive";
+  process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_NAME || "The Drive Center - لضبط الزوايا والترصيص";
 
 export const GOOGLE_PLACE_ID = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID || "";
 export const GOOGLE_PLACE_URL = process.env.NEXT_PUBLIC_GOOGLE_PLACE_URL || "";

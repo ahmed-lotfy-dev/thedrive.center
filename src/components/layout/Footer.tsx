@@ -38,7 +38,7 @@ export function Footer() {
                 </div>
               </div>
               <div className="leading-tight">
-                <h1 className="text-xl font-black tracking-tighter uppercase italic text-foreground group-hover:text-emerald-500 transition-colors">The Drive</h1>
+                <h1 className="text-xl font-black tracking-tighter uppercase italic text-foreground group-hover:text-emerald-500 transition-colors">The Drive Center</h1>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Precision Service</p>
               </div>
             </div>
