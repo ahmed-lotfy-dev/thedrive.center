@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { VideoEmbed } from "@/components/shared/VideoEmbed";
 import { ArrowLeft, Calendar, Info, Share2, Facebook, Instagram } from "lucide-react";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const car = await db.query.cars.findFirst({
-    where: eq(cars.slug, params.slug),
+    where: eq(cars.slug, slug),
   });
 
   if (!car) return { title: "غير موجود" };
@@ -25,9 +26,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function CarDetailPage({ params }: { params: { slug: string } }) {
+export default async function CarDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const car = await db.query.cars.findFirst({
-    where: eq(cars.slug, params.slug),
+    where: eq(cars.slug, slug),
     with: {
       media: true,
     },
