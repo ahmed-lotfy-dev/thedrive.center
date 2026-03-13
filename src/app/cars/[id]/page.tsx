@@ -1,119 +1,156 @@
 import { db } from "@/db";
 import { cars, carMedia } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
-import { notFound } from "next/navigation";
+import { eq } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight, PlayCircle } from "lucide-react";
+import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { VideoEmbed } from "@/components/shared/VideoEmbed";
+import { ArrowLeft, Calendar, Info, Share2, Facebook, Instagram } from "lucide-react";
 
-export default async function CarDetailsPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const carId = (await params).id;
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const car = await db.query.cars.findFirst({
+    where: eq(cars.id, params.id),
+  });
 
-  const [car] = await db.select().from(cars).where(eq(cars.id, carId));
+  if (!car) return { title: "غير موجود" };
 
-  if (!car) {
-    notFound();
-  }
+  return {
+    title: `${car.title} | The Drive Center`,
+    description: car.description?.substring(0, 160) || `تم ضبط زوايا وترصيص ${car.title} بأعلى جودة.`,
+    openGraph: {
+      images: [car.coverImageUrl],
+    },
+  };
+}
 
-  const gallery = await db
-    .select()
-    .from(carMedia)
-    .where(eq(carMedia.carId, car.id))
-    .orderBy(desc(carMedia.createdAt));
+export default async function CarDetailPage({ params }: { params: { id: string } }) {
+  const car = await db.query.cars.findFirst({
+    where: eq(cars.id, params.id),
+    with: {
+      media: true,
+    },
+  });
+
+  if (!car) notFound();
 
   return (
-    <main dir="rtl" className="min-h-screen bg-slate-50 pb-20 pt-36">
-      <div className="container mx-auto px-4 max-w-5xl">
+    <main dir="rtl" className="min-h-screen bg-background pt-32 pb-20">
+      <div className="container mx-auto px-4">
+        {/* Breadcrumbs / Back */}
         <Link 
           href="/cars" 
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-emerald-600 font-medium mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-emerald-500 font-bold hover:gap-3 transition-all mb-8 group"
         >
-          <ChevronRight className="size-5" />
-          الرجوع للمعرض
+          <ArrowLeft className="w-5 h-5" />
+          <span>العودة لسجل الخدمة</span>
         </Link>
 
-        {/* Hero Section of Car */}
-        <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 mb-12">
-           <div className="relative aspect-[21/9] w-full bg-slate-900">
-             {car.coverImageUrl && (
-                <Image
-                  src={car.coverImageUrl}
-                  alt={car.title}
-                  fill
-                  priority
-                  className="object-cover opacity-90"
-                  sizes="(max-width: 1200px) 100vw, 1200px"
-                />
-              )}
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              
-              <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div className="text-white drop-shadow-md">
-                  <h1 className="text-3xl md:text-5xl font-bold">{car.title}</h1>
-                  {car.serviceType && (
-                    <span className="inline-block mt-3 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-sm font-medium">
-                      نوع الخدمة: {car.serviceType === "all" ? "شامل" : car.serviceType === "inspection" ? "فحص" : car.serviceType === "alignment" ? "زوايا" : "تكويد"}
-                    </span>
-                  )}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left Column: Media */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Main Featured Image */}
+            <div className="relative aspect-video w-full rounded-5xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+              <Image
+                src={car.coverImageUrl}
+                alt={car.title}
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+              <div className="absolute top-6 right-6">
+                <Badge className="bg-emerald-500 text-white font-bold h-10 px-6 rounded-2xl shadow-lg border-emerald-400">
+                  {car.serviceType === 'alignment_balancing' ? 'ضبط زوايا وترصيص' : 
+                   car.serviceType === 'inspection' ? 'فحص شامل' : 
+                   car.serviceType === 'steering_coding' ? 'تكويد طارة' : car.serviceType}
+                </Badge>
+              </div>
+            </div>
+
+            {/* Video Section if available */}
+            {car.videoUrl && (
+              <div className="space-y-4">
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                   <div className="w-2 h-8 bg-emerald-500 rounded-full" />
+                   فيديو العمل بالمركز
+                </h3>
+                <VideoEmbed url={car.videoUrl} title={`فيديو ${car.title}`} />
+              </div>
+            )}
+
+            {/* Gallery Section */}
+            {car.media && car.media.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                   <div className="w-2 h-8 bg-emerald-500 rounded-full" />
+                   توثيق الصور (Gallery)
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {car.media.map((item) => (
+                    <div key={item.id} className="relative aspect-square rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:scale-105 transition-transform duration-500 cursor-zoom-in">
+                       <Image
+                         src={item.url}
+                         alt="صورة العمل"
+                         fill
+                         className="object-cover"
+                         sizes="(max-width: 768px) 50vw, 33vw"
+                       />
+                    </div>
+                  ))}
                 </div>
               </div>
-           </div>
-
-           {car.description && (
-             <div className="p-6 md:p-10">
-               <h2 className="text-xl font-bold mb-4">تفاصيل الشغل الذي تم تنفيذه</h2>
-               <p className="text-slate-600 leading-relaxed max-w-3xl whitespace-pre-wrap text-lg">
-                 {car.description}
-               </p>
-             </div>
-           )}
-        </div>
-
-        {/* Video Section */}
-        {car.videoUrl && (
-          <div className="mb-12">
-             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <PlayCircle className="size-6 text-emerald-600" />
-                فيديو للسيارة (قبل وبعد)
-             </h2>
-             <div className="bg-black rounded-3xl overflow-hidden aspect-video relative shadow-lg">
-               <video 
-                  src={car.videoUrl} 
-                  controls 
-                  className="absolute inset-0 w-full h-full object-contain"
-                  poster={car.coverImageUrl}
-                />
-             </div>
+            )}
           </div>
-        )}
 
-        {/* Gallery Section */}
-        {gallery.length > 0 && (
-          <div>
-            <h2 className="text-2xl font-bold mb-6">صور من العمل</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {gallery.map((media) => (
-                <div key={media.id} className="relative aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-white group cursor-zoom-in">
-                  <Image
-                    src={media.url}
-                    alt={`صورة عمل ${car.title}`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                  />
-                  {/* Setup a simple CSS hover overlay for aesthetics */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+          {/* Right Column: Info */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 p-8 rounded-5xl sticky top-32">
+              <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4 leading-tight">
+                {car.title}
+              </h1>
+              
+              <div className="flex items-center gap-3 text-slate-500 mb-8 pb-8 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{new Date(car.createdAt!).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
-              ))}
+              </div>
+
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <h4 className="flex items-center gap-2 text-sm font-black text-slate-400 uppercase tracking-widest">
+                    <Info className="w-4 h-4" />
+                    تفاصيل الخدمة
+                  </h4>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+                    {car.description}
+                  </p>
+                </div>
+
+                <div className="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-4">
+                   <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest">مشاركة الصفحة</h4>
+                   <div className="flex gap-4">
+                      <Button variant="outline" size="icon" className="w-12 h-12 rounded-2xl">
+                         <Facebook className="w-5 h-5" />
+                      </Button>
+                      <Button variant="outline" size="icon" className="w-12 h-12 rounded-2xl">
+                         <Instagram className="w-5 h-5" />
+                      </Button>
+                      <Button variant="outline" size="icon" className="w-12 h-12 rounded-2xl border-emerald-500/20 text-emerald-500">
+                         <Share2 className="w-5 h-5" />
+                      </Button>
+                   </div>
+                </div>
+
+                <Button asChild className="w-full h-16 rounded-3xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-lg mt-4 shadow-xl shadow-emerald-500/10">
+                   <Link href="/book">احجز موعداً لسيارتك</Link>
+                </Button>
+              </div>
             </div>
           </div>
-        )}
-
+        </div>
       </div>
     </main>
   );

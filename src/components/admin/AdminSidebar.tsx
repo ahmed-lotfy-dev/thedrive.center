@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, CalendarDays, Images, LogOut, Home } from "lucide-react";
+import { LayoutDashboard, CalendarDays, Images, LogOut, Home, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 
 const sidebarItems = [
   { title: "نظرة عامة", href: "/admin", icon: LayoutDashboard },
   { title: "الحجوزات", href: "/admin/appointments", icon: CalendarDays },
+  { title: "سجل التميز", href: "/admin/portfolio", icon: LayoutGrid },
   { title: "صور الهيرو", href: "/admin/carousel", icon: Images },
 ];
 

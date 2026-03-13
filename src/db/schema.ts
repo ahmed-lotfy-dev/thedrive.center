@@ -135,3 +135,15 @@ export const customerCars = pgTable("customer_cars", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+import { relations } from "drizzle-orm";
+
+export const carsRelations = relations(cars, ({ many }) => ({
+  media: many(carMedia),
+}));
+
+export const carMediaRelations = relations(carMedia, ({ one }) => ({
+  car: one(cars, {
+    fields: [carMedia.carId],
+    references: [cars.id],
+  }),
+}));
