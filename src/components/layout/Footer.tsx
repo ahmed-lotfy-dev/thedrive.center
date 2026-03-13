@@ -60,12 +60,12 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary/80">بيانات الاتصال</h3>
             <div className="grid gap-4 text-sm text-muted-foreground">
-              <p className="flex items-start gap-4">
+              <div className="flex items-start gap-4">
                 <div className="size-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
                   <MapPin className="size-5 text-emerald-500" />
                 </div>
                 <span className="leading-snug pt-1 font-bold">{BUSINESS_ADDRESS}، {BUSINESS_CITY}</span>
-              </p>
+              </div>
               <div className="flex items-start gap-4">
                 <div className="size-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
                   <Phone className="size-5 text-emerald-500" />
@@ -75,12 +75,12 @@ export function Footer() {
                   <p className="text-[10px] uppercase font-bold text-emerald-600/60 tracking-widest">Official Owner Line</p>
                 </div>
               </div>
-              <p className="flex items-center gap-4">
+              <div className="flex items-center gap-4 text-muted-foreground">
                 <div className="size-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
                   <Clock3 className="size-5 text-emerald-500" />
                 </div>
                 <span className="font-bold pt-1">يومياً: ٩ ص - ١٠ م</span>
-              </p>
+              </div>
             </div>
           </div>
 
