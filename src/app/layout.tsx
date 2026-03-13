@@ -4,6 +4,7 @@ import "./globals.css";
 import {
   BUSINESS_ADDRESS,
   BUSINESS_CITY,
+  BUSINESS_PHONE,
   BUSINESS_REGION,
   GOOGLE_BUSINESS_NAME,
   GOOGLE_MAPS_COORDS,
@@ -109,7 +110,7 @@ export default function RootLayout({
     },
     sameAs: GOOGLE_PLACE_URL ? [GOOGLE_PLACE_URL] : [],
     url: siteUrl,
-    telephone: "+201228093434",
+    telephone: `+2${BUSINESS_PHONE}`,
   };
 
   const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";

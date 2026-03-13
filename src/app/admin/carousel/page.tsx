@@ -46,7 +46,7 @@ export default async function CarouselAdminPage() {
                   {slide.isActive ? (
                     <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-xs">مفعلة</span>
                   ) : (
-                    <span className="rounded-full bg-slate-200 text-slate-700 px-2 py-0.5 text-xs">مخفية</span>
+                    <span className="rounded-full bg-zinc-200 text-zinc-700 px-2 py-0.5 text-xs">مخفية</span>
                   )}
                   {(slide.order ?? 0) >= 100 && (
                     <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-xs">مميزة</span>

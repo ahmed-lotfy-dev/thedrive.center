@@ -43,17 +43,17 @@ export default async function CarDetailsPage({
     <div dir="rtl" className="space-y-8 max-w-5xl mx-auto">
       {/* Header & Breadcrumb */}
       <div className="flex items-center gap-4">
-        <Button asChild variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+        <Button asChild variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800">
           <Link href="/dashboard/cars">
-            <ArrowRight className="w-5 h-5 text-slate-500" />
+            <ArrowRight className="w-5 h-5 text-zinc-500" />
             <span className="sr-only">العودة للسجل</span>
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white uppercase">
             لوحة: {car.car.plateNumber}
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-zinc-500 dark:text-zinc-400 mt-1">
             سجل الصيانة الخاص بسيارة {car.car.make} {car.car.model} {car.car.year}
           </p>
         </div>
@@ -63,25 +63,25 @@ export default async function CarDetailsPage({
         
         {/* Left Column: Client & Car Info */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-full h-1 bg-linear-to-r from-blue-500 to-indigo-500" />
+          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-full h-1 bg-linear-to-r from-emerald-500 to-emerald-600" />
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-500" />
+              <User className="w-5 h-5 text-emerald-500" />
               بيانات العميل
             </h3>
             <div className="space-y-4">
               <div>
-                <Label className="text-xs text-slate-500">الاسم</Label>
+                <Label className="text-xs text-zinc-500">الاسم</Label>
                 <div className="font-medium">{car.owner?.name || "غير محدد"}</div>
               </div>
               <div>
-                <Label className="text-xs text-slate-500">البريد الإلكتروني</Label>
-                <div className="font-medium text-sm text-slate-700 dark:text-slate-300">{car.owner?.email || "غير محدد"}</div>
+                <Label className="text-xs text-zinc-500">البريد الإلكتروني</Label>
+                <div className="font-medium text-sm text-zinc-700 dark:text-zinc-300">{car.owner?.email || "غير محدد"}</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 w-full h-1 bg-linear-to-r from-emerald-500 to-teal-500" />
             <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-emerald-500" />
@@ -89,19 +89,19 @@ export default async function CarDetailsPage({
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-xs text-slate-500">الماركة</Label>
+                <Label className="text-xs text-zinc-500">الماركة</Label>
                 <div className="font-medium whitespace-nowrap overflow-hidden text-ellipsis">{car.car.make}</div>
               </div>
               <div>
-                <Label className="text-xs text-slate-500">الموديل</Label>
+                <Label className="text-xs text-zinc-500">الموديل</Label>
                 <div className="font-medium whitespace-nowrap overflow-hidden text-ellipsis">{car.car.model}</div>
               </div>
               <div>
-                <Label className="text-xs text-slate-500">سنة الصنع</Label>
+                <Label className="text-xs text-zinc-500">سنة الصنع</Label>
                 <div className="font-medium">{car.car.year || "---"}</div>
               </div>
               <div>
-                <Label className="text-xs text-slate-500">اللون</Label>
+                <Label className="text-xs text-zinc-500">اللون</Label>
                 <div className="font-medium">{car.car.color || "---"}</div>
               </div>
             </div>
@@ -112,9 +112,9 @@ export default async function CarDetailsPage({
         <div className="lg:col-span-2 space-y-8">
           
           {/* Add New Record Form */}
-          <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-200 dark:border-slate-700/50">
+          <div className="bg-zinc-50 dark:bg-zinc-800/30 rounded-3xl p-6 border border-zinc-200 dark:border-zinc-700/50">
             <h3 className="font-bold text-xl mb-6 flex items-center gap-2">
-              <Plus className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <Plus className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               إضافة سجل صيانة جديد
             </h3>
             
@@ -129,7 +129,7 @@ export default async function CarDetailsPage({
                     name="serviceType" 
                     placeholder="مثال: ضبط زوايا، ترصيص، كشف أعطال" 
                     required 
-                    className="bg-white dark:bg-slate-900"
+                    className="bg-white dark:bg-zinc-900"
                   />
                 </div>
                 <div className="space-y-2">
@@ -138,7 +138,7 @@ export default async function CarDetailsPage({
                     name="actualPrice" 
                     type="number" 
                     placeholder="0.00" 
-                    className="bg-white dark:bg-slate-900"
+                    className="bg-white dark:bg-zinc-900"
                   />
                 </div>
               </div>
@@ -148,12 +148,12 @@ export default async function CarDetailsPage({
                 <Textarea 
                   name="notes" 
                   placeholder="تم تغيير طقم تيل فرامل، مقصات بحاجة للتغيير الزيارة القادمة..." 
-                  className="min-h-[100px] bg-white dark:bg-slate-900 resize-none"
+                  className="min-h-[100px] bg-white dark:bg-zinc-900 resize-none"
                 />
               </div>
 
               <div className="pt-2 flex justify-end">
-                <Button type="button" className="bg-slate-900 hover:bg-slate-800 text-white gap-2 px-8 rounded-xl h-12">
+                <Button type="button" className="bg-zinc-900 hover:bg-zinc-800 text-white gap-2 px-8 rounded-xl h-12">
                   <Save className="w-4 h-4" />
                   حفظ السجل
                 </Button>
@@ -166,28 +166,28 @@ export default async function CarDetailsPage({
             <h3 className="font-bold text-2xl mb-6">سجل الزيارات السابقة</h3>
             
             {history.length === 0 ? (
-              <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
-                <CalendarDays className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-1">لا يوجد سجل سابق</h4>
-                <p className="text-slate-500">قم بإضافة أول خدمة صيانة لهذه السيارة من النموذج أعلاه.</p>
+              <div className="text-center py-12 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 border-dashed">
+                <CalendarDays className="w-12 h-12 text-zinc-300 dark:text-zinc-600 mx-auto mb-4" />
+                <h4 className="text-lg font-medium text-zinc-900 dark:text-white mb-1">لا يوجد سجل سابق</h4>
+                <p className="text-zinc-500">قم بإضافة أول خدمة صيانة لهذه السيارة من النموذج أعلاه.</p>
               </div>
             ) : (
-              <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-800 before:to-transparent">
+              <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-zinc-200 dark:before:via-zinc-800 before:to-transparent">
                 {history.map((record, index) => (
                   <div key={record.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                     
                     {/* Timeline Marker */}
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-slate-950 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-zinc-950 bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
                     
                     {/* Card */}
-                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                        <h4 className="font-bold text-lg text-slate-900 dark:text-white">
+                        <h4 className="font-bold text-lg text-zinc-900 dark:text-white">
                           {record.serviceType}
                         </h4>
-                        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md w-fit">
+                        <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 rounded-md w-fit">
                           <CalendarDays className="w-3.5 h-3.5" />
                           <time dateTime={format(record.createdAt!, "yyyy-MM-dd")}>
                             {format(record.createdAt!, "dd/MM/yyyy")}
@@ -196,17 +196,17 @@ export default async function CarDetailsPage({
                       </div>
                       
                       {record.notes ? (
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 whitespace-pre-wrap leading-relaxed">
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 whitespace-pre-wrap leading-relaxed">
                           {record.notes}
                         </p>
                       ) : (
-                        <p className="text-sm text-slate-400 dark:text-slate-500 mb-4 italic">
+                        <p className="text-sm text-zinc-400 dark:text-zinc-500 mb-4 italic">
                           لا توجد ملاحظات مسجلة
                         </p>
                       )}
                       
-                      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-sm font-medium">
-                        <span className="text-slate-500">التكلفة:</span>
+                      <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-between items-center text-sm font-medium">
+                        <span className="text-zinc-500">التكلفة:</span>
                         <span className="text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-md">
                           {record.actualPrice ? `${record.actualPrice} دج` : "غير مسجل"}
                         </span>

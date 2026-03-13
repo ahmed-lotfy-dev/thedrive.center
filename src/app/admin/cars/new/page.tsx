@@ -145,7 +145,7 @@ export default function NewCarPage() {
         </div>
 
         {/* Media Uploads */}
-        <div className="space-y-6 rounded-lg bg-slate-50 p-6 border">
+        <div className="space-y-6 rounded-lg bg-zinc-50 p-6 border">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <ImageIcon className="size-5 text-emerald-600"/>
             الصور والفيديوهات
@@ -184,9 +184,9 @@ export default function NewCarPage() {
                   </button>
                 </div>
               ) : (
-                <label className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 transition-colors">
-                  <Film className="size-8 text-slate-400" />
-                  <span className="text-sm font-medium text-slate-600">رفع فيديو MP4</span>
+                <label className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-zinc-300 bg-white hover:bg-zinc-50 transition-colors">
+                  <Film className="size-8 text-zinc-400" />
+                  <span className="text-sm font-medium text-zinc-600">رفع فيديو MP4</span>
                   <input type="file" accept="video/*" className="hidden" onChange={(e) => handleFileUpload(e, 'video')} disabled={uploading} />
                 </label>
               )}
@@ -206,8 +206,8 @@ export default function NewCarPage() {
                  </div>
                 ))}
                 
-                <label className="flex size-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50 transition-colors">
-                  <Plus className="size-6 text-slate-400" />
+                <label className="flex size-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-zinc-300 bg-white hover:bg-zinc-50 transition-colors">
+                  <Plus className="size-6 text-zinc-400" />
                   <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleFileUpload(e, 'gallery')} disabled={uploading} />
                 </label>
               </div>
@@ -219,7 +219,7 @@ export default function NewCarPage() {
            <button
             type="button"
             onClick={() => router.back()}
-            className="rounded-md px-6 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100"
+            className="rounded-md px-6 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100"
           >
             إلغاء
           </button>

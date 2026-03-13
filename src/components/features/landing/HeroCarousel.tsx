@@ -82,9 +82,9 @@ export function HeroCarousel({ slides = [] }: HeroCarouselProps) {
                 />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/80 via-slate-950/35 to-slate-900/10 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/80 via-zinc-950/35 to-zinc-900/10 z-10" />
               <div className="absolute -top-16 -left-14 h-44 w-44 rounded-full bg-teal-300/25 blur-3xl z-10" />
-              <div className="absolute -bottom-14 -right-10 h-48 w-48 rounded-full bg-slate-300/20 blur-3xl z-10" />
+              <div className="absolute -bottom-14 -right-10 h-48 w-48 rounded-full bg-zinc-300/20 blur-3xl z-10" />
 
               <div className="absolute inset-0 z-20 flex flex-col justify-center items-start px-8 md:px-24">
                 <div className="max-w-2xl space-y-8 animate-in slide-in-from-bottom-8 fade-in duration-1000">
@@ -96,7 +96,7 @@ export function HeroCarousel({ slides = [] }: HeroCarouselProps) {
                     {slide.title}
                   </h2>
 
-                  <p className="text-lg md:text-2xl text-slate-200 font-sans leading-relaxed max-w-xl drop-shadow-lg opacity-90">
+                  <p className="text-lg md:text-2xl text-zinc-200 font-sans leading-relaxed max-w-xl drop-shadow-lg opacity-90">
                     {slide.description}
                   </p>
 

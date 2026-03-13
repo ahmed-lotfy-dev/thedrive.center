@@ -19,11 +19,11 @@ export default async function PortfolioDashboardPage() {
     <div dir="rtl" className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-3">
              <LayoutGrid className="w-8 h-8 text-emerald-500" />
              إدارة سجل التميز
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">إضافة وتعديل السيارات التي تظهر في معرض أعمال المركز (Portfolio)</p>
+          <p className="text-zinc-500 dark:text-zinc-400 mt-1">إضافة وتعديل السيارات التي تظهر في معرض أعمال المركز (Portfolio)</p>
         </div>
         <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-6 gap-2">
              <Link href="/admin/portfolio/new">
@@ -35,7 +35,7 @@ export default async function PortfolioDashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {allCars.map((car) => (
-          <div key={car.id} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm group">
+          <div key={car.id} className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-sm group">
             <div className="relative aspect-video">
               <Image 
                 src={car.coverImageUrl} 
@@ -60,13 +60,13 @@ export default async function PortfolioDashboardPage() {
             
             <div className="p-5">
                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-bold text-lg text-slate-900 dark:text-white line-clamp-1">{car.title}</h3>
-                  <Badge variant="outline" className="text-[10px] uppercase font-bold border-slate-200 dark:border-slate-700">
+                  <h3 className="font-bold text-lg text-zinc-900 dark:text-white line-clamp-1">{car.title}</h3>
+                  <Badge variant="outline" className="text-[10px] uppercase font-bold border-zinc-200 dark:border-zinc-700">
                      {car.serviceType}
                   </Badge>
                </div>
                
-               <div className="flex items-center gap-4 text-xs text-slate-500 font-medium">
+               <div className="flex items-center gap-4 text-xs text-zinc-500 font-medium">
                   <div className="flex items-center gap-1">
                      <ImageIcon className="w-3.5 h-3.5" />
                      <span>{car.media.length} صور</span>
@@ -83,10 +83,10 @@ export default async function PortfolioDashboardPage() {
         ))}
 
         {allCars.length === 0 && (
-          <div className="col-span-full py-24 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-4xl">
-             <LayoutGrid className="w-16 h-16 text-slate-200 dark:text-slate-800 mx-auto mb-4" />
-             <h3 className="text-xl font-bold text-slate-400">لا توجد أعمال مسجلة بعد</h3>
-             <p className="text-slate-500 mt-2 mb-8">ابدأ بتوثيق أول عمل لمركز التميز ليظهر للجمهور.</p>
+          <div className="col-span-full py-24 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-4xl">
+             <LayoutGrid className="w-16 h-16 text-zinc-200 dark:text-zinc-800 mx-auto mb-4" />
+             <h3 className="text-xl font-bold text-zinc-400">لا توجد أعمال مسجلة بعد</h3>
+             <p className="text-zinc-500 mt-2 mb-8">ابدأ بتوثيق أول عمل لمركز التميز ليظهر للجمهور.</p>
              <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-8">
                 <Link href="/admin/portfolio/new">إضافة أول عمل الآن</Link>
              </Button>

@@ -26,7 +26,7 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
   return (
     <>
       <CardHeader className="text-center pb-4">
-        <CardTitle className="text-4xl font-black tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-l from-emerald-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400">
+        <CardTitle className="text-4xl font-black tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-l from-emerald-600 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400">
           إنـشـاء حـسـاب
         </CardTitle>
       </CardHeader>
@@ -45,11 +45,11 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
         <CredentialsSignUp />
       </CardContent>
 
-      <CardFooter className="flex flex-col items-center gap-4 py-6 border-t border-border/40 bg-slate-50/30 dark:bg-slate-900/30">
+      <CardFooter className="flex flex-col items-center gap-4 py-6 border-t border-border/40 bg-zinc-50/30 dark:bg-zinc-900/30">
         <Button 
           variant="link" 
           onClick={onSwitch} 
-          className="text-muted-foreground hover:text-cyan-500 transition-colors font-bold text-base cursor-pointer"
+          className="text-muted-foreground hover:text-emerald-500 transition-colors font-bold text-base cursor-pointer"
         >
           عندك حساب بالفعل؟ سجل دخولك من هنا
         </Button>

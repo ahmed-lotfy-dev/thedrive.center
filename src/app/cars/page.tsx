@@ -18,19 +18,19 @@ export default async function CarsGalleryPage() {
   });
 
   return (
-    <main dir="rtl" className="min-h-screen bg-background pt-32 pb-20">
-      <div className="container mx-auto px-4">
+    <main dir="rtl" className="min-h-screen bg-background pt-24 md:pt-32 pb-20">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div className="space-y-2">
-            <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
-              سجل التميز
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-              سيارات تم <span className="text-emerald-500">خدمتها</span>
+        <div className="flex flex-col items-center text-center space-y-6 mb-16 md:mb-20">
+          <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-6 h-9 rounded-full font-bold uppercase tracking-wider animate-in fade-in slide-in-from-bottom-2 duration-500">
+            سجل التميز
+          </Badge>
+          <div className="space-y-4 max-w-3xl">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-zinc-950 dark:text-white leading-[1.1]">
+              سيارات تم <span className="text-emerald-500">خدمتها</span> باحترافية
             </h1>
-            <p className="text-lg text-slate-500 dark:text-slate-400 max-w-xl">
-              ثقة عملائنا هي سر نجاحنا. هنا نوثق بعض الأعمال التي قمنا بها لضمان أعلى مستويات الدقة والأمان على الطريق.
+            <p className="text-base sm:text-lg md:text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+              ثقة عملائنا هي سر نجاحنا. هنا نوثق بعض الأعمال التي قمنا بها لضمان أعلى مستويات الدقة والأمان على الطريق باستخدام أحدث تقنيات ضبط الزوايا.
             </p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default async function CarsGalleryPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {allCars.map((car) => (
               <Link key={car.id} href={`/cars/${car.id}`} className="group block">
-                <Card className="overflow-hidden border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 rounded-4xl group-hover:-translate-y-2">
+                <Card className="overflow-hidden border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 rounded-4xl group-hover:-translate-y-2">
                   <div className="relative aspect-16/10 overflow-hidden">
                     <Image
                       src={car.coverImageUrl}
@@ -52,7 +52,7 @@ export default async function CarsGalleryPage() {
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                    <div className="absolute inset-0 bg-linear-to-t from-zinc-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                     
                     <div className="absolute top-4 right-4">
                       <Badge className="bg-white/10 backdrop-blur-md border-white/20 text-white font-bold h-9 px-4 rounded-2xl">
@@ -64,16 +64,16 @@ export default async function CarsGalleryPage() {
                   </div>
                   
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-emerald-500 transition-colors">
+                    <h3 className="text-xl font-black text-zinc-900 dark:text-white mb-2 group-hover:text-emerald-500 transition-colors">
                       {car.title}
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
                       {car.description}
                     </p>
                   </CardContent>
                   
                   <CardFooter className="p-6 pt-0 flex items-center justify-between text-sm">
-                    <span className="text-slate-400 font-medium">
+                    <span className="text-zinc-400 font-medium">
                       {new Date(car.createdAt!).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long' })}
                     </span>
                     <div className="flex items-center gap-1 text-emerald-500 font-bold group-hover:gap-2 transition-all">
@@ -86,10 +86,10 @@ export default async function CarsGalleryPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-32 text-center bg-slate-50 dark:bg-slate-800/20 rounded-5xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-            <Camera className="w-20 h-20 text-slate-300 mb-6" />
-            <h2 className="text-2xl font-bold text-slate-400">سجل الخدمة فارغ حالياً</h2>
-            <p className="text-slate-500 mt-2">سيتم توثيق أولى عمليات الخدمة فور إطلاق المنصة.</p>
+          <div className="flex flex-col items-center justify-center py-32 text-center bg-zinc-50 dark:bg-zinc-800/20 rounded-5xl border-2 border-dashed border-zinc-200 dark:border-zinc-800">
+            <Camera className="w-20 h-20 text-zinc-300 mb-6" />
+            <h2 className="text-2xl font-bold text-zinc-400">سجل الخدمة فارغ حالياً</h2>
+            <p className="text-zinc-500 mt-2">سيتم توثيق أولى عمليات الخدمة فور إطلاق المنصة.</p>
           </div>
         )}
       </div>

@@ -1,7 +1,7 @@
 import { Hero } from "@/features/landing/components/Hero";
 import { Services } from "@/features/landing/components/Services";
-import { UvInspection } from "@/features/landing/components/UvInspection";
 import { Process } from "@/features/landing/components/Process";
+import { FAQ } from "@/features/landing/components/FAQ";
 import { CTA } from "@/features/landing/components/CTA";
 import { LocationSection } from "@/features/landing/components/LocationSection";
 import { ComingSoon } from "@/features/maintenance/components/ComingSoon";
@@ -17,8 +17,8 @@ export default function Home() {
     <main dir="rtl" className="overflow-x-hidden pb-10">
       <Hero />
       <Services />
-      <UvInspection />
       <Process />
+      <FAQ />
       <CTA />
       <LocationSection />
     </main>

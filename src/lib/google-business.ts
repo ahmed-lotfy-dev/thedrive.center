@@ -13,8 +13,11 @@ export const BUSINESS_ADDRESS =
 export const BUSINESS_CITY = process.env.NEXT_PUBLIC_BUSINESS_CITY || "المحلة الكبرى";
 export const BUSINESS_REGION = process.env.NEXT_PUBLIC_BUSINESS_REGION || "المحلة الكبرى";
 
+export const BUSINESS_PHONE = "01017131414";
+export const BUSINESS_PHONE_WHATSAPP = "201017131414";
+
 export const FACEBOOK_URL = process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://facebook.com/";
-export const TIKTOK_URL = process.env.NEXT_PUBLIC_TIKTOK_URL || "https://www.tiktok.com/";
+export const TIKTOK_URL = process.env.NEXT_PUBLIC_TIKTOK_URL || "https://www.tiktok.com/@thedrive";
 export const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/";
 
 export function getDirectionsUrl() {

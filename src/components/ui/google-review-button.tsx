@@ -17,7 +17,7 @@ export function GoogleReviewButton() {
       href={reviewUrl} 
       target="_blank" 
       rel="noopener noreferrer"
-      className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 bg-blue-600 rounded-xl hover:bg-blue-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 bg-emerald-600 rounded-xl hover:bg-emerald-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
     >
       <Star className="w-5 h-5 fill-yellow-400 stroke-yellow-400" />
       <span>Review us on Google</span>

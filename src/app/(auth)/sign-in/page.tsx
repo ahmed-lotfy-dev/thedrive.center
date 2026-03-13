@@ -17,12 +17,12 @@ export default function AuthPage() {
       
       <div className="absolute inset-0 pointer-events-none -z-10">
         <div className="absolute top-[-5%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 dark:bg-emerald-500/20 blur-[130px] rounded-full" />
-        <div className="absolute bottom-[-5%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/10 dark:bg-cyan-500/20 blur-[130px] rounded-full" />
+        <div className="absolute bottom-[-5%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 dark:bg-emerald-500/20 blur-[130px] rounded-full" />
       </div>
 
       <div className="w-full max-w-md relative pt-32 md:pt-48 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
         {/* Glow effect behind card */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 blur-3xl rounded-[3rem] -z-10 opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 blur-3xl rounded-[3rem] -z-10 opacity-60" />
 
         <div className="relative">
           <Card className="w-full bg-white/40 dark:bg-black/40 backdrop-blur-2xl border-white/40 dark:border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] rounded-[2.5rem] overflow-hidden select-none">

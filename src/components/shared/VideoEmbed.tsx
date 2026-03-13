@@ -61,7 +61,7 @@ export function VideoEmbed({ url, title }: VideoEmbedProps) {
   }
 
   return (
-    <div className="relative w-full aspect-video rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800">
+    <div className="relative w-full aspect-video rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-800">
       {isLoading && <Skeleton className="absolute inset-0 z-10 w-full h-full" />}
       
       {embedUrl ? (
@@ -74,7 +74,7 @@ export function VideoEmbed({ url, title }: VideoEmbedProps) {
           onLoad={() => setIsLoading(false)}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center h-full p-4 text-center text-slate-500">
+        <div className="flex flex-col items-center justify-center h-full p-4 text-center text-zinc-500">
           <AlertCircle className="w-10 h-10 mb-2 opacity-20" />
           <p className="text-sm">لم نتمكن من معالجة رابط الفيديو</p>
         </div>

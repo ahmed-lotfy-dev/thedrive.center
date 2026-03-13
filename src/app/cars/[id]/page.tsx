@@ -36,22 +36,22 @@ export default async function CarDetailPage({ params }: { params: { id: string }
   if (!car) notFound();
 
   return (
-    <main dir="rtl" className="min-h-screen bg-background pt-32 pb-20">
-      <div className="container mx-auto px-4">
+    <main dir="rtl" className="min-h-screen bg-background pt-24 md:pt-32 pb-20">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Breadcrumbs / Back */}
         <Link 
           href="/cars" 
-          className="inline-flex items-center gap-2 text-emerald-500 font-bold hover:gap-3 transition-all mb-8 group"
+          className="inline-flex items-center gap-2 text-emerald-500 font-bold hover:gap-3 transition-all mb-6 md:mb-10 group bg-emerald-500/5 px-4 py-2 rounded-xl border border-emerald-500/10"
         >
-          <ArrowLeft className="w-5 h-5" />
-          <span>العودة لسجل الخدمة</span>
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm">العودة لسجل الخدمة</span>
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
           {/* Left Column: Media */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-10">
             {/* Main Featured Image */}
-            <div className="relative aspect-video w-full rounded-5xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div className="relative aspect-video w-full rounded-3xl md:rounded-5xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800">
               <Image
                 src={car.coverImageUrl}
                 alt={car.title}
@@ -72,7 +72,7 @@ export default async function CarDetailPage({ params }: { params: { id: string }
             {/* Video Section if available */}
             {car.videoUrl && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <h3 className="text-2xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
                    <div className="w-2 h-8 bg-emerald-500 rounded-full" />
                    فيديو العمل بالمركز
                 </h3>
@@ -83,13 +83,13 @@ export default async function CarDetailPage({ params }: { params: { id: string }
             {/* Gallery Section */}
             {car.media && car.media.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <h3 className="text-2xl font-black text-zinc-900 dark:text-white flex items-center gap-2">
                    <div className="w-2 h-8 bg-emerald-500 rounded-full" />
                    توثيق الصور (Gallery)
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {car.media.map((item) => (
-                    <div key={item.id} className="relative aspect-square rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:scale-105 transition-transform duration-500 cursor-zoom-in">
+                    <div key={item.id} className="relative aspect-square rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:scale-105 transition-transform duration-500 cursor-zoom-in">
                        <Image
                          src={item.url}
                          alt="صورة العمل"
@@ -106,13 +106,13 @@ export default async function CarDetailPage({ params }: { params: { id: string }
 
           {/* Right Column: Info */}
           <div className="lg:col-span-4 space-y-8">
-            <div className="bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 p-8 rounded-5xl sticky top-32">
-              <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-4 leading-tight">
+            <div className="bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 p-6 md:p-8 rounded-3xl md:rounded-5xl lg:sticky lg:top-32 shadow-xl shadow-zinc-200/50 dark:shadow-none">
+              <h1 className="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white mb-4 leading-tight">
                 {car.title}
               </h1>
               
-              <div className="flex items-center gap-3 text-slate-500 mb-8 pb-8 border-b border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold">
+              <div className="flex items-center gap-3 text-zinc-500 mb-8 pb-8 border-b border-zinc-200 dark:border-zinc-800">
+                <div className="flex items-center gap-1.5 bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-xl text-xs font-bold">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>{new Date(car.createdAt!).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
@@ -120,17 +120,17 @@ export default async function CarDetailPage({ params }: { params: { id: string }
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h4 className="flex items-center gap-2 text-sm font-black text-slate-400 uppercase tracking-widest">
+                  <h4 className="flex items-center gap-2 text-sm font-black text-zinc-400 uppercase tracking-widest">
                     <Info className="w-4 h-4" />
                     تفاصيل الخدمة
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+                  <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-lg">
                     {car.description}
                   </p>
                 </div>
 
-                <div className="pt-8 border-t border-slate-200 dark:border-slate-800 space-y-4">
-                   <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest">مشاركة الصفحة</h4>
+                <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800 space-y-4">
+                   <h4 className="text-sm font-black text-zinc-400 uppercase tracking-widest">مشاركة الصفحة</h4>
                    <div className="flex gap-4">
                       <Button variant="outline" size="icon" className="w-12 h-12 rounded-2xl">
                          <Facebook className="w-5 h-5" />

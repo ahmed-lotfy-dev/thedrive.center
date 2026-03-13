@@ -29,91 +29,91 @@ export function OnboardingForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="make" className="text-base font-bold text-slate-700 dark:text-slate-300">ماركة السيارة</Label>
+          <Label htmlFor="make" className="text-base font-bold text-zinc-700 dark:text-zinc-300">ماركة السيارة</Label>
           <Input 
             id="make" 
             name="make" 
             placeholder="مثل: Toyota" 
             required 
-            className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-emerald-500 rounded-xl"
+            className="h-12 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:ring-emerald-500 rounded-xl"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="model" className="text-base font-bold text-slate-700 dark:text-slate-300">الموديل</Label>
+          <Label htmlFor="model" className="text-base font-bold text-zinc-700 dark:text-zinc-300">الموديل</Label>
           <Input 
             id="model" 
             name="model" 
             placeholder="مثل: Corolla" 
             required 
-            className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-emerald-500 rounded-xl"
+            className="h-12 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:ring-emerald-500 rounded-xl"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="year" className="text-base font-bold text-slate-700 dark:text-slate-300">سنة الصنع</Label>
+          <Label htmlFor="year" className="text-base font-bold text-zinc-700 dark:text-zinc-300">سنة الصنع</Label>
           <Input 
             id="year" 
             name="year" 
             type="number" 
             placeholder="2024" 
-            className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-emerald-500 rounded-xl"
+            className="h-12 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:ring-emerald-500 rounded-xl"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="color" className="text-base font-bold text-slate-700 dark:text-slate-300">اللون</Label>
+          <Label htmlFor="color" className="text-base font-bold text-zinc-700 dark:text-zinc-300">اللون</Label>
           <Input 
             id="color" 
             name="color" 
             placeholder="أسود، فضي..." 
-            className="h-12 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:ring-emerald-500 rounded-xl"
+            className="h-12 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:ring-emerald-500 rounded-xl"
           />
         </div>
       </div>
 
       <div className="space-y-4">
-        <Label htmlFor="plateNumber" className="text-base font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
+        <Label htmlFor="plateNumber" className="text-base font-black text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
           <Fingerprint className="w-5 h-5 text-emerald-500" />
           رقم اللوحة (مصري)
         </Label>
         
-        <div className="flex flex-col items-center gap-4 p-8 bg-slate-50/50 dark:bg-slate-800/20 backdrop-blur-sm rounded-4xl border border-slate-200/60 dark:border-slate-800/60 transition-all shadow-inner relative overflow-hidden group">
+        <div className="flex flex-col items-center gap-4 p-8 bg-zinc-50/50 dark:bg-zinc-800/20 backdrop-blur-sm rounded-4xl border border-zinc-200/60 dark:border-zinc-800/60 transition-all shadow-inner relative overflow-hidden group">
           <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none" />
           <div className="flex items-center gap-2 group" dir="rtl">
             {/* Letters Portion - Should be on the RIGHT in RTL flow */}
             <div className="space-y-2">
-              <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-black text-center">الحروف</p>
+              <p className="text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-black text-center">الحروف</p>
               <InputOTP
                 maxLength={3}
                 value={plateLetters}
                 onChange={setPlateLetters}
               >
                 <InputOTPGroup>
-                  <InputOTPSlot index={0} className="font-bold text-xl bg-white dark:bg-slate-900" />
-                  <InputOTPSlot index={1} className="font-bold text-xl bg-white dark:bg-slate-900" />
-                  <InputOTPSlot index={2} className="font-bold text-xl bg-white dark:bg-slate-900" />
+                  <InputOTPSlot index={0} className="font-bold text-xl bg-white dark:bg-zinc-900" />
+                  <InputOTPSlot index={1} className="font-bold text-xl bg-white dark:bg-zinc-900" />
+                  <InputOTPSlot index={2} className="font-bold text-xl bg-white dark:bg-zinc-900" />
                 </InputOTPGroup>
               </InputOTP>
             </div>
 
             <div className="mt-6 flex items-center justify-center w-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-600" />
+              <div className="w-1.5 h-1.5 rounded-full bg-zinc-400 dark:bg-zinc-600" />
             </div>
 
             {/* Numbers Portion - Should be on the LEFT in RTL flow */}
             <div className="space-y-2">
-              <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-black text-center">الأرقام</p>
+              <p className="text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-black text-center">الأرقام</p>
               <InputOTP
                 maxLength={4}
                 value={plateNumbers}
                 onChange={setPlateNumbers}
               >
                 <InputOTPGroup>
-                  <InputOTPSlot index={0} className="font-bold text-xl bg-white dark:bg-slate-900" />
-                  <InputOTPSlot index={1} className="font-bold text-xl bg-white dark:bg-slate-900" />
-                  <InputOTPSlot index={2} className="font-bold text-xl bg-white dark:bg-slate-900" />
-                  <InputOTPSlot index={3} className="font-bold text-xl bg-white dark:bg-slate-900" />
+                  <InputOTPSlot index={0} className="font-bold text-xl bg-white dark:bg-zinc-900" />
+                  <InputOTPSlot index={1} className="font-bold text-xl bg-white dark:bg-zinc-900" />
+                  <InputOTPSlot index={2} className="font-bold text-xl bg-white dark:bg-zinc-900" />
+                  <InputOTPSlot index={3} className="font-bold text-xl bg-white dark:bg-zinc-900" />
                 </InputOTPGroup>
               </InputOTP>
             </div>
@@ -126,13 +126,13 @@ export function OnboardingForm() {
             required
           />
           
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
             يرجى إدخال الحروف بالترتيب (مثال: ع م ب) ثم الأرقام.
           </p>
         </div>
       </div>
 
-      <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+      <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800">
         <Button 
           type="submit" 
           disabled={isPending}
@@ -143,7 +143,7 @@ export function OnboardingForm() {
         </Button>
       </div>
 
-      <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-sm italic">
+      <div className="flex items-center justify-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm italic">
         <ShieldCheck className="w-4 h-4" />
         <span>بياناتك محمية ومشفرة وفق أعلى المعايير.</span>
       </div>

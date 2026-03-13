@@ -26,7 +26,7 @@ export function SignInForm({ onSwitch }: SignInFormProps) {
   return (
     <>
       <CardHeader className="text-center pb-4">
-        <CardTitle className="text-3xl font-black tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-l from-emerald-600 to-cyan-600 dark:from-emerald-400 dark:to-cyan-400">
+        <CardTitle className="text-3xl font-black tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-l from-emerald-600 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400">
           تـسـجيـل الـدخول
         </CardTitle>
       </CardHeader>
@@ -45,7 +45,7 @@ export function SignInForm({ onSwitch }: SignInFormProps) {
         <CredentialsSignIn />
       </CardContent>
 
-      <CardFooter className="flex flex-col items-center gap-4 py-6 border-t border-border/40 bg-slate-50/30 dark:bg-slate-900/30">
+      <CardFooter className="flex flex-col items-center gap-4 py-6 border-t border-border/40 bg-zinc-50/30 dark:bg-zinc-900/30">
         <Button 
           variant="link" 
           onClick={onSwitch} 

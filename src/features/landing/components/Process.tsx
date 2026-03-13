@@ -1,11 +1,14 @@
 "use client";
 
 import { Timer, CheckCircle2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const steps = [
   "استقبال العربية وتسجيل بياناتها بدقة.",
-  "فحص الزوايا والترصيص بأجهزة معايرة حديثة.",
-  "تسليم تقرير واضح مع توصيات عملية.",
+  "فحص الزوايا والترصيص والبدء في الكشف الشامل.",
+  "فحص هيكل السيارة بأحدث الأجهزة (UV والجهاز الرقمي).",
+  "تسليم تقرير مفصل يوضح أي خبطات أو رش أو تصليحات سابقة بكل شفافية.",
 ];
 
 const strengths = [
@@ -17,32 +20,48 @@ const strengths = [
 
 export function Process() {
   return (
-    <section className="container mx-auto px-4 pb-8" data-animate>
-      <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-        <div className="surface-soft p-8 md:p-10">
-          <p className="text-sm font-semibold text-accent">طريقة الشغل</p>
-          <h2 className="mt-2 text-3xl font-semibold md:text-4xl">فحص منظم خطوة بخطوة</h2>
-          <div className="mt-6 space-y-3">
+    <section className="container mx-auto px-4 py-12 md:py-20" data-animate>
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* How we work */}
+        <div className="relative group overflow-hidden p-8 md:p-12 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/10">
+          <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold mb-4">
+            طريقة الشغل
+          </Badge>
+          <h2 className="text-3xl font-black text-zinc-900 dark:text-white mb-8">فحص منظم خطوة بخطوة</h2>
+          <div className="space-y-4">
             {steps.map((step, i) => (
-              <p key={step} className={`surface reveal inline-flex w-full items-center gap-2 p-3 text-sm md:text-base ${i === 0 ? "delay-1" : i === 1 ? "delay-2" : "delay-3"}`}>
-                <Timer className="size-4 text-accent" />
-                {step}
-              </p>
+              <div key={step} className={cn(
+                "flex items-center gap-4 p-4 rounded-2xl bg-zinc-100/50 dark:bg-zinc-800/50 hover:bg-emerald-500/5 transition-colors border border-transparent hover:border-emerald-500/10",
+                i === 0 ? "delay-100" : i === 1 ? "delay-200" : "delay-300"
+              )}>
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/20">
+                  {i + 1}
+                </div>
+                <p className="text-sm md:text-base font-medium text-zinc-700 dark:text-zinc-300">{step}</p>
+              </div>
             ))}
           </div>
         </div>
 
-        <div className="surface p-8 md:p-10">
-          <p className="text-sm font-semibold text-accent">ليه تختارنا</p>
-          <h2 className="mt-2 text-3xl font-semibold md:text-4xl">خدمة احترافية بتفاصيل تفرق</h2>
-          <div className="mt-6 space-y-3">
+        {/* Why us */}
+        <div className="relative group overflow-hidden p-8 md:p-12 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white transition-all duration-500 shadow-xl dark:shadow-2xl">
+          <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-500/20 dark:border-emerald-400/20 bg-emerald-500/5 dark:bg-emerald-400/5 px-4 h-8 rounded-full font-bold mb-4">
+            ليه تختارنا
+          </Badge>
+          <h2 className="text-3xl font-black mb-8">خدمة احترافية بتفاصيل تفرق</h2>
+          <div className="space-y-4">
             {strengths.map((item, i) => (
-              <p key={item} className={`reveal inline-flex items-center gap-2 text-sm text-muted-foreground md:text-base ${i === 0 ? "delay-1" : i === 1 ? "delay-2" : "delay-3"}`}>
-                <CheckCircle2 className="size-4 text-accent" />
-                {item}
-              </p>
+              <div key={item} className={cn(
+                "flex items-center gap-4 p-4 rounded-2xl bg-zinc-50 dark:bg-white/5 hover:bg-emerald-500/5 transition-colors border border-transparent hover:border-emerald-500/20",
+                i === 0 ? "delay-100" : i === 1 ? "delay-200" : "delay-300"
+              )}>
+                <CheckCircle2 className="size-6 text-emerald-500 dark:text-emerald-400 shrink-0" />
+                <p className="text-sm md:text-base font-medium text-zinc-700 dark:text-zinc-300">{item}</p>
+              </div>
             ))}
           </div>
+          
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full" />
         </div>
       </div>
     </section>
