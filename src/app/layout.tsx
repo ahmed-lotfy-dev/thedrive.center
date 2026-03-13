@@ -81,7 +81,6 @@ export const metadata: Metadata = {
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { GlobalScrollEffects } from "@/components/animations/GlobalScrollEffects";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
@@ -119,7 +118,6 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <GlobalScrollEffects />
           {!isMaintenanceMode && <Navbar />}
           <script
             type="application/ld+json"
