@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     // Signed URL valid for 5 minutes
     const signedUrl = await getSignedUrl(r2, command, { expiresIn: 300 });
 
-    const publicUrl = `${process.env.R2_PUBLIC_URL}/${uniqueFilename}`;
+    const publicUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${uniqueFilename}`;
 
     return NextResponse.json({
       uploadUrl: signedUrl,

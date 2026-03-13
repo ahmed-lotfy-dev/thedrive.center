@@ -12,6 +12,8 @@ import {
   TIKTOK_URL,
   getDirectionsUrl,
   getReviewsUrl,
+  GOOGLE_RATING,
+  GOOGLE_REVIEWS_COUNT,
 } from "@/lib/google-business";
 import { ArrowUpRight, Clock3, Facebook, MapPin, Music2, Phone, Star } from "lucide-react";
 
@@ -89,9 +91,9 @@ export function Footer() {
             <div className="flex flex-wrap gap-3">
               <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-black hover:text-white transition-all h-11 w-11 p-0 border-white/10">
                 <Link href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" title="تيك توك">
-                   <svg viewBox="0 0 24 24" fill="currentColor" className="size-5">
-                      <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/>
-                   </svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                    <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
+                  </svg>
                 </Link>
               </Button>
               <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-[#1877F2] hover:text-white transition-all h-11 w-11 p-0 border-white/10">
@@ -101,50 +103,60 @@ export function Footer() {
               </Button>
               <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-linear-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white transition-all h-11 w-11 p-0 border-white/10">
                 <Link href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" title="انستجرام">
-                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-5">
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                   </svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-5">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
                 </Link>
               </Button>
             </div>
-            
+
             <div className="pt-6 border-t border-border/10">
-               <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400">
-                  <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-black tracking-widest uppercase">Verified Business</span>
-               </div>
+              <Link 
+                href={getReviewsUrl()} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group/google flex flex-col gap-2 p-3 rounded-2xl bg-zinc-950/5 dark:bg-white/5 border border-transparent hover:border-emerald-500/20 hover:bg-emerald-500/5 transition-all"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="size-3.5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <span className="text-sm font-black text-foreground">{GOOGLE_RATING}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="size-4 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="white" className="size-2.5">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                    Google Business Verified • {GOOGLE_REVIEWS_COUNT}+ Reviews
+                  </span>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
       <div className="border-t border-border/50 py-6">
-        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-muted-foreground">
-          <p>© {new Date().getFullYear()} {GOOGLE_BUSINESS_NAME}. جميع الحقوق محفوظة.</p>
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-             <div className="flex items-center gap-4">
-                <span>المحلة الكبرى - مصر</span>
-                <span className="h-4 w-px bg-border/50 hidden md:block" />
-                <p className="flex items-center gap-1 group">
-                  <span>صنع بشغف في</span>
-                  <span className="text-emerald-500 font-bold group-hover:scale-110 transition-transform">Egypt</span>
-                </p>
-             </div>
-             
-             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950/5 dark:bg-white/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all group">
-                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Designed & Developed by</span>
-                <Link 
-                  href="https://github.com/ahmed-shoman-dev" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-foreground dark:text-white font-black hover:text-emerald-500 transition-colors flex items-center gap-1"
-                >
-                  Ahmed Shoman
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all -translate-y-0.5" />
-                </Link>
-             </div>
+        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-[10px] md:text-xs font-medium text-muted-foreground text-center">
+          <p>© {new Date().getFullYear()} The Drive Center. جميع الحقوق محفوظة.</p>
+          <span className="h-3 w-px bg-border/50 hidden md:block" />
+          <div className="flex items-center gap-1 group">
+             <span className="opacity-60">Designed & Developed by</span>
+             <Link
+               href="https://ahmedlotfy.site"
+               target="_blank"
+               rel="noopener noreferrer"
+               className="text-foreground dark:text-white font-black hover:text-emerald-500 transition-colors"
+             >
+               Ahmed Shoman
+             </Link>
           </div>
         </div>
       </div>

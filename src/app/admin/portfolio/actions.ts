@@ -6,8 +6,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import crypto from "crypto";
+import { eq } from "drizzle-orm";
 
 const carSchema = z.object({
+  id: z.string().optional(),
   title: z.string().min(3, "العنوان مطلوب"),
   description: z.string().min(10, "الوصف مطلوب"),
   coverImageUrl: z.string().url("رابط الصورة الغلاف غير صحيح"),
@@ -67,6 +69,67 @@ export async function createPortfolioEntry(formData: FormData) {
   revalidatePath("/cars");
   revalidatePath("/admin/portfolio");
   revalidatePath("/sitemap.xml");
+  
+  redirect("/admin/portfolio");
+}
+
+export async function deletePortfolioEntry(id: string) {
+  try {
+    await db.delete(cars).where(eq(cars.id, id));
+    revalidatePath("/cars");
+    revalidatePath("/admin/portfolio");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to delete portfolio entry:", error);
+    return { error: "فشل في حذف العمل" };
+  }
+}
+
+export async function updatePortfolioEntry(id: string, formData: FormData) {
+  const result = carSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+    coverImageUrl: formData.get("coverImageUrl"),
+    videoUrl: formData.get("videoUrl"),
+    serviceType: formData.get("serviceType"),
+    galleryUrls: formData.get("galleryUrls"),
+  });
+
+  if (!result.success) {
+    return { error: result.error.flatten().fieldErrors };
+  }
+
+  const { galleryUrls, title, ...carData } = result.data;
+
+  // 1. Update the main car entry
+  await db.update(cars)
+    .set({
+      ...carData,
+      title,
+      updatedAt: new Date(),
+    })
+    .where(eq(cars.id, id));
+
+  // 2. Update gallery images
+  // Simplest approach: delete existing media and re-insert
+  await db.delete(carMedia).where(eq(carMedia.carId, id));
+  
+  if (galleryUrls) {
+    const urls = galleryUrls.split(",").map(u => u.trim()).filter(Boolean);
+    if (urls.length > 0) {
+      const mediaData = urls.map((url, index) => ({
+        carId: id,
+        url,
+        type: "image",
+        order: index,
+      }));
+      await db.insert(carMedia).values(mediaData);
+    }
+  }
+
+  revalidatePath("/cars");
+  revalidatePath(`/cars/${id}`); // Potentially need to find the slug, but revalidatePath is fine with IDs or we can just revalidate all
+  revalidatePath("/admin/portfolio");
   
   redirect("/admin/portfolio");
 }

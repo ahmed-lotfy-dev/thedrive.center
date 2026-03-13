@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Camera, ArrowLeft } from "lucide-react";
+import { PortfolioCar } from "@/types/portfolio";
 
 export const metadata = {
   title: "سجل التميز | The Drive Center",
@@ -15,7 +16,7 @@ export const metadata = {
 export default async function CarsGalleryPage() {
   const allCars = await db.query.cars.findMany({
     orderBy: [desc(cars.createdAt)],
-  });
+  }) as PortfolioCar[];
 
   return (
     <main dir="rtl" className="min-h-screen bg-background pt-24 md:pt-32 pb-20">

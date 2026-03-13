@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 interface VideoEmbedProps {
   url: string;
@@ -61,15 +62,20 @@ export function VideoEmbed({ url, title }: VideoEmbedProps) {
   }
 
   return (
-    <div className="relative w-full aspect-video rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-800">
+    <div className={cn(
+      "relative w-full rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-800 mx-auto",
+      platform === "tiktok" ? "aspect-9/16 max-w-[400px]" : "aspect-video"
+    )}>
       {isLoading && <Skeleton className="absolute inset-0 z-10 w-full h-full" />}
-      
+
       {embedUrl ? (
         <iframe
           src={embedUrl}
           title={title || "فيديو من ذا درايف"}
           className="absolute inset-0 w-full h-full border-0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-presentation"
+          referrerPolicy="no-referrer-when-downgrade"
           allowFullScreen
           onLoad={() => setIsLoading(false)}
         />

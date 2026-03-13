@@ -1,5 +1,5 @@
 export const GOOGLE_BUSINESS_NAME =
-  process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_NAME || "The Drive Center - لضبط الزوايا والترصيص";
+  process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_NAME || "The Drive Center";
 
 export const GOOGLE_PLACE_ID = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID || "";
 export const GOOGLE_PLACE_URL = process.env.NEXT_PUBLIC_GOOGLE_PLACE_URL || "";
@@ -12,6 +12,9 @@ export const BUSINESS_ADDRESS =
 
 export const BUSINESS_CITY = process.env.NEXT_PUBLIC_BUSINESS_CITY || "المحلة الكبرى";
 export const BUSINESS_REGION = process.env.NEXT_PUBLIC_BUSINESS_REGION || "المحلة الكبرى";
+
+export const GOOGLE_RATING = "4.9";
+export const GOOGLE_REVIEWS_COUNT = "180";
 
 export const BUSINESS_PHONE = "01017131414";
 export const BUSINESS_PHONE_WHATSAPP = "201017131414";
