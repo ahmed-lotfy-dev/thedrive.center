@@ -1,5 +1,8 @@
-﻿"use server";
+"use server";
 
+import { db } from "@/db";
+import { customerCars } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { z } from "zod";
@@ -14,7 +17,7 @@ const appointmentSchema = z.object({
   machineType: z.string().min(1, "Vehicle type is required"),
   date: z.string().min(1, "Date is required"),
   notes: z.string().optional(),
-  address: z.string().min(1, "Address is required"),
+  plateNumber: z.string().min(1, "Plate number is required"),
 });
 
 function isAdminRole(role?: string) {
@@ -36,7 +39,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
       };
     }
 
-    const appointmentData = {
+    const appointmentData: any = {
       userId: session?.user?.id || null,
       guestName: session?.user?.name || validated.guestName || null,
       guestEmail: validated.guestEmail || session?.user?.email || null,
@@ -45,8 +48,39 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
       machineType: validated.machineType,
       date: new Date(validated.date),
       notes: validated.notes || null,
-      address: validated.address,
     };
+
+    const cleanPlateNumber = validated.plateNumber.replace(/\s+/g, "").toUpperCase();
+    
+    let car = await db.query.customerCars.findFirst({
+      where: eq(customerCars.plateNumber, cleanPlateNumber),
+    });
+
+    if (!car) {
+      const [newCar] = await db.insert(customerCars).values({
+        plateNumber: cleanPlateNumber,
+        make: "سيارة", 
+        model: validated.machineType, 
+        userId: session?.user?.id || null,
+        status: "active",
+      }).returning();
+      car = newCar;
+    } else {
+      // If car exists but is archived, reactivate it
+      if (car.status === "archived") {
+        await db.update(customerCars)
+          .set({ status: "active" })
+          .where(eq(customerCars.id, car.id));
+      }
+
+      if (!car.userId && session?.user?.id) {
+        await db.update(customerCars)
+          .set({ userId: session.user.id })
+          .where(eq(customerCars.id, car.id));
+      }
+    }
+
+    appointmentData.carId = car.id;
 
     const appointment = await appointmentQueries.create(appointmentData);
 
@@ -56,7 +90,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     return {
       success: true,
       data: appointment,
-      message: "Appointment booked successfully",
+      message: "تم حجز الموعد بنجاح",
     };
   } catch (error) {
     console.error("Error creating appointment:", error);
@@ -68,7 +102,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     }
     return {
       success: false,
-      error: "Failed to book appointment",
+      error: "فشل حجز الموعد، يرجى المحاولة مرة أخرى",
     };
   }
 }
@@ -117,6 +151,7 @@ export async function updateAppointmentStatus(id: string, status: string) {
     }
 
     const updated = await appointmentQueries.updateStatus(id, status);
+    revalidatePath("/admin/appointments");
 
     return {
       success: true,
@@ -128,6 +163,36 @@ export async function updateAppointmentStatus(id: string, status: string) {
     return {
       success: false,
       error: "Failed to update appointment",
+    };
+  }
+}
+
+export async function deleteAppointmentAction(id: string) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    const userRole = (session?.user as { role?: string } | undefined)?.role;
+    if (!session?.user || !isAdminRole(userRole)) {
+      return {
+        success: false,
+        error: "Unauthorized",
+      };
+    }
+
+    await appointmentQueries.delete(id);
+    revalidatePath("/admin/appointments");
+
+    return {
+      success: true,
+      message: "Appointment deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting appointment:", error);
+    return {
+      success: false,
+      error: "Failed to delete appointment",
     };
   }
 }

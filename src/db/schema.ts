@@ -76,9 +76,6 @@ export const appointments = pgTable("appointments", {
   date: timestamp("date").notNull(),
   status: text("status").default("pending"),
   notes: text("notes"),
-  address: text("address").notNull(),
-  latitude: decimal("latitude"),
-  longitude: decimal("longitude"),
   technicianId: uuid("technician_id").references(() => user.id),
   estimatedPrice: decimal("estimated_price", { precision: 10, scale: 2 }),
   actualPrice: decimal("actual_price", { precision: 10, scale: 2 }),
@@ -119,16 +116,31 @@ export const advices = pgTable("advices", {
 
 export const customerCars = pgTable("customer_cars", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").references(() => user.id, { onDelete: "cascade" }), // Nullable to allow admin entry
   make: text("make").notNull(),
   model: text("model").notNull(),
   year: integer("year"),
   plateNumber: text("plate_number").notNull().unique(),
   color: text("color"),
+  nextServiceDate: timestamp("next_service_date"),
+  nextServiceOdometer: integer("next_service_odometer"),
+  nextAlignmentDate: timestamp("next_alignment_date"),
+  status: text("status").default("active").notNull(), // 'active', 'archived'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const serviceRecords = pgTable("service_records", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  carId: uuid("car_id")
+    .notNull()
+    .references(() => customerCars.id, { onDelete: "cascade" }),
+  serviceDate: timestamp("service_date").notNull().defaultNow(),
+  serviceType: text("service_type").notNull(), // e.g. 'Oil Change', 'Alignment'
+  description: text("description"),
+  odometer: integer("odometer"),
+  cost: decimal("cost", { precision: 10, scale: 2 }),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 import { relations } from "drizzle-orm";
@@ -141,5 +153,37 @@ export const carMediaRelations = relations(carMedia, ({ one }) => ({
   car: one(cars, {
     fields: [carMedia.carId],
     references: [cars.id],
+  }),
+}));
+
+export const appointmentsRelations = relations(appointments, ({ one }) => ({
+  user: one(user, {
+    fields: [appointments.userId],
+    references: [user.id],
+  }),
+  car: one(customerCars, {
+    fields: [appointments.carId],
+    references: [customerCars.id],
+  }),
+}));
+
+export const userRelations = relations(user, ({ many }) => ({
+  appointments: many(appointments),
+  cars: many(customerCars),
+}));
+
+export const customerCarsRelations = relations(customerCars, ({ many, one }) => ({
+  serviceRecords: many(serviceRecords),
+  user: one(user, {
+    fields: [customerCars.userId],
+    references: [user.id],
+  }),
+  appointments: many(appointments),
+}));
+
+export const serviceRecordsRelations = relations(serviceRecords, ({ one }) => ({
+  car: one(customerCars, {
+    fields: [serviceRecords.carId],
+    references: [customerCars.id],
   }),
 }));
