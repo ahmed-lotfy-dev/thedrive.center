@@ -1,27 +1,63 @@
-# Case Study: The Drive Center - Elevating Automotive Digital Experiences
+# Case Study: The Drive Center
 
-## 1. The Challenge (The "Why")
-Traditional automotive service centers often rely on outdated manual systems or clunky, generic software that fails to match the premium quality of their physical work. Owners of high-end vehicles expect a digital experience that mirrors the precision and care they receive in the garage. 
+**Category**: Automotive Service / SaaS Platform
+**Type**: Full-Stack Web Application
+**Stack**: Next.js 16 · TypeScript · PostgreSQL · Drizzle ORM · Tailwind CSS · Cloudflare R2
 
-**The Drive Center** was built to solve this by providing a unified, high-performance platform that manages complex operations while offering a "Pro Max" user interface.
+---
 
-## 2. The Solution (The "What")
-We developed a comprehensive automotive management ecosystem that handles everything from the first customer touchpoint to the long-term maintenance lifecycle.
+## The Problem
 
-- **For the User**: A frictionless, beautiful booking engine that recognizes their car and provides instant access to their service history.
-- **For the Business**: A sophisticated Command Center that tracks appointments, manages a professional vehicle CRM, and provides deep insights into the service record of every client car.
-- **For the Brand**: A cinematic portfolio system that showcases finished projects in high-definition, building trust and authority in the elite automotive market.
+The Drive Center is a specialized car service center in **Al Mahalla Al Kubra, Gharbia Governorate, Egypt** — the city's number-one destination for wheel alignment, balancing, and pre-purchase vehicle inspection. Despite the quality of their service, all operations were manual: appointments by phone, car records on paper, and no digital showcase of their work.
 
-## 3. The Execution (The "How")
+The result: missed bookings, zero service history traceability, and no online presence that matched the quality of their physical work.
 
-### Engineering Excellence
-The platform is built on **Next.js 15**, utilizing **Server Actions** for lightning-fast performance and **Drizzle ORM** for a rock-solid data foundation. We implemented **Better Auth** to provide secure, seamless entry for both clients and administrators.
+---
 
-### Design Innovation ("Pro Max")
-We moved beyond standard dark modes to an **OLED Black** aesthetic, utilizing **glassmorphism** and high-contrast semantic tokens. Every interaction is enhanced with micro-animations—from the GSAP-powered car scroll on the landing page to the fluid Framer Motion transitions in the dashboard.
+## What I Built
 
-### Operational Power
-The Admin Portal isn't just a dashboard; it's a professional tool. We engineered specialized components like the `LicensePlateInput` and the unified `ServiceSelect` to ensure data integrity and a consistent user experience project-wide.
+A complete operational web platform replacing all manual processes with a premium digital experience:
 
-## 4. The Impact
-The result is more than just a website; it's a digital extension of the service center's excellence. It significantly reduces administrative overhead, ensures no appointment is missed, and provides customers with a transparent, premium feeling of care for their most valued assets.
+**For clients:**
+- Online appointment booking with Arabic license plate recognition, service type selection, and date scheduling — no account required
+- A cinematic portfolio gallery ("سجل التميز") showcasing finished work with hi-res images and video per car
+- A personal garage dashboard to track their vehicle's service history (in development)
+
+**For the admin team:**
+- A full appointments control panel — view, confirm, update status, and delete bookings
+- A vehicle CRM tracking every car by plate number, linked to its complete service history (dates, costs, odometer)
+- Content management for the portfolio and client advice tips
+
+---
+
+## Services Managed by the Platform
+
+| Service | Arabic |
+|---|---|
+| Wheel Alignment & Balancing | ضبط زوايا وترصيص |
+| Comprehensive Pre-Purchase Inspection | فحص شامل |
+| Power Steering Coding | تكويد طارة |
+| Suspension Repair | إصلاح عفشة |
+| Tire Service | خدمة إطارات |
+
+---
+
+## Technical Decisions
+
+**Self-hosted infrastructure (no vendor lock-in):**
+The entire system — app server and PostgreSQL database — runs on a private VPS managed via **Dokploy** (Docker-based PaaS). This keeps infrastructure costs low and data fully on-premise. Deployments are automated on every push to `main`.
+
+**Server Actions over API routes:**
+All data mutations (create booking, delete car, add service record) use Next.js Server Actions directly, eliminating the need for a traditional REST API layer and reducing latency.
+
+**Media at the edge:**
+Car photos and videos are stored on **Cloudflare R2** (S3-compatible) and delivered globally with zero egress fees.
+
+---
+
+## Business Impact
+
+- Appointments are now captured digitally, with real-time status updates for the admin
+- Every vehicle entering the center gets a permanent, searchable record
+- A professional portfolio increases trust and showcases craftsmanship to potential new clients
+- 4.6/5 on Google with 34+ verified reviews — the platform now reinforces this reputation digitally

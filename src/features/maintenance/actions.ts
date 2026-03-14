@@ -12,8 +12,10 @@ async function isAdmin() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  return session?.user?.role === "admin";
+  const role = (session?.user as { role?: string } | undefined)?.role;
+  return role === "admin" || role === "owner";
 }
+
 
 export async function getUserCars() {
   const session = await auth.api.getSession({

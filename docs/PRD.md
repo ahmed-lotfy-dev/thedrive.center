@@ -1,42 +1,78 @@
-# Project Requirements Document: The Drive Center
+# Project Requirements Document — The Drive Center
 
-## 1. Vision & Purpose
-"The Drive Center" is a premium, "Pro Max" automotive service management platform designed to bridge the gap between high-end automotive care and a sophisticated digital experience. The platform serves two primary audiences:
-- **Clients**: Providing a seamless booking experience and a transparent view of their vehicle's service history.
-- **Administrators**: Offering a powerful suite of tools to manage appointments, track customer vehicles, and showcase the center's elite craftsmanship through a curated portfolio.
+## 1. Business Overview
 
-## 2. Target Audience
-- **Car Enthusiasts & Luxury Vehicle Owners**: Users who demand high-quality maintenance and want a digital record of their car's care.
-- **Service Center Management**: Admins and technicians responsible for day-to-day operations and business growth.
+**The Drive Center** (`المركز الهندسى`) is a specialized automotive service center located at:
+> منشية البكري، ٨ شارع طلعت النجار، **المحلة الكبرى**، محافظة الغربية، مصر
 
-## 3. Core Features
+- **Phone / WhatsApp**: 010 1713 1414
+- **Working Hours**: يومياً ٩ ص – ١٠ م (Daily 9 AM – 10 PM)
+- **Google Rating**: 4.6 / 5 (34+ verified reviews)
+- **TikTok**: @thedrive
+- **Schema Type**: `AutoRepair` (Google Schema.org)
 
-### 3.1 Client Experience
-- **Interactive Booking**: A streamlined, mobile-first booking form with intelligent plate number recognition and service selection.
-- **Garage Dashboard**: (In Development) A personal space for users to manage their registered vehicles and view upcoming service needs.
-- **Portfolio Showcase**: A high-impact, visual gallery of the center's best work, featuring detailed descriptions and media.
+The center is **المركز الأول في المحلة الكبرى** for precision wheel alignment, balancing, and comprehensive pre-sale vehicle inspection using world-class equipment.
 
-### 3.2 Admin Management
-- **Appointment Control Tower**: A central hub to track, update, and manage bookings (Pending, Completed, Cancelled).
-- **Customer Vehicle Database**: A professional CRM for tracking every car that enters the center, linked to specific owners and detailed service histories.
-- **Service Logging**: Tools to record precise work details (odometer readings, costs, technical descriptions) for every visit.
-- **Portfolio Management**: An easy-to-use interface for adding new "Success Stories" with high-quality photos and videos.
+---
 
-### 3.3 Design Philosophy ("Pro Max")
-- **OLED Black Foundation**: A sleek, dark-themed aesthetic optimized for premium displays.
-- **Glassmorphism**: Subtle blur effects and translucency for a modern, high-end feel.
-- **Micro-Animations**: Fluid transitions using GSAP and Framer Motion to enhance the "feeling" of the app.
-- **Semantic Theming**: A robust system-wide theme palette ensuring consistency across all components.
+## 2. Services Offered
+
+These are the exact services taken from `src/lib/constants.ts` and `Services.tsx`:
+
+| Value | Label (Arabic) | Description |
+|---|---|---|
+| `alignment_balancing` | ضبط زوايا وترصيص | Computer-based precision alignment and balancing |
+| `inspection` | فحص شامل | Comprehensive inspection before vehicle purchase/sale |
+| `steering_coding` | تكويد طارة | Electronic power steering programming/calibration |
+| `suspension_repair` | إصلاح عفشة | Suspension system repair and calibration |
+| `tire_service` | خدمة إطارات | Tire services |
+| `other` | أخرى | Other services |
+
+### Inspection Tools Used
+- **قلم فحص البوية** — Basic paint inspection tool for quick surface checks
+- **جهاز قياس سمك الدهان** — Digital professional micron-level paint thickness gauge
+- **ماسح الأشعة (UV)** — Exclusive UV scanner that reveals hidden repairs and damage
+
+---
+
+## 3. Platform Purpose
+
+A full-stack web platform that digitizes the center's operations:
+
+### Client-Facing
+- **Appointment Booking** (`/book`): Online booking form with license plate recognition, service and vehicle type selection, and date picker.
+- **Portfolio Gallery** (`/cars`, `/cars/[slug]`): Visual showcase of completed work with images and video per car.
+- **Sign In / Onboarding** (`/sign-in`, `/onboarding`): Account registration linking a user to their cars.
+- **Garage Dashboard** (`/dashboard/garage`): Personal space for registered users to see their car's service history.
+
+### Admin Panel (`/admin/*`)
+- **Appointments**: View, update status, and delete appointment requests.
+- **Customer Cars**: Full CRM for all vehicles registered in the system, with service history per car.
+- **Portfolio Management**: Add, edit, and manage portfolio entries (the "سجل التميز").
+- **Advices**: Manage dynamic tips shown to users.
+- **Hero Image**: Update the landing page hero image.
+- **Admin Dashboard**: Overview with booking charts and recent activity.
+
+---
 
 ## 4. Technical Stack
-- **Framework**: Next.js 15 (App Router)
-- **Styling**: Tailwind CSS with custom "Pro Max" tokens.
-- **Database**: PostgreSQL with Drizzle ORM.
-- **Authentication**: Better Auth (supporting Google and traditional methods).
-- **Storage**: Cloudflare R2 for high-performance media delivery.
-- **Analytics**: PostHog (integrated for user behavior tracking).
 
-## 5. Security & Performance
-- **Role-Based Access Control**: Strict separation between user and admin capabilities.
-- **Media Optimization**: Dynamic image resizing and performant video streaming via Cloudflare.
-- **SEO Optimization**: Fully semantic HTML and complete meta-tagging for maximum search visibility.
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Language**: TypeScript (end-to-end strict)
+- **Database**: PostgreSQL (self-hosted via Dokploy) + Drizzle ORM
+- **Authentication**: Better Auth (email/password + Google OAuth)
+- **Hosting**: Self-hosted VPS, containerized via **Dokploy** (Docker PaaS)
+- **Styling**: Tailwind CSS v4 with semantic "Pro Max" tokens
+- **Media Storage**: Cloudflare R2 (S3-compatible)
+- **Fonts**: Cairo (Arabic) from Google Fonts
+- **Animations**: Framer Motion (`motion/react`) + GSAP (scroll animations)
+- **Analytics**: PostHog
+
+---
+
+## 5. Security & Access Control
+
+- **Roles**: `user`, `admin`, `owner` — strictly enforced on all server actions.
+- **Session-based auth** via Better Auth; all mutations require verified session.
+- **Guest booking** supported (no account required for booking appointments).
+- **Admin actions** (delete, update, archive) require `admin` or `owner` role check server-side.
