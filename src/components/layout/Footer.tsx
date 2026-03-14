@@ -113,9 +113,9 @@ export function Footer() {
             </div>
 
             <div className="pt-6 border-t border-border/10">
-              <Link 
-                href={getReviewsUrl()} 
-                target="_blank" 
+              <Link
+                href={getReviewsUrl()}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="group/google flex flex-col gap-2 p-3 rounded-2xl bg-zinc-950/5 dark:bg-white/5 border border-transparent hover:border-emerald-500/20 hover:bg-emerald-500/5 transition-all"
               >
@@ -144,19 +144,21 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border/50 py-6">
-        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-[10px] md:text-xs font-medium text-muted-foreground text-center">
-          <p>© {new Date().getFullYear()} The Drive Center. جميع الحقوق محفوظة.</p>
-          <span className="h-3 w-px bg-border/50 hidden md:block" />
+        <div className="container mx-auto px-6 flex flex-col items-center justify-center gap-1 text-[10px] md:text-xs font-medium text-muted-foreground text-center">
+          <p className="flex flex-wrap items-center justify-center gap-1">
+            <span dir="rtl">جميع الحقوق محفوظة.</span>
+            <span dir="ltr">&copy; {new Date().getFullYear()} The Drive Center.</span>
+          </p>
           <div className="flex items-center gap-1 group">
-             <span className="opacity-60">Designed & Developed by</span>
-             <Link
-               href="https://ahmedlotfy.site"
-               target="_blank"
-               rel="noopener noreferrer"
-               className="text-foreground dark:text-white font-black hover:text-emerald-500 transition-colors"
-             >
-               Ahmed Shoman
-             </Link>
+            <span className="opacity-60">Designed & Developed by</span>
+            <Link
+              href="https://ahmedlotfy.site"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground dark:text-white font-black hover:text-emerald-500 transition-colors"
+            >
+              Ahmed Shoman
+            </Link>
           </div>
         </div>
       </div>

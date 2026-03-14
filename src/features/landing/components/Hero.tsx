@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="relative px-4 pb-20 pt-28 md:pt-40 overflow-hidden min-h-[90vh] md:min-h-[92vh] flex items-center border-b border-border/40">
+    <section className="relative px-4 pb-20 pt-28 md:pt-40 overflow-hidden min-h-screen flex items-center border-b border-border/40">
       {/* Advanced Ambient Background */}
       <div className="absolute inset-0 bg-background -z-20" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[32px_32px] -z-20" />

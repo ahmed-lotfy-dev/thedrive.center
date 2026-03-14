@@ -1,90 +1,134 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface VideoEmbedProps {
   url: string;
   title?: string;
 }
 
-export function VideoEmbed({ url, title }: VideoEmbedProps) {
-  const [embedUrl, setEmbedUrl] = useState<string | null>(null);
-  const [platform, setPlatform] = useState<"tiktok" | "facebook" | "youtube" | "unknown">("unknown");
-  const [isLoading, setIsLoading] = useState(true);
+type Platform = "tiktok" | "facebook" | "youtube" | "unknown";
+
+function parsePlatform(url: string): { platform: Platform; embedUrl?: string; videoId?: string } {
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("tiktok.com")) {
+      const match = url.match(/video\/(\d+)/);
+      return { platform: "tiktok", videoId: match?.[1] };
+    }
+
+    if (parsed.hostname.includes("facebook.com") || parsed.hostname.includes("fb.watch")) {
+      return {
+        platform: "facebook",
+        embedUrl: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=100%`,
+      };
+    }
+
+    if (parsed.hostname.includes("youtube.com") || parsed.hostname.includes("youtu.be")) {
+      const id = parsed.hostname.includes("youtu.be")
+        ? parsed.pathname.replace("/", "")
+        : parsed.searchParams.get("v") || "";
+      return { platform: "youtube", embedUrl: `https://www.youtube.com/embed/${id}` };
+    }
+  } catch {
+  }
+  return { platform: "unknown" };
+}
+
+function TikTokEmbed({ url, videoId }: { url: string; videoId: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
-    if (!url) return;
+    const el = containerRef.current;
+    if (!el) return;
 
-    // Detect platform
-    if (url.includes("tiktok.com")) {
-      setPlatform("tiktok");
-      // Extract video ID from tiktok URL
-      const tiktokId = url.split("/video/")[1]?.split("?")[0];
-      if (tiktokId) {
-        setEmbedUrl(`https://www.tiktok.com/embed/v2/${tiktokId}`);
-      }
-    } else if (url.includes("facebook.com") || url.includes("fb.watch")) {
-      setPlatform("facebook");
-      setEmbedUrl(`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0&width=560`);
-    } else if (url.includes("youtube.com") || url.includes("youtu.be")) {
-      setPlatform("youtube");
-      let ytId = "";
-      if (url.includes("youtube.com/watch")) {
-        ytId = new URL(url).searchParams.get("v") || "";
-      } else if (url.includes("youtu.be")) {
-        ytId = url.split("/").pop() || "";
-      }
-      if (ytId) {
-        setEmbedUrl(`https://www.youtube.com/embed/${ytId}`);
-      }
-    } else {
-      setPlatform("unknown");
-    }
-    setIsLoading(false);
-  }, [url]);
+    // Remove existing script to force re-render with new theme if needed
+    const scriptId = "tiktok-embed-script";
+    const existing = document.getElementById(scriptId);
+    if (existing) existing.remove();
 
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = "https://www.tiktok.com/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      const s = document.getElementById(scriptId);
+      if (s) s.remove();
+    };
+  }, [videoId, theme]);
+
+  return (
+    <div 
+      ref={containerRef} 
+      className="w-full flex justify-center min-h-[580px] bg-zinc-50/50 dark:bg-zinc-900/20 rounded-4xl border border-zinc-200/50 dark:border-white/5 p-1 md:p-3 transition-all duration-500 overflow-hidden shadow-sm"
+    >
+      <blockquote
+        className="tiktok-embed"
+        cite={url}
+        data-video-id={videoId}
+        data-theme={theme === "dark" ? "dark" : "light"}
+        style={{ maxWidth: "605px", minWidth: "325px", width: "100%", margin: "0 auto" }}
+      >
+        <section>
+          <a target="_blank" href={url} rel="noopener noreferrer">
+            مشاهدة على TikTok
+          </a>
+        </section>
+      </blockquote>
+    </div>
+  );
+}
+
+function IframeEmbed({ embedUrl, title }: { embedUrl: string; title?: string }) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <div className="relative w-full rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-800 aspect-video">
+      {isLoading && <Skeleton className="absolute inset-0 z-10 w-full h-full" />}
+      <iframe
+        src={embedUrl}
+        title={title || "Video"}
+        className="absolute inset-0 w-full h-full border-0"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        referrerPolicy="strict-origin-when-cross-origin"
+        onLoad={() => setIsLoading(false)}
+      />
+    </div>
+  );
+}
+
+export function VideoEmbed({ url, title }: VideoEmbedProps) {
   if (!url) return null;
+
+  const { platform, embedUrl, videoId } = parsePlatform(url);
 
   if (platform === "unknown") {
     return (
       <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>رابط فيديو غير مدعوم</AlertTitle>
-        <AlertDescription>
-          يدعم الموقع حالياً روابط تيك توك، فيسبوك، ويوتيوب فقط.
-        </AlertDescription>
+        <AlertDescription>يدعم الموقع حالياً روابط تيك توك، فيسبوك، ويوتيوب فقط.</AlertDescription>
       </Alert>
     );
   }
 
-  return (
-    <div className={cn(
-      "relative w-full rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-800 mx-auto",
-      platform === "tiktok" ? "aspect-9/16 max-w-[400px]" : "aspect-video"
-    )}>
-      {isLoading && <Skeleton className="absolute inset-0 z-10 w-full h-full" />}
+  if (platform === "tiktok" && videoId) {
+    return <TikTokEmbed url={url} videoId={videoId} />;
+  }
 
-      {embedUrl ? (
-        <iframe
-          src={embedUrl}
-          title={title || "فيديو من ذا درايف"}
-          className="absolute inset-0 w-full h-full border-0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-presentation"
-          referrerPolicy="no-referrer-when-downgrade"
-          allowFullScreen
-          onLoad={() => setIsLoading(false)}
-        />
-      ) : (
-        <div className="flex flex-col items-center justify-center h-full p-4 text-center text-zinc-500">
-          <AlertCircle className="w-10 h-10 mb-2 opacity-20" />
-          <p className="text-sm">لم نتمكن من معالجة رابط الفيديو</p>
-        </div>
-      )}
-    </div>
-  );
+  if (embedUrl) {
+    return <IframeEmbed embedUrl={embedUrl} title={title} />;
+  }
+
+  return null;
 }

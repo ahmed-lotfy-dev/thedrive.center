@@ -1,22 +1,35 @@
-import { db } from "@/db";
-import { cars } from "@/db/schema";
-import { desc } from "drizzle-orm";
+import { getPortfolio } from "@/lib/api/portfolio";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutGrid, Edit3, ExternalLink, ImageIcon, Video } from "lucide-react";
+import { Plus, LayoutGrid, Edit3, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { DeleteAction } from "./DeleteAction";
 import { PortfolioCarWithMedia } from "@/types/portfolio";
+import { FilterBar } from "@/components/shared/FilterBar";
+import { PaginationControls } from "@/components/shared/PaginationControls";
 
-export default async function PortfolioDashboardPage() {
-  const allCars = (await db.query.cars.findMany({
-    orderBy: [desc(cars.createdAt)],
-    with: {
-      media: true,
-    },
-  })) as PortfolioCarWithMedia[];
+interface PortfolioDashboardProps {
+  searchParams: Promise<{
+    page?: string;
+    search?: string;
+    serviceType?: string;
+  }>;
+}
+
+export default async function PortfolioDashboardPage({ searchParams }: PortfolioDashboardProps) {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const search = params.search || "";
+  const serviceType = params.serviceType || "";
+
+  const { data: allCars, meta } = await getPortfolio({
+    page,
+    limit: 12,
+    search,
+    serviceType,
+  });
 
   return (
     <div dir="rtl" className="space-y-8">
@@ -35,6 +48,8 @@ export default async function PortfolioDashboardPage() {
           </Link>
         </Button>
       </div>
+
+      <FilterBar />
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {allCars.map((car) => (
@@ -67,7 +82,7 @@ export default async function PortfolioDashboardPage() {
             <CardFooter className="p-6 pt-0 border-t border-zinc-100/50 dark:border-zinc-800/50 mt-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button asChild variant="ghost" size="icon" className="h-10 w-10 text-zinc-500 hover:text-emerald-500 hover:bg-emerald-50/50 rounded-xl">
-                  <Link href={`/admin/portfolio/${car.id}/edit`}>
+                  <Link href={`/admin/portfolio/${car.slug}/edit`}>
                     <Edit3 className="w-5 h-5" />
                   </Link>
                 </Button>
@@ -87,14 +102,21 @@ export default async function PortfolioDashboardPage() {
         {allCars.length === 0 && (
           <div className="col-span-full py-24 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-4xl">
             <LayoutGrid className="w-16 h-16 text-zinc-200 dark:text-zinc-800 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-zinc-400">لا توجد أعمال مسجلة بعد</h3>
-            <p className="text-zinc-500 mt-2 mb-8">ابدأ بتوثيق أول عمل لمركز التميز ليظهر للجمهور.</p>
+            <h3 className="text-xl font-bold text-zinc-400">لا توجد أعمال تطابق بحثك</h3>
+            <p className="text-zinc-500 mt-2 mb-8">جرب كلمات بحث مختلفة أو قم بإضافة عمل جديد.</p>
             <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-8">
-              <Link href="/admin/portfolio/new">إضافة أول عمل الآن</Link>
+              <Link href="/admin/portfolio/new">إضافة عمل جديد</Link>
             </Button>
           </div>
         )}
       </div>
+
+      <PaginationControls
+        currentPage={meta.page}
+        totalPages={meta.totalPages}
+        baseUrl="/admin/portfolio"
+        queryParams={{ search, serviceType }}
+      />
     </div>
   );
 }

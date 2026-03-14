@@ -1,4 +1,4 @@
-export async function resizeImage(file: File, maxWidth = 1200, maxHeight = 1200, quality = 0.8): Promise<Blob> {
+export async function resizeImage(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.9): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = URL.createObjectURL(file);
@@ -69,4 +69,27 @@ export async function uploadToR2(file: File | Blob, originalName: string) {
   }
 
   return publicUrl;
+}
+
+export async function deleteFromR2(url: string) {
+  try {
+    const filename = url.split("/").pop();
+
+    if (!filename) return;
+
+    const response = await fetch("/api/upload", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ filename }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to delete from R2");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in deleteFromR2:", error);
+  }
 }

@@ -1,6 +1,4 @@
-import type { MetadataRoute } from "next";
-
-export const revalidate = 0;
+import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center";
@@ -9,8 +7,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/dashboard/", "/admin/", "/onboarding/", "/sign-in/"],
+      disallow: ["/admin/", "/api/"],
     },
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: `${siteUrl.endsWith("/") ? siteUrl : siteUrl + "/"}sitemap.xml`,
   };
 }
