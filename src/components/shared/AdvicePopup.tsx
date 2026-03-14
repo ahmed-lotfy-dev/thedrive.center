@@ -15,7 +15,7 @@ interface AdvicePopupProps {
   delaySeconds?: number;
 }
 
-export function AdvicePopup({ advice, delaySeconds = 10 }: AdvicePopupProps) {
+export function AdvicePopup({ advice, delaySeconds = 30 }: AdvicePopupProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [hasBeenDismissed, setHasBeenDismissed] = useState(false);
 

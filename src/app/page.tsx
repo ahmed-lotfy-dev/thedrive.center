@@ -32,7 +32,7 @@ export default async function Home() {
       <LocationSection />
       
       {/* Dynamic Car Tips / Advice Pop-up */}
-      <AdvicePopup advice={randomAdvice} delaySeconds={10} />
+      <AdvicePopup advice={randomAdvice} delaySeconds={30} />
     </main>
   );
 }

@@ -71,7 +71,7 @@ export function Navbar() {
     >
       <div
         className={cn(
-          "mx-auto flex h-16 md:h-20 max-w-7xl items-center justify-between rounded-4xl border transition-all duration-500 px-4 sm:px-8 relative",
+          "mx-auto flex h-16 md:h-20 container items-center justify-between rounded-4xl border transition-all duration-500 px-4 sm:px-8 relative",
           isScrolled
             ? "bg-background/80 shadow-lg dark:shadow-2xl backdrop-blur-2xl border-border/50"
             : "bg-background/40 backdrop-blur-xl border-border/20"
@@ -154,7 +154,7 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mx-auto mt-2 max-w-7xl rounded-2xl border bg-background/95 backdrop-blur-md p-4 md:hidden shadow-2xl relative z-40"
+            className="mx-auto mt-2 container rounded-2xl border bg-background/95 backdrop-blur-md p-4 md:hidden shadow-2xl relative z-40"
           >
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
