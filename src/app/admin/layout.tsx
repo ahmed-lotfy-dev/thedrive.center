@@ -3,8 +3,10 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-function isAdminRole(role?: string) {
-  return role === "admin" || role === "owner";
+function isAdminRole(role?: string, email?: string) {
+  const isAdmin = role === "admin" || role === "owner";
+  const isHardcodedAdmin = process.env.ADMIN_EMAIL && email === process.env.ADMIN_EMAIL;
+  return isAdmin || isHardcodedAdmin;
 }
 
 export default async function AdminLayout({
@@ -20,8 +22,8 @@ export default async function AdminLayout({
     redirect("/sign-in");
   }
 
-  const userRole = (session.user as { role?: string }).role;
-  if (!isAdminRole(userRole)) {
+  const user = session.user as { role?: string; email: string };
+  if (!isAdminRole(user.role, user.email)) {
     redirect("/");
   }
 

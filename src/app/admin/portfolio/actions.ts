@@ -5,7 +5,7 @@ import { cars, carMedia } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import crypto from "crypto";
+import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
 
 const carSchema = z.object({
@@ -32,7 +32,7 @@ export async function createPortfolioEntry(formData: FormData) {
     return { error: result.error.flatten().fieldErrors };
   }
 
-  const { galleryUrls, title, ...carData } = result.data;
+  const { galleryUrls, title, description, coverImageUrl, videoUrl, serviceType } = result.data;
 
   // Generate a URL-friendly slug: spaces and non-word characters to hyphens
   const baseSlug = title
@@ -41,13 +41,16 @@ export async function createPortfolioEntry(formData: FormData) {
     .replace(/[^\u0621-\u064A\u0660-\u0669a-z0-9]+/g, "-") // Keep Arabic letters, English letters, and numbers
     .replace(/^-+|-+$/g, ""); // Remove trailing/leading hyphens
   
-  const uniqueId = crypto.randomBytes(3).toString("hex");
+  const uniqueId = randomBytes(3).toString("hex");
   const slug = `${baseSlug ? baseSlug + "-" : "car-"}${uniqueId}`;
 
   // 1. Create the main car entry
   const [newCar] = await db.insert(cars).values({
-    ...carData,
     title,
+    description,
+    coverImageUrl,
+    videoUrl,
+    serviceType,
     slug,
     featured: true,
   }).returning();
@@ -99,13 +102,16 @@ export async function updatePortfolioEntry(id: string, formData: FormData) {
     return { error: result.error.flatten().fieldErrors };
   }
 
-  const { galleryUrls, title, ...carData } = result.data;
+  const { galleryUrls, title, description, coverImageUrl, videoUrl, serviceType } = result.data;
 
   // 1. Update the main car entry
   await db.update(cars)
     .set({
-      ...carData,
       title,
+      description,
+      coverImageUrl,
+      videoUrl,
+      serviceType,
       updatedAt: new Date(),
     })
     .where(eq(cars.id, id));

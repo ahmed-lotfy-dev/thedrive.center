@@ -16,6 +16,22 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          if (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL) {
+            return {
+              data: {
+                ...user,
+                role: "admin",
+              },
+            };
+          }
+        },
+      },
+    },
+  },
   user: {
     additionalFields: {
       role: {

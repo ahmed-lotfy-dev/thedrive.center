@@ -110,14 +110,9 @@ export const carMedia = pgTable("car_media", {
   order: integer("order").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
-export const heroSlides = pgTable("hero_slides", {
+export const advices = pgTable("advices", {
   id: uuid("id").primaryKey().defaultRandom(),
-  title: text("title"),
-  description: text("description"),
-  imageUrl: text("image_url").notNull(),
-  linkUrl: text("link_url"),
-  buttonText: text("button_text").default("احجز الآن"),
-  order: integer("order").default(0),
+  content: text("content").notNull(),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });

@@ -1,6 +1,7 @@
-﻿import "dotenv/config";
+import "dotenv/config";
 import { db } from "./index.js";
-import { heroSlides, appointments } from "./schema.js";
+import { appointments, user, advices } from "./schema.js";
+import { eq } from "drizzle-orm";
 
 const main = async () => {
   console.log("Seeding service-center MVP database...");
@@ -21,39 +22,6 @@ const main = async () => {
   }
 
   await safeDelete(appointments, "appointments");
-  await safeDelete(heroSlides, "hero_slides");
-
-  const slides = [
-    {
-      title: "ضبط زوايا وترصيص باحدث الاجهزة",
-      description: "تشخيص دقيق وثبات افضل للعربية على الطريق.",
-      imageUrl: "/hero-maintenance.png",
-      linkUrl: "/book",
-      buttonText: "احجز الان",
-      order: 3,
-      isActive: true,
-    },
-    {
-      title: "فحص شامل قبل البيع والشراء",
-      description: "تقرير واضح يساعدك تاخد قرارك بثقة.",
-      imageUrl: "/hero-spare-parts.png",
-      linkUrl: "/book",
-      buttonText: "اطلب فحص",
-      order: 2,
-      isActive: true,
-    },
-    {
-      title: "خدمة سريعة داخل المحلة الكبرى",
-      description: "فريق فني محترف ومواعيد مرنة.",
-      imageUrl: "/hero-water-filters.png",
-      linkUrl: "/book",
-      buttonText: "تواصل معنا",
-      order: 1,
-      isActive: true,
-    },
-  ];
-
-  await db.insert(heroSlides).values(slides);
 
   const appts = [
     {
@@ -79,6 +47,41 @@ const main = async () => {
   ];
 
   await db.insert(appointments).values(appts);
+
+  // --- Initial Advices ---
+  console.log("Seeding common car tips from workshop signage...");
+  await db.insert(advices).values([
+    { content: "ضبط زوايا: لازم كل ٣ شهور لضمان ثبات العربية وإطالة عمر الكاوتش." },
+    { content: "ضبط زوايا: هيوفر لك لحد ١٠٪ من استهلاك البنزين وبيحافظ على العفشة." },
+    { content: "ترصيص: لو حسيت برعشة أو هزة في الطارة، لازم تعمل ترصيص فوراً للحفاظ على أجزاء العفشة." },
+    { content: "ترصيص: ضروري جداً عند تغيير أو لحام الكاوتش لضمان راحة القيادة وحماية جسم العربية من الشروخ." },
+    { content: "تأكد من مراجعة ضغط الإطارات بانتظام، خاصة قبل السفر الطويل." },
+    { content: "تغيير زيت الفرامل كل سنتين ضروري جداً للحفاظ على كفاءة الفرامل وسلامتك." },
+  ]);
+
+  // --- Ensure Admin User ---
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+  if (!ADMIN_EMAIL) {
+    console.warn("ADMIN_EMAIL not set in .env, skipping admin role check.");
+  } else {
+    console.log(`Checking for admin user: ${ADMIN_EMAIL}`);
+    
+    const [existingAdmin] = await db
+      .select()
+      .from(user)
+      .where(eq(user.email, ADMIN_EMAIL))
+      .limit(1);
+
+    if (existingAdmin) {
+      console.log("Admin user found, updating role...");
+      await db
+        .update(user)
+        .set({ role: "admin" })
+        .where(eq(user.id, existingAdmin.id));
+    } else {
+      console.log("Admin user not found in DB. Better Auth will create it on first login.");
+    }
+  }
 
   console.log("MVP seed completed.");
   process.exit(0);

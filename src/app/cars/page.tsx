@@ -74,17 +74,17 @@ export default async function CarsGalleryPage({ searchParams }: CarsGalleryProps
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         priority={allCars.indexOf(car) === 0}
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-zinc-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity dark:from-zinc-950/80 from-zinc-800/70" />
-                      
+                      <div className="absolute inset-0 bg-linear-to-t from-zinc-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity dark:from-zinc-950/80" />
+
                       <div className="absolute top-4 right-4">
                         <Badge className="bg-white/10 backdrop-blur-md border-white/20 text-white font-bold h-9 px-4 rounded-2xl">
-                          {car.serviceType === 'alignment_balancing' ? 'ضبط زوايا وترصيص' : 
-                           car.serviceType === 'inspection' ? 'فحص شامل' : 
-                           car.serviceType === 'steering_coding' ? 'تكويد طارة' : car.serviceType}
+                          {car.serviceType === 'alignment_balancing' ? 'ضبط زوايا وترصيص' :
+                            car.serviceType === 'inspection' ? 'فحص شامل' :
+                              car.serviceType === 'steering_coding' ? 'تكويد طارة' : car.serviceType}
                         </Badge>
                       </div>
                     </div>
-                    
+
                     <CardContent className="p-6">
                       <h2 className="text-xl font-black text-zinc-900 dark:text-white mb-2 group-hover:text-emerald-500 transition-colors">
                         {car.title}
@@ -93,7 +93,7 @@ export default async function CarsGalleryPage({ searchParams }: CarsGalleryProps
                         {car.description}
                       </p>
                     </CardContent>
-                    
+
                     <CardFooter className="p-6 pt-0 flex items-center justify-between text-sm">
                       <span className="text-zinc-400 font-bold">
                         {new Date(car.createdAt!).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long' })}

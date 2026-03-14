@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import { cars, carMedia } from "@/db/schema";
 import { revalidatePath } from "next/cache";
+import { randomBytes } from "crypto";
 // import { auth } from "@/lib/auth"; // ensure admin protection
 
 export async function createCarAction(formData: FormData) {
@@ -20,6 +21,15 @@ export async function createCarAction(formData: FormData) {
     throw new Error("Missing required fields");
   }
 
+  const baseSlug = title
+    .trim()
+    .toLowerCase()
+    .replace(/[^\u0621-\u064A\u0660-\u0669a-z0-9]+/g, "-") // Keep Arabic letters, English letters, and numbers
+    .replace(/^-+|-+$/g, ""); // Remove trailing/leading hyphens
+
+  const uniqueId = randomBytes(4).toString("hex");
+  const slug = `${baseSlug ? baseSlug + "-" : "car-"}${uniqueId}`;
+
   try {
     const [newCar] = await db
       .insert(cars)
@@ -29,6 +39,7 @@ export async function createCarAction(formData: FormData) {
         coverImageUrl,
         serviceType,
         videoUrl: videoUrl || null,
+        slug,
         featured,
       })
       .returning();

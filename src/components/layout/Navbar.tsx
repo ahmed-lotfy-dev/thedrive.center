@@ -7,7 +7,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { Menu, X, LayoutDashboard } from "lucide-react";
+import { Menu, X, LayoutDashboard, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +18,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
+import * as motion from "motion/react-client";
+
+const navContainerVariants = {
+  hidden: { opacity: 0, y: -40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const navItemVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
 
 export function Navbar() {
   const pathname = usePathname();
@@ -45,20 +72,25 @@ export function Navbar() {
   const canOpenAdmin = userRole === "admin" || userRole === "owner";
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-4 md:pt-6">
+    <motion.nav
+      className="fixed top-0 left-0 right-0 z-50 px-4 pt-4 md:pt-6"
+      variants={navContainerVariants as any}
+      initial="hidden"
+      animate="visible"
+    >
       <div
         className={cn(
           "mx-auto flex h-16 md:h-20 max-w-7xl items-center justify-between rounded-4xl border transition-all duration-500 px-4 sm:px-8 relative",
-          isScrolled 
-            ? "bg-background/80 shadow-lg dark:shadow-[0_8px_32px_rgba(0,0,0,0.8)] backdrop-blur-2xl border-border/50 dark:border-white/10" 
+          isScrolled
+            ? "bg-background/80 shadow-lg dark:shadow-[0_8px_32px_rgba(0,0,0,0.8)] backdrop-blur-2xl border-border/50 dark:border-white/10"
             : "bg-background/40 backdrop-blur-xl border-border/20 dark:border-white/5"
         )}
       >
         {/* Top Edge Highlight */}
         <div className="absolute inset-x-10 top-0 h-px bg-linear-to-r from-transparent via-emerald-500/50 to-transparent opacity-50" />
-        
+
         {/* Right Section: Logo (Start in RTL) */}
-        <div className="flex-1 flex justify-start relative z-10">
+        <motion.div variants={navItemVariants as any} className="flex-1 flex justify-start relative z-10">
           <Link href="/" className="flex items-center gap-3 md:gap-5 group">
             <div className="relative">
               <div className="absolute -inset-1 bg-emerald-500/20 rounded-2xl blur-md group-hover:bg-emerald-500/40 transition-all duration-500" />
@@ -74,18 +106,18 @@ export function Navbar() {
               </div>
             </div>
           </Link>
-        </div>
+        </motion.div>
 
         {/* Center Section: Navigation Links */}
-        <div className="hidden md:flex items-center justify-center gap-2 flex-1 relative z-10">
+        <motion.div variants={navItemVariants as any} className="hidden md:flex items-center justify-center gap-2 flex-1 relative z-10">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
                 "px-5 py-2 text-sm font-bold transition-all duration-300 rounded-full relative group/item",
-                pathname === link.href 
-                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 shadow-inner" 
+                pathname === link.href
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 shadow-inner"
                   : "text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"
               )}
             >
@@ -95,45 +127,61 @@ export function Navbar() {
               )}
             </Link>
           ))}
-        </div>
+        </motion.div>
 
         {/* Left Section: Actions (End in RTL) */}
-        <div className="flex-1 flex justify-end items-center gap-3 sm:gap-6 relative z-10">
+        <motion.div variants={navItemVariants as any} className="flex-1 flex justify-end items-center gap-3 sm:gap-6 relative z-10">
           <div className="hidden sm:flex items-center gap-4">
             <ThemeToggle />
             <div className="h-8 w-px bg-white/10 mx-1" />
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="rounded-2xl pr-2 pl-5 h-12 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/20 bg-black/5 dark:bg-white/5 transition-all hover:bg-black/10 dark:hover:bg-white/10 flex items-center gap-3 group">
+                  <Button variant="ghost" className="rounded-3xl pr-2 pl-5 h-12 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/20 bg-black/5 dark:bg-white/5 transition-all hover:bg-black/10 flex items-center gap-3 group cursor-pointer">
                     <Avatar className="size-9 border-2 border-emerald-500/30 transition-transform group-hover:scale-105">
                       <AvatarImage src={session.user.image || ""} />
                       <AvatarFallback className="text-xs bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-black">
                         {session.user.name?.slice(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-black hidden lg:inline text-foreground/80 dark:text-zinc-200 group-hover:text-foreground dark:group-hover:text-white transition-colors">{session.user.name}</span>
+                    <span className="text-sm font-black hidden lg:inline text-foreground/80 dark:text-emerald-50/90 group-hover:text-foreground dark:group-hover:text-white transition-colors">{session.user.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border-white/10 bg-zinc-950/95 backdrop-blur-2xl">
-                  <DropdownMenuLabel className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">لوحة التحكم</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/10 mx-2 mb-2" />
+                <DropdownMenuContent align="end" className="w-64 rounded-3xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border-black/5 dark:border-white/10 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-2xl">
+                  <DropdownMenuLabel className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">لوحة التحكم</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-black/5 dark:bg-white/10 mx-2 mb-2" />
                   {canOpenAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin" className="cursor-pointer rounded-xl p-4 flex items-center gap-4 font-bold text-zinc-200 hover:bg-emerald-500/10 hover:text-emerald-400 transition-all">
-                        <div className="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                           <LayoutDashboard className="h-4 w-4 text-emerald-500" />
+                    <DropdownMenuItem asChild className="p-0 focus:bg-emerald-500/5 dark:focus:bg-emerald-500/10 focus:text-emerald-700 dark:focus:text-emerald-400">
+                      <Link 
+                        href="/admin" 
+                        className="group/item cursor-pointer rounded-2xl p-4 flex items-center gap-4 font-bold transition-all duration-300 w-full
+                          text-zinc-700 dark:text-zinc-200 
+                          hover:text-emerald-700 dark:hover:text-emerald-400
+                          hover:bg-emerald-500/10 dark:hover:bg-emerald-500/20
+                          border border-transparent hover:border-emerald-500/20 dark:hover:border-emerald-500/30 overflow-hidden shadow-xs hover:shadow-md"
+                      >
+                        <div className="size-8 rounded-lg bg-emerald-500/10 group-hover/item:bg-emerald-500/20 flex items-center justify-center transition-colors">
+                          <LayoutDashboard className="h-4 w-4 text-emerald-600 dark:text-emerald-500 transition-colors" />
                         </div>
-                        <span>إدارة المركز</span>
+                        <span className="transition-colors">إدارة المركز</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
-                  <div className="mt-2 pt-2 border-t border-white/5 px-2">
-                    <DropdownMenuItem 
-                      onClick={() => authClient.signOut()} 
-                      className="text-red-400 focus:text-red-100 focus:bg-red-500/20 rounded-xl p-4 font-bold cursor-pointer transition-all"
+                  <div className="mt-2 pt-2 border-t border-black/5 dark:border-white/5 px-2">
+                    <DropdownMenuItem
+                      onClick={() => authClient.signOut()}
+                      className="group/logout flex items-center gap-4 rounded-2xl p-4 font-bold cursor-pointer transition-all duration-300
+                        text-red-600 dark:text-red-400 
+                        hover:bg-red-500/10 dark:hover:bg-red-500/20
+                        hover:text-red-700 dark:hover:text-red-300
+                        focus:bg-red-500/10 dark:focus:bg-red-500/20
+                        focus:text-red-700 dark:focus:text-red-300
+                        border border-transparent hover:border-red-500/20 dark:hover:border-red-500/30"
                     >
-                      تسجيل خروج
+                      <div className="size-8 rounded-lg bg-red-500/10 group-hover/logout:bg-red-500/20 flex items-center justify-center transition-colors">
+                        <LogOut className="h-4 w-4 text-red-600 dark:text-red-400 group-hover/logout:text-red-700 dark:group-hover:text-red-300 transition-colors" />
+                      </div>
+                      <span className="transition-colors">تسجيل خروج</span>
                     </DropdownMenuItem>
                   </div>
                 </DropdownMenuContent>
@@ -146,7 +194,7 @@ export function Navbar() {
           </div>
 
           <div className="flex sm:hidden items-center gap-3">
-             <ThemeToggle />
+            <ThemeToggle />
           </div>
 
           <button
@@ -156,7 +204,7 @@ export function Navbar() {
           >
             {isOpen ? <X className="size-6 text-foreground dark:text-white" /> : <Menu className="size-6 text-foreground dark:text-white" />}
           </button>
-        </div>
+        </motion.div>
       </div>
 
       {isOpen && (
@@ -169,8 +217,8 @@ export function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className={cn(
                   "rounded-xl px-4 py-3 text-sm font-medium transition-all",
-                  pathname === link.href 
-                    ? "bg-primary/10 text-primary" 
+                  pathname === link.href
+                    ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted"
                 )}
               >
@@ -185,22 +233,22 @@ export function Navbar() {
               </div>
             )}
             {session && (
-               <div className="pt-2 mt-2 border-t border-border/50 flex items-center justify-between px-2">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="size-8">
-                       <AvatarImage src={session.user.image || ""} />
-                       <AvatarFallback>{session.user.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-bold">{session.user.name}</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={() => authClient.signOut()} className="text-destructive h-9">
-                    خروج
-                  </Button>
-               </div>
+              <div className="pt-2 mt-2 border-t border-border/50 flex items-center justify-between px-2">
+                <div className="flex items-center gap-3">
+                  <Avatar className="size-8">
+                    <AvatarImage src={session.user.image || ""} />
+                    <AvatarFallback>{session.user.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-bold">{session.user.name}</span>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => authClient.signOut()} className="text-destructive h-9">
+                  خروج
+                </Button>
+              </div>
             )}
           </div>
         </div>
       )}
-    </nav>
+    </motion.nav>
   );
 }
