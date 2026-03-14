@@ -46,47 +46,48 @@
 :root {
   --radius: 1.25rem;
 
-  --background: #fbfbfc;
-  --foreground: #09090b;
+  /* Pro Max Light Theme - Sophisticated & Clean */
+  --background: #f8fafc; /* Softer, airy foundation */
+  --foreground: #0f172a; /* Deep charcoal for premium readability */
 
   --card: #ffffff;
-  --card-foreground: #09090b;
+  --card-foreground: #0f172a;
 
   --popover: #ffffff;
-  --popover-foreground: #09090b;
+  --popover-foreground: #0f172a;
 
-  --primary: #09090b;
-  --primary-foreground: #ffffff;
+  --primary: #0f172a; /* Slate 900 */
+  --primary-foreground: #f8fafc;
 
-  --secondary: #f4f4f5;
-  --secondary-foreground: #09090b;
+  --secondary: #e2e8f0; /* Slate 200 */
+  --secondary-foreground: #1e293b;
 
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
+  --muted: #f1f5f9; /* Slate 100 */
+  --muted-foreground: #64748b; /* Slate 500 - Clear but secondary */
 
-  --accent: #10b981;
+  --accent: #10b981; /* Keep Emerald for consistency */
   --accent-foreground: #ffffff;
 
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  --border: #d4d4d8;
-  --input: #d4d4d8;
+  --border: #e2e8f0; /* Soft borders for premium feel */
+  --input: #e2e8f0;
   --ring: #10b981;
 
-  --chart-1: #09090b;
+  --chart-1: #0f172a;
   --chart-2: #10b981;
-  --chart-3: #52525b;
+  --chart-3: #64748b;
   --chart-4: #f59e0b;
   --chart-5: #fb7185;
 
   --sidebar: #ffffff;
-  --sidebar-foreground: #09090b;
+  --sidebar-foreground: #0f172a;
   --sidebar-primary: #10b981;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4f4f5;
-  --sidebar-accent-foreground: #09090b;
-  --sidebar-border: #d4d4d8;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
   --sidebar-ring: #10b981;
 }
 
@@ -170,18 +171,20 @@
 
   .mesh-fade {
     background-image:
-      linear-gradient(to right, rgb(31 41 51 / 4%) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(31 41 51 / 4%) 1px, transparent 1px);
-    background-size: 22px 22px;
+      linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.15;
   }
 
   .ambient-grid {
     background-image:
-      radial-gradient(circle at 15% 15%, rgb(15 118 110 / 12%), transparent 24%),
-      radial-gradient(circle at 85% 85%, rgb(31 41 51 / 10%), transparent 30%),
-      linear-gradient(to right, rgb(31 41 51 / 3%) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(31 41 51 / 3%) 1px, transparent 1px);
-    background-size: auto, auto, 26px 26px, 26px 26px;
+      radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 24%),
+      radial-gradient(circle at 85% 85%, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent 30%),
+      linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+    background-size: auto, auto, 28px 28px, 28px 28px;
+    opacity: 0.6;
   }
 
   .glow-orb {

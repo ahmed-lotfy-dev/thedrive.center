@@ -33,7 +33,7 @@ InputOTPGroup.displayName = "InputOTPGroup"
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
->(({ index, className, ...props }, ref) => {
+>(({ index, className, children, ...props }, ref) => {
   const inputOTPContext = React.useContext(OTPInputContext)
   const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
 
@@ -47,7 +47,7 @@ const InputOTPSlot = React.forwardRef<
       )}
       {...props}
     >
-      {char}
+      {children !== undefined ? children : char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
@@ -68,4 +68,4 @@ const InputOTPSeparator = React.forwardRef<
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"
 
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator, OTPInputContext }

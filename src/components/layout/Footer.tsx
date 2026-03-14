@@ -40,14 +40,14 @@ export function Footer() {
   const reviewsUrl = getReviewsUrl();
 
   return (
-    <footer className="border-t border-border/80 bg-zinc-50/50 dark:bg-card/60 mt-12 md:mt-24">
+    <footer className="border-t border-border/80 bg-background/50 backdrop-blur-sm mt-12 md:mt-24">
       <div className="container mx-auto px-6 py-12 md:py-20 relative z-10">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-6">
             <div className="flex items-center gap-4 group">
               <div className="relative">
                 <div className="absolute -inset-1 bg-emerald-500/10 rounded-xl blur-sm group-hover:bg-emerald-500/20 transition-all" />
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-950 border border-white/10 overflow-hidden shadow-lg">
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-card border border-border/60 overflow-hidden shadow-lg">
                   <img src="/logo.png" alt="The Drive Logo" className="w-full h-full object-cover" />
                 </div>
               </div>
@@ -101,19 +101,19 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary/80">مجتمعنا الرقمي</h3>
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-black hover:text-white transition-all h-11 w-11 p-0 border-white/10">
+              <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-foreground hover:text-background transition-all h-11 w-11 p-0 border-border/50">
                 <Link href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" title="تيك توك">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="size-5">
                     <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
                   </svg>
                 </Link>
               </Button>
-              <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-[#1877F2] hover:text-white transition-all h-11 w-11 p-0 border-white/10">
+              <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-[#1877F2] hover:text-white transition-all h-11 w-11 p-0 border-border/50">
                 <Link href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" title="فيسبوك">
                   <Facebook className="size-5" />
                 </Link>
               </Button>
-              <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-linear-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white transition-all h-11 w-11 p-0 border-white/10">
+              <Button asChild size="sm" variant="outline" className="rounded-xl hover:bg-linear-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white transition-all h-11 w-11 p-0 border-border/50">
                 <Link href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" title="انستجرام">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-5">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -129,7 +129,7 @@ export function Footer() {
                 href={getReviewsUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/google flex flex-col gap-2 p-3 rounded-2xl bg-zinc-950/5 dark:bg-white/5 border border-transparent hover:border-emerald-500/20 hover:bg-emerald-500/5 transition-all"
+                className="group/google flex flex-col gap-2 p-3 rounded-2xl bg-muted/50 border border-transparent hover:border-emerald-500/20 hover:bg-emerald-500/5 transition-all"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center">

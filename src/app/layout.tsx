@@ -123,7 +123,7 @@ export default function RootLayout({
           />
           {children}
           {!isMaintenanceMode && <Footer />}
-          <Toaster dir="rtl" />
+          <Toaster dir="rtl" position="top-center" />
         </ThemeProvider>
       </body>
     </html>
