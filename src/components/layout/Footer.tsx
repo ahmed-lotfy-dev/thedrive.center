@@ -54,7 +54,7 @@ export function Footer() {
             <div className="grid gap-2.5 text-sm font-bold text-muted-foreground">
               <Link href="/" className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block">الرئيسية</Link>
               <Link href="/cars" className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block">سجل التميز</Link>
-              <Link href="/#services" className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block">خدماتنا</Link>
+              <a href="/#services" className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block font-bold">خدماتنا</a>
               <Link href="/book" className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block">حجز موعد</Link>
             </div>
           </div>

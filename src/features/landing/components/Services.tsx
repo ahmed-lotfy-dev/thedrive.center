@@ -48,9 +48,9 @@ const secondaryServices = [
 
 export function Services() {
   return (
-    <div id="services" className="space-y-12 md:space-y-20">
+    <div className="space-y-12 md:space-y-20">
       {/* SECTION 1: COMPREHENSIVE INSPECTION HIGHLIGHT */}
-      <section id="inspection" className="container mx-auto px-4 md:px-6 pt-12" data-animate>
+      <section id="services" className="container mx-auto px-4 md:px-6 pt-12 scroll-mt-24" data-animate>
         <div className="relative overflow-hidden rounded-[2.5rem] md:rounded-[4rem] bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/50 dark:border-white/5 shadow-2xl transition-colors duration-500">
           <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 via-transparent to-emerald-500/5 pointer-events-none opacity-50 dark:opacity-100" />
           
