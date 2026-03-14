@@ -60,7 +60,7 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary/80">بيانات الاتصال</h3>
+            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary/80">تواصل مـعـنا</h3>
             <div className="grid gap-4 text-sm text-muted-foreground">
               <div className="flex items-start gap-4">
                 <div className="size-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
@@ -73,8 +73,8 @@ export function Footer() {
                   <Phone className="size-5 text-emerald-500" />
                 </div>
                 <div className="flex flex-col gap-1 pt-1" dir="ltr">
-                  <a href="tel:+201017131414" className="hover:text-emerald-500 font-black transition-colors text-base tracking-tighter">010 1713 1414</a>
-                  <p className="text-[10px] uppercase font-bold text-emerald-600/60 tracking-widest">Official Owner Line</p>
+                  <a href="https://wa.me/201017131414" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 font-black transition-colors text-base tracking-tighter">010 1713 1414</a>
+                  <p className="text-[10px] uppercase font-bold text-emerald-600/60 tracking-widest">كلمـنـا دلوقتي</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 text-muted-foreground">

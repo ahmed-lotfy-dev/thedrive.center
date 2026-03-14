@@ -45,19 +45,19 @@ export function Hero() {
               </Button>
             </div>
 
-            {/* FLOATING STATS GRID */}
-            <div className="grid grid-cols-3 gap-6 pt-10 mt-10 border-t border-border/50 animate-in fade-in duration-1000 delay-700">
-              <div className="flex flex-col">
-                <div className="text-3xl md:text-4xl font-black text-foreground drop-shadow-sm">99<span className="text-emerald-500">%</span></div>
-                <div className="text-sm md:text-base font-bold text-muted-foreground mt-1">دقة الفحص</div>
+            {/* FLOATING STATS GRID - NEW CARD STYLE */}
+            <div className="flex flex-wrap items-center gap-3 pt-8 mt-8 border-t border-border/50 animate-in fade-in duration-1000 delay-700">
+              <div className="flex flex-col p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-border shadow-sm min-w-[120px]">
+                <div className="text-2xl md:text-3xl font-black text-foreground drop-shadow-sm">99<span className="text-emerald-500">%</span></div>
+                <div className="text-[10px] md:text-xs font-black uppercase tracking-wider text-muted-foreground mt-1">دقة الفحص</div>
               </div>
-              <div className="flex flex-col">
-                <div className="text-3xl md:text-4xl font-black text-foreground drop-shadow-sm">100<span className="text-emerald-500">+</span></div>
-                <div className="text-sm md:text-base font-bold text-muted-foreground mt-1">عميل راضي</div>
+              <div className="flex flex-col p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-border shadow-sm min-w-[120px]">
+                <div className="text-2xl md:text-3xl font-black text-foreground drop-shadow-sm">100<span className="text-emerald-500">+</span></div>
+                <div className="text-[10px] md:text-xs font-black uppercase tracking-wider text-muted-foreground mt-1">عميل راضي</div>
               </div>
-              <div className="flex flex-col">
-                <div className="text-3xl md:text-4xl font-black text-foreground drop-shadow-sm">أحدث</div>
-                <div className="text-sm md:text-base font-bold text-muted-foreground mt-1">الأجهزة المتطورة</div>
+              <div className="flex flex-col p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-border shadow-sm min-w-[120px]">
+                <div className="text-2xl md:text-3xl font-black text-foreground drop-shadow-sm">أحدث</div>
+                <div className="text-[10px] md:text-xs font-black uppercase tracking-wider text-muted-foreground mt-1">الأجهزة المتطورة</div>
               </div>
             </div>
           </div>

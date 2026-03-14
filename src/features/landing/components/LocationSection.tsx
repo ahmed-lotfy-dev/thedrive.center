@@ -32,7 +32,7 @@ export function LocationSection() {
         <div className="space-y-8" data-parallax="20">
           <div className="space-y-4">
             <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
-              عنواننا وصورنا
+              موقعنا وتواصلنا
             </Badge>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white leading-tight">
               تعالى لنا بسهولة <br /><span className="text-emerald-500">من أي مكان</span>
@@ -105,19 +105,19 @@ export function LocationSection() {
           <div className="p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-white relative overflow-hidden shadow-xl dark:shadow-2xl border border-zinc-200/50 dark:border-white/5">
             <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4 relative z-10">مجتمعنا الرقمي</p>
             <div className="flex flex-wrap gap-3 relative z-10">
-              <Button asChild variant="ghost" className="rounded-xl h-12 w-12 p-0 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all">
+              <Button asChild variant="ghost" className="rounded-xl h-12 w-12 p-0 bg-black/5 dark:bg-white/5 hover:bg-black hover:text-white transition-all">
                 <Link href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" title="تيك توك">
                    <svg viewBox="0 0 24 24" fill="currentColor" className="size-6">
                       <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/>
                    </svg>
                 </Link>
               </Button>
-              <Button asChild variant="ghost" className="rounded-xl h-12 w-12 p-0 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all">
+              <Button asChild variant="ghost" className="rounded-xl h-12 w-12 p-0 bg-black/5 dark:bg-white/5 hover:bg-[#1877F2] hover:text-white transition-all">
                 <Link href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" title="فيسبوك">
-                  <Facebook className="size-6" />
+                   <Facebook className="size-6" />
                 </Link>
               </Button>
-              <Button asChild variant="ghost" className="rounded-xl h-12 w-12 p-0 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all">
+              <Button asChild variant="ghost" className="rounded-xl h-12 w-12 p-0 bg-black/5 dark:bg-white/5 hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white transition-all">
                 <Link href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" title="انستجرام">
                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-6">
                       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
