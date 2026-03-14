@@ -33,17 +33,17 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
 
   return (
     <div dir="rtl" className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/50 pb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-3">
+          <h1 className="text-3xl font-black italic uppercase tracking-tighter text-foreground flex items-center gap-3">
             <LayoutGrid className="w-8 h-8 text-emerald-500" />
             إدارة سجل التميز
           </h1>
-          <p className="text-zinc-500 dark:text-zinc-400 mt-1">إضافة وتعديل السيارات التي تظهر في معرض أعمال المركز (Portfolio)</p>
+          <p className="text-muted-foreground/60 font-bold mt-1 text-sm tracking-wide">إضافة وتعديل السيارات التي تظهر في معرض أعمال المركز (Portfolio)</p>
         </div>
-        <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-6 gap-2">
+        <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-8 gap-3 font-black shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02]">
           <Link href="/admin/portfolio/new">
-            <Plus className="w-5 h-5" />
+            <Plus className="w-6 h-6" />
             إضافة عمل جديد
           </Link>
         </Button>
@@ -53,7 +53,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {allCars.map((car) => (
-          <Card key={car.id} className="group overflow-hidden border-zinc-200/60 dark:border-zinc-800/60 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-4xl hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500">
+          <Card key={car.id} className="group overflow-hidden border-border/50 bg-card/40 backdrop-blur-md rounded-[2rem] hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 hover:border-emerald-500/20">
             <div className="relative aspect-video">
               <Image
                 src={car.coverImageUrl}
@@ -62,7 +62,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute top-4 right-4 flex gap-2">
-                <Badge className="bg-zinc-900/60 backdrop-blur-md border-white/10 text-white font-bold h-8 px-3 rounded-xl">
+                <Badge className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground font-black h-8 px-3 rounded-xl shadow-lg">
                   {car.serviceType === 'alignment_balancing' ? 'ضبط زوايا' :
                     car.serviceType === 'inspection' ? 'فحص شامل' :
                       car.serviceType === 'steering_coding' ? 'تكويد طارة' : car.serviceType}
@@ -71,17 +71,17 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
             </div>
 
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2 line-clamp-1 group-hover:text-emerald-500 transition-colors">
+              <h3 className="text-xl font-black text-foreground mb-2 line-clamp-1 group-hover:text-emerald-500 transition-colors tracking-tight">
                 {car.title}
               </h3>
-              <p className="text-sm text-zinc-500 line-clamp-2 min-h-10">
+              <p className="text-sm text-muted-foreground font-bold line-clamp-2 min-h-10 leading-relaxed">
                 {car.description}
               </p>
             </CardContent>
 
-            <CardFooter className="p-6 pt-0 border-t border-zinc-100/50 dark:border-zinc-800/50 mt-4 flex items-center justify-between">
+            <CardFooter className="p-6 pt-0 border-t border-border/50 mt-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Button asChild variant="ghost" size="icon" className="h-10 w-10 text-zinc-500 hover:text-emerald-500 hover:bg-emerald-50/50 rounded-xl">
+                <Button asChild variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50 rounded-xl transition-all">
                   <Link href={`/admin/portfolio/${car.slug}/edit`}>
                     <Edit3 className="w-5 h-5" />
                   </Link>
@@ -89,7 +89,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
                 <DeleteAction id={car.id} title={car.title} />
               </div>
 
-              <Button asChild variant="outline" size="sm" className="rounded-xl border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors group/link">
+              <Button asChild variant="outline" size="sm" className="rounded-xl border-border hover:bg-muted text-foreground hover:text-foreground/80 transition-all group/link font-black h-10 px-4">
                 <Link href={`/cars/${car.slug}`} target="_blank" className="flex items-center gap-2">
                   <ExternalLink className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                   <span>معاينة العرض</span>
@@ -100,11 +100,11 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
         ))}
 
         {allCars.length === 0 && (
-          <div className="col-span-full py-24 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-4xl">
-            <LayoutGrid className="w-16 h-16 text-zinc-200 dark:text-zinc-800 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-zinc-400">لا توجد أعمال تطابق بحثك</h3>
-            <p className="text-zinc-500 mt-2 mb-8">جرب كلمات بحث مختلفة أو قم بإضافة عمل جديد.</p>
-            <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-8">
+          <div className="col-span-full py-24 text-center border-2 border-dashed border-border/50 rounded-[2rem] bg-muted/20">
+            <LayoutGrid className="w-16 h-16 text-muted-foreground/20 mx-auto mb-4" />
+            <h3 className="text-xl font-black text-muted-foreground/60 tracking-tight">لا توجد أعمال تطابق بحثك</h3>
+            <p className="text-muted-foreground/40 font-bold mt-2 mb-8">جرب كلمات بحث مختلفة أو قم بإضافة عمل جديد.</p>
+            <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-8 font-black shadow-lg shadow-emerald-500/20">
               <Link href="/admin/portfolio/new">إضافة عمل جديد</Link>
             </Button>
           </div>
