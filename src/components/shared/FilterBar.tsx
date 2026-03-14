@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { SERVICE_TYPES } from "@/lib/constants";
 import { useTransition } from "react";
+import { ServiceSelect } from "./ServiceSelect";
 
 interface FilterBarProps {
   placeholder?: string;
@@ -59,45 +60,38 @@ export function FilterBar({
   const currentService = searchParams.get("serviceType") || "all";
 
   return (
-    <div dir="rtl" className="flex flex-col md:flex-row gap-4 mb-8">
+    <div dir="rtl" className="flex flex-col md:flex-row items-stretch gap-4 mb-8">
       <div className="relative flex-1 group">
-        <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-emerald-500 transition-colors" />
+        <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/40 group-focus-within:text-emerald-500 transition-colors" />
         <Input
           placeholder={placeholder}
           defaultValue={currentSearch}
           onChange={(e) => handleSearch(e.target.value)}
           aria-label="بحث في سجل التميز"
-          className="h-14 pr-11 bg-white dark:bg-zinc-900 border-border rounded-2xl group-focus-within:border-emerald-500/50 transition-all shadow-sm"
+          className="h-12! pr-12 bg-card/50 backdrop-blur-md border-border/50 rounded-2xl group-focus-within:border-emerald-500/50 transition-all shadow-sm text-foreground font-bold placeholder:text-muted-foreground/40"
         />
         {currentSearch && (
           <button
             onClick={() => handleSearch("")}
             aria-label="مسح البحث"
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 flex items-center justify-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400"
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-xl hover:bg-muted text-muted-foreground transition-colors"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         )}
       </div>
 
       {showServiceFilter && (
-        <Select value={currentService} onValueChange={handleServiceChange}>
-          <SelectTrigger className="md:w-[240px] h-14 bg-white dark:bg-zinc-900 border-border rounded-2xl focus:ring-emerald-500/20 shadow-sm font-bold">
-            <SelectValue placeholder="كل التصنيفات" />
-          </SelectTrigger>
-          <SelectContent className="rounded-2xl border-zinc-200 dark:border-zinc-800 font-bold">
-            <SelectItem value="all">كل الخدمات</SelectItem>
-            {SERVICE_TYPES.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                {type.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <ServiceSelect 
+          value={currentService} 
+          onValueChange={handleServiceChange}
+          className="md:w-[260px] h-12!"
+          showAllOption={true}
+        />
       )}
       
       {isPending && (
-        <div className="flex items-center text-xs text-muted-foreground animate-pulse pr-2">
+        <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-emerald-500 animate-pulse pr-2 whitespace-nowrap">
            جاري التحديث...
         </div>
       )}

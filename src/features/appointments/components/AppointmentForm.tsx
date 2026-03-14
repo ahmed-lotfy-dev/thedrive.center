@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, CalendarIcon, Wrench } from "lucide-react";
+import { 
+  Loader2, 
+  CalendarIcon, 
+  Wrench,
+  User as UserIcon,
+  Phone,
+  Hash
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -20,16 +27,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { createAppointment } from "@/server/actions/appointments";
 import { authClient } from "@/lib/auth-client";
+import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
+import { ServiceSelect } from "@/components/shared/ServiceSelect";
 
 const formSchema = z.object({
   guestName: z.string().min(1, "الاسم مطلوب"),
   guestEmail: z.string().email("البريد الإلكتروني غير صحيح").optional().or(z.literal("")),
   guestPhone: z.string().min(10, "رقم الموبايل مطلوب"),
+  plateNumber: z.string().min(1, "رقم اللوحة مطلوب"),
   serviceType: z.string().min(1, "نوع الخدمة مطلوب"),
   machineType: z.string().min(1, "نوع العربية مطلوب"),
   date: z.date(),
   notes: z.string().optional(),
-  address: z.string().min(1, "العنوان مطلوب"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -45,10 +54,10 @@ export function AppointmentForm() {
       guestName: session?.user?.name || "",
       guestEmail: session?.user?.email || "",
       guestPhone: "",
+      plateNumber: "",
       serviceType: "",
       machineType: "",
       notes: "",
-      address: "",
     },
   });
 
@@ -95,9 +104,16 @@ export function AppointmentForm() {
             name="guestName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>الاسم *</FormLabel>
+                <div className="flex items-center gap-2 mb-2">
+                  <UserIcon className="size-4 text-primary/80" />
+                  <FormLabel className="font-bold text-xs uppercase tracking-wider">الاسم *</FormLabel>
+                </div>
                 <FormControl>
-                  <Input placeholder="مثال: أحمد محمد" {...field} />
+                  <Input 
+                    placeholder="مثال: أحمد محمد" 
+                    {...field} 
+                    className="bg-muted/30 border-border/50 rounded-xl h-12 focus:border-primary/50 transition-all placeholder:text-muted-foreground/40"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -109,10 +125,40 @@ export function AppointmentForm() {
             name="guestPhone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>رقم الموبايل *</FormLabel>
+                <div className="flex items-center gap-2 mb-2">
+                  <Phone className="size-4 text-primary/80" />
+                  <FormLabel className="font-bold text-xs uppercase tracking-wider">رقم الموبايل *</FormLabel>
+                </div>
                 <FormControl>
-                  <Input placeholder="01234567890" dir="ltr" {...field} />
+                  <Input 
+                    placeholder="01012345678" 
+                    dir="ltr" 
+                    {...field} 
+                    className="bg-muted/30 border-border/50 rounded-xl h-12 focus:border-primary/50 transition-all placeholder:text-muted-foreground/40"
+                  />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="plateNumber"
+            render={({ field }) => (
+              <FormItem className="relative flex flex-col items-center sm:items-start md:col-span-2">
+                <div className="flex items-center gap-2 mb-4 self-start">
+                  <Hash className="size-4 text-primary/80" />
+                  <FormLabel className="font-bold text-xs uppercase tracking-wider">رقم اللوحة *</FormLabel>
+                </div>
+                <FormControl>
+                  <LicensePlateInput 
+                    value={field.value} 
+                    onChange={field.onChange}
+                    disabled={isSubmitting}
+                  />
+                </FormControl>
+                <FormDescription className="mt-2 text-center sm:text-right w-full text-[10px] uppercase tracking-widest text-zinc-500">رقم اللوحة يساعدنا في الوصول لسجل سيارتك</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -147,9 +193,9 @@ export function AppointmentForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="washing_machine">ملاكي</SelectItem>
-                    <SelectItem value="refrigerator">SUV</SelectItem>
-                    <SelectItem value="water_filter">نقل خفيف</SelectItem>
+                    <SelectItem value="sedan">ملاكي</SelectItem>
+                    <SelectItem value="suv">SUV</SelectItem>
+                    <SelectItem value="truck">نقل / فان</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -162,19 +208,14 @@ export function AppointmentForm() {
             name="serviceType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>نوع الخدمة *</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر الخدمة" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="repair">ضبط زوايا</SelectItem>
-                    <SelectItem value="installation">ترصيص واتزان</SelectItem>
-                    <SelectItem value="maintenance">فحص شامل قبل البيع/الشراء</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormLabel className="font-bold text-xs uppercase tracking-wider mb-2">نوع الخدمة *</FormLabel>
+                <FormControl>
+                  <ServiceSelect 
+                    value={field.value} 
+                    onValueChange={field.onChange}
+                    className="h-12 bg-muted/30 border-border/50"
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -217,19 +258,6 @@ export function AppointmentForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>العنوان *</FormLabel>
-              <FormControl>
-                <Textarea placeholder="اكتب عنوانك بالتفصيل..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}
