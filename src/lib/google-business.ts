@@ -13,8 +13,8 @@ export const BUSINESS_ADDRESS =
 export const BUSINESS_CITY = process.env.NEXT_PUBLIC_BUSINESS_CITY || "المحلة الكبرى";
 export const BUSINESS_REGION = process.env.NEXT_PUBLIC_BUSINESS_REGION || "المحلة الكبرى";
 
-export const GOOGLE_RATING = "4.9";
-export const GOOGLE_REVIEWS_COUNT = "180";
+export const GOOGLE_RATING = "4.6";
+export const GOOGLE_REVIEWS_COUNT = "34";
 
 export const BUSINESS_PHONE = "01017131414";
 export const BUSINESS_PHONE_WHATSAPP = "201017131414";

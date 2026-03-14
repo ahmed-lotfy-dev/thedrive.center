@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import {
   GOOGLE_REVIEWS_COUNT,
 } from "@/lib/google-business";
 import { ArrowUpRight, Clock3, Facebook, MapPin, Music2, Phone, Star } from "lucide-react";
+import { getDynamicStats } from "@/app/actions/stats";
 
 export function Footer() {
   const pathname = usePathname();
@@ -23,6 +25,16 @@ export function Footer() {
   if (pathname?.startsWith("/admin")) {
     return null;
   }
+
+  const [stats, setStats] = React.useState<{ rating: string; reviewsCount: string } | null>(null);
+
+  React.useEffect(() => {
+    async function loadStats() {
+      const data = await getDynamicStats();
+      if (data) setStats(data);
+    }
+    loadStats();
+  }, []);
 
   const directionsUrl = getDirectionsUrl();
   const reviewsUrl = getReviewsUrl();
@@ -125,7 +137,7 @@ export function Footer() {
                       <Star key={i} className="size-3.5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <span className="text-sm font-black text-foreground">{GOOGLE_RATING}</span>
+                  <span className="text-sm font-black text-foreground">{stats?.rating || GOOGLE_RATING}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="size-4 rounded-full bg-emerald-500 flex items-center justify-center">
@@ -134,7 +146,7 @@ export function Footer() {
                     </svg>
                   </div>
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                    Google Business Verified • {GOOGLE_REVIEWS_COUNT}+ Reviews
+                    Google Business Verified • {stats?.reviewsCount || GOOGLE_REVIEWS_COUNT}+ Reviews
                   </span>
                 </div>
               </Link>
