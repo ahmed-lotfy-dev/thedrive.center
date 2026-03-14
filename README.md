@@ -1,30 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Drive Center 🏎️💎
 
-## Getting Started
+A premium, "Pro Max" automotive service management platform built for elite service centers and their clients.
 
-First, run the development server with Bun:
+## 🌟 Project Overview
+The Drive Center is a high-performance digital ecosystem designed to manage the entire lifecycle of luxury automotive care. From intelligent booking to detailed service history tracking and a cinematic portfolio showcase, every aspect of the platform is engineered for excellence.
 
-```bash
-bun dev
-```
+## 📖 Documentation Suite
+We have completely overhauled our documentation to ensure maximum clarity for both human developers and AI assistants:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [**PRD (Project Requirements Document)**](docs/PRD.md): The vision, core features, and technical foundation.
+- [**Technical Architecture**](docs/ARCHITECTURE.md): Deep dive into the system design, infrastructure, and front-end philosophy.
+- [**Database ERD**](docs/ERD.md): Detailed Mermaid diagram of the project's data relationships.
+- [**Case Study**](docs/CASE_STUDY.md): A professional summary of the problem, solution, and impact for portfolio showcase.
+- [**المركز الهندسى (Intro Arabic)**](docs/INTRO_ARABIC.md): A complete introduction for our Arabic-speaking clients and partners.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
+- **Framework**: Next.js 15
+- **Database**: PostgreSQL + Drizzle ORM
+- **Authentication**: Better Auth
+- **Storage**: Cloudflare R2
+- **Styling**: Tailwind CSS (Pro Max Semantic Tokens)
+- **Animations**: GSAP & Framer Motion
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Getting Started
 
-## Learn More
+### Prerequisites
+- [Bun](https://bun.sh/) (Recommended) or Node.js 20+
+- PostgreSQL Database
+- Cloudflare R2 Credentials (Optional for local dev)
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ahmed-lotfy-dev/thedrive.center.git
+   ```
+2. Install dependencies:
+   ```bash
+   bun install
+   ```
+3. Set up your environment variables:
+   ```bash
+   cp .env.example .env
+   # Fill in your database and auth credentials
+   ```
+4. Run the development server:
+   ```bash
+   bun dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🏗️ Development Principles
+- **Feature-Driven Design**: Components are modular and grouped by domain.
+- **Micro-Animations**: Fluid transitions using GSAP and Framer Motion.
+- **OLED Black UI**: Optimized for high-end displays with semantic tokens.
+- **Security First**: Role-based access and secure data mutations.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Built with passion for the automotive world.* 🏁
