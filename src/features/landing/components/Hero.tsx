@@ -46,7 +46,7 @@ export function Hero() {
             </div>
 
             {/* FLOATING STATS GRID - NEW CARD STYLE */}
-            <div className="flex flex-wrap items-center gap-3 pt-8 mt-8 border-t border-border/50 animate-in fade-in duration-1000 delay-700">
+            <div className="flex flex-wrap items-center gap-3 pt-8 animate-in fade-in duration-1000 delay-700">
               <div className="flex flex-col p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-border shadow-sm min-w-[120px]">
                 <div className="text-2xl md:text-3xl font-black text-foreground drop-shadow-sm">99<span className="text-emerald-500">%</span></div>
                 <div className="text-[10px] md:text-xs font-black uppercase tracking-wider text-muted-foreground mt-1">دقة الفحص</div>
