@@ -35,7 +35,7 @@ export function CTA() {
             احجز ميعادك في <span className="text-emerald-400">The Drive</span> وخليك مطمّن على ثبات وأداء عربيتك
           </h2>
           <div className="flex flex-wrap gap-4">
-            <Button asChild size="lg" className="h-16 rounded-3xl bg-emerald-500 hover:bg-emerald-400 text-zinc-900 px-10 text-lg font-black shadow-lg shadow-emerald-500/20 transition-transform active:scale-95">
+            <Button asChild size="lg" className="h-16 rounded-3xl bg-emerald-500 hover:bg-emerald-400 text-zinc-900 px-10 text-lg font-black shadow-lg shadow-emerald-500/20 transition-all hover:shadow-emerald-500/40 hover:-translate-y-1 active:scale-95 leading-none">
               <Link href="/book">احجز ميعادك دلوقتي</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-16 rounded-3xl px-10 text-lg font-black border-white/10 bg-white/5 hover:bg-white/10 text-white">

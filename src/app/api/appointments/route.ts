@@ -9,10 +9,9 @@ const appointmentSchema = z.object({
   guestName: z.string().optional(),
   guestEmail: z.string().email().optional(),
   guestPhone: z.string().min(10),
-  serviceType: z.enum(["repair", "installation", "maintenance"]),
-  machineType: z.enum(["washing_machine", "water_filter", "refrigerator"]),
+  serviceType: z.string(),
+  machineType: z.string(),
   date: z.string().transform((str) => new Date(str)),
-  address: z.string().min(5),
   notes: z.string().optional(),
 });
 
@@ -39,7 +38,6 @@ export async function POST(req: Request) {
       serviceType: validatedData.serviceType,
       machineType: validatedData.machineType,
       date: validatedData.date,
-      address: validatedData.address,
       notes: validatedData.notes,
       status: "pending",
     });

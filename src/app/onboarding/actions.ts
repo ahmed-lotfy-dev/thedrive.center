@@ -30,18 +30,42 @@ export async function submitOnboarding(prevState: any, formData: FormData) {
   }
 
   // Clean the plate number string to ensure consistent formatting
-  const cleanPlateNumber = plateNumber.trim().toUpperCase();
+  const cleanPlateNumber = plateNumber.replace(/\s+/g, "").toUpperCase();
 
   try {
-    // Insert car details
-    await db.insert(customerCars).values({
-      userId,
-      make,
-      model,
-      year,
-      plateNumber: cleanPlateNumber,
-      color,
+    // Check if car already exists in the system (e.g. added by admin)
+    const existingCar = await db.query.customerCars.findFirst({
+      where: eq(customerCars.plateNumber, cleanPlateNumber),
     });
+
+    if (existingCar) {
+      if (existingCar.userId && existingCar.userId !== userId) {
+        return { error: "رقم اللوحة هذا مسجل لمستخدم آخر. يرجى التواصل مع الإدارة." };
+      }
+      
+      // Link the existing car to this user and ensure it's active
+      await db.update(customerCars)
+        .set({ 
+          userId, 
+          make, 
+          model, 
+          year, 
+          color, 
+          status: "active",
+          updatedAt: new Date() 
+        })
+        .where(eq(customerCars.id, existingCar.id));
+    } else {
+      // Insert new car record
+      await db.insert(customerCars).values({
+        userId,
+        make,
+        model,
+        year,
+        plateNumber: cleanPlateNumber,
+        color,
+      });
+    }
 
     // Mark user as onboarded
     await db.update(user)
@@ -49,10 +73,6 @@ export async function submitOnboarding(prevState: any, formData: FormData) {
       .where(eq(user.id, userId));
 
   } catch (error: any) {
-    // Check for PostgreSQL unique violation error code (23505)
-    if (error.code === '23505') {
-       return { error: "رقم اللوحة هذا مسجل مسبقاً في النظام. يرجى المراجعة." };
-    }
     console.error("Onboarding error:", error);
     return { error: "حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى." };
   }

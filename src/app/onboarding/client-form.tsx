@@ -6,17 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ShieldCheck, Sparkles, AlertCircle, Fingerprint } from "lucide-react";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-  InputOTPSeparator,
-} from "@/components/ui/input-otp"
+import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
 
 export function OnboardingForm() {
   const [state, formAction, isPending] = useActionState(submitOnboarding, null);
-  const [plateLetters, setPlateLetters] = useState("");
-  const [plateNumbers, setPlateNumbers] = useState("");
+  const [plateNumber, setPlateNumber] = useState("");
 
   return (
     <form action={formAction} className="p-8 md:p-10 space-y-6">
@@ -80,54 +74,22 @@ export function OnboardingForm() {
         
         <div className="flex flex-col items-center gap-4 p-8 bg-zinc-50/50 dark:bg-zinc-800/20 backdrop-blur-sm rounded-4xl border border-zinc-200/60 dark:border-zinc-800/60 transition-all shadow-inner relative overflow-hidden group">
           <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none" />
-          <div className="flex items-center gap-2 group" dir="rtl">
-            {/* Letters Portion - Should be on the RIGHT in RTL flow */}
-            <div className="space-y-2">
-              <p className="text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-black text-center">الحروف</p>
-              <InputOTP
-                maxLength={3}
-                value={plateLetters}
-                onChange={setPlateLetters}
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} className="font-bold text-xl bg-white dark:bg-zinc-900" />
-                  <InputOTPSlot index={1} className="font-bold text-xl bg-white dark:bg-zinc-900" />
-                  <InputOTPSlot index={2} className="font-bold text-xl bg-white dark:bg-zinc-900" />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
-
-            <div className="mt-6 flex items-center justify-center w-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-zinc-400 dark:bg-zinc-600" />
-            </div>
-
-            {/* Numbers Portion - Should be on the LEFT in RTL flow */}
-            <div className="space-y-2">
-              <p className="text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-black text-center">الأرقام</p>
-              <InputOTP
-                maxLength={4}
-                value={plateNumbers}
-                onChange={setPlateNumbers}
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} className="font-bold text-xl bg-white dark:bg-zinc-900" />
-                  <InputOTPSlot index={1} className="font-bold text-xl bg-white dark:bg-zinc-900" />
-                  <InputOTPSlot index={2} className="font-bold text-xl bg-white dark:bg-zinc-900" />
-                  <InputOTPSlot index={3} className="font-bold text-xl bg-white dark:bg-zinc-900" />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
-          </div>
+          
+          <LicensePlateInput 
+            value={plateNumber}
+            onChange={setPlateNumber}
+            disabled={isPending}
+          />
           
           <input 
             type="hidden" 
             name="plateNumber" 
-            value={`${plateLetters}-${plateNumbers}`} 
+            value={plateNumber} 
             required
           />
           
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
-            يرجى إدخال الحروف بالترتيب (مثال: ع م ب) ثم الأرقام.
+            يرجى إدخال الأرقام أولاً ثم الحروف العربية بالترتيب.
           </p>
         </div>
       </div>
