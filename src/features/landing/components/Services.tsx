@@ -48,7 +48,7 @@ const secondaryServices = [
 
 export function Services() {
   return (
-    <div className="space-y-12 md:space-y-20">
+    <div id="services" className="space-y-12 md:space-y-20">
       {/* SECTION 1: COMPREHENSIVE INSPECTION HIGHLIGHT */}
       <section id="inspection" className="container mx-auto px-4 md:px-6 pt-12" data-animate>
         <div className="relative overflow-hidden rounded-[2.5rem] md:rounded-[4rem] bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/50 dark:border-white/5 shadow-2xl transition-colors duration-500">
