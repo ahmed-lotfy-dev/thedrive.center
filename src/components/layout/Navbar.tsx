@@ -45,12 +45,37 @@ export function Navbar() {
   const { data: session } = authClient.useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navRef = React.useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 18);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isOpen]);
 
   if (pathname?.startsWith("/admin")) {
     return null;
@@ -64,6 +89,7 @@ export function Navbar() {
 
   return (
     <motion.nav
+      ref={navRef as any}
       className="fixed top-0 left-0 right-0 z-50 px-4 pt-4 md:pt-6"
       variants={navContainerVariants}
       initial="hidden"
@@ -134,16 +160,17 @@ export function Navbar() {
             </Button>
           </div>
 
-          <div className="flex sm:hidden items-center gap-3">
+          <div className="flex md:hidden items-center gap-2">
             <ThemeToggle />
+            <UserMenu session={session} />
           </div>
 
           <button
             onClick={() => setIsOpen((prev) => !prev)}
-            className="inline-flex md:hidden size-12 items-center justify-center rounded-2xl border border-border/50 bg-muted/50 hover:bg-muted transition-all active:scale-90"
+            className="inline-flex md:hidden size-10 md:size-12 items-center justify-center rounded-xl md:rounded-2xl border border-border/50 bg-muted/50 hover:bg-muted transition-all active:scale-90"
             aria-label="القائمة"
           >
-            {isOpen ? <X className="size-6 text-foreground dark:text-white" /> : <Menu className="size-6 text-foreground dark:text-white" />}
+            {isOpen ? <X className="size-5 md:size-6 text-foreground dark:text-white" /> : <Menu className="size-5 md:size-6 text-foreground dark:text-white" />}
           </button>
         </motion.div>
       </div>
@@ -172,27 +199,17 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              {!session && (
-                <div className="pt-2 mt-2 border-t border-border/50">
+              <div className="pt-2 mt-2 border-t border-border/50">
+                {!session ? (
+                  <Button asChild className="w-full rounded-xl h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black shadow-lg shadow-emerald-500/30">
+                    <Link href="/sign-in" onClick={() => setIsOpen(false)}>دخول</Link>
+                  </Button>
+                ) : (
                   <Button asChild className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-black">
-                    <Link href="/sign-in" onClick={() => setIsOpen(false)}>سجل دخولك</Link>
+                    <Link href="/book" onClick={() => setIsOpen(false)}>احجز موعد</Link>
                   </Button>
-                </div>
-              )}
-              {session && (
-                <div className="pt-2 mt-2 border-t border-border/50 flex items-center justify-between px-2">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="size-8">
-                      <AvatarImage src={session.user.image || ""} />
-                      <AvatarFallback>{session.user.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-bold">{session.user.name}</span>
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={() => authClient.signOut()} className="text-destructive h-9 font-black">
-                    خروج
-                  </Button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </motion.div>
         )}

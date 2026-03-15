@@ -93,7 +93,7 @@ export function Footer() {
                 <div className="size-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
                   <Clock3 className="size-5 text-emerald-500" />
                 </div>
-                <span className="font-bold pt-1">يومياً: ٩ ص - ١٠ م</span>
+                <span className="font-bold pt-1">يومياً: ١٠ ص - ١٠ م</span>
               </div>
             </div>
           </div>
