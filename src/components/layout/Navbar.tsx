@@ -6,9 +6,8 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { UserMenu } from "../shared/UserMenu";
-import { Calendar, Menu, X } from "lucide-react";
+import { Calendar, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { motion, AnimatePresence, type Variants } from "motion/react";
@@ -46,6 +45,9 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navRef = React.useRef<HTMLElement>(null);
+
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
+  const canOpenAdmin = userRole === "admin" || userRole === "owner";
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 18);
@@ -145,7 +147,6 @@ export function Navbar() {
 
         <motion.div variants={navItemVariants} className="flex-1 flex justify-end items-center gap-3 sm:gap-6 relative z-10">
           <div className="hidden md:flex items-center gap-4">
-            <ThemeToggle />
             <UserMenu session={session} />
             <Button
               asChild
@@ -158,11 +159,6 @@ export function Navbar() {
                 </span>
               </Link>
             </Button>
-          </div>
-
-          <div className="flex md:hidden items-center gap-2">
-            <ThemeToggle />
-            <UserMenu session={session} />
           </div>
 
           <button
@@ -205,9 +201,65 @@ export function Navbar() {
                     <Link href="/sign-in" onClick={() => setIsOpen(false)}>دخول</Link>
                   </Button>
                 ) : (
-                  <Button asChild className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-black">
-                    <Link href="/book" onClick={() => setIsOpen(false)}>احجز موعد</Link>
-                  </Button>
+                  <>
+                    <div className="flex flex-col gap-1 mb-2">
+                      <Link 
+                        href="/dashboard/garage" 
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-zinc-200 hover:bg-emerald-500/20 active:bg-emerald-500/30 transition-all"
+                      >
+                        <LayoutDashboard className="size-4 text-emerald-500" />
+                        كراجي (My Garage)
+                      </Link>
+                      
+                      {canOpenAdmin && (
+                        <>
+                          <Link 
+                            href="/admin" 
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-zinc-200 hover:bg-indigo-500/20 active:bg-indigo-500/30 transition-all"
+                          >
+                            <LayoutDashboard className="size-4 text-indigo-500" />
+                            إدارة المركز
+                          </Link>
+                          <Link 
+                            href="/admin/customer-cars" 
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-zinc-200 hover:bg-amber-500/20 active:bg-amber-500/30 transition-all"
+                          >
+                            <LayoutDashboard className="size-4 text-amber-500" />
+                            سيارات العملاء
+                          </Link>
+                        </>
+                      )}
+                      
+                      <button
+                        onClick={() => {
+                          setIsOpen(false);
+                          authClient.signOut();
+                        }}
+                        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-500/20 active:bg-red-500/30 transition-all w-full text-right cursor-pointer"
+                      >
+                        <LogOut className="size-4 text-red-500" />
+                        تسجيل خروج
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-3 px-3 py-3 bg-muted/40 rounded-xl mb-3 border border-white/5">
+                      <Avatar className="size-10 border border-emerald-500/30">
+                        <AvatarImage src={session.user.image || ""} />
+                        <AvatarFallback className="bg-emerald-500/20 text-emerald-500 font-black">{session.user.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col text-right">
+                        <span className="text-sm font-black text-foreground">{session.user.name}</span>
+                        <span className="text-xs text-muted-foreground font-bold">{canOpenAdmin ? 'مدير النظام' : 'عميل'}</span>
+                      </div>
+                    </div>
+
+                    <Button asChild className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-lg shadow-primary/20">
+                      <Link href="/book" onClick={() => setIsOpen(false)}>احجز موعد جديد</Link>
+                    </Button>
+                  </>
                 )}
               </div>
             </div>
