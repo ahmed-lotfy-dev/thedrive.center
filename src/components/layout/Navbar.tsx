@@ -255,10 +255,6 @@ export function Navbar() {
                         <span className="text-xs text-muted-foreground font-bold">{canOpenAdmin ? 'مدير النظام' : 'عميل'}</span>
                       </div>
                     </div>
-
-                    <Button asChild className="w-full rounded-xl h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-lg shadow-primary/20">
-                      <Link href="/book" onClick={() => setIsOpen(false)}>احجز موعد جديد</Link>
-                    </Button>
                   </>
                 )}
               </div>
