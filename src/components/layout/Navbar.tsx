@@ -86,7 +86,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "الرئيسية" },
     { href: "/cars", label: "سجل التميز" },
-    { href: "/book", label: "احجز موعد" },
+    ...(!session ? [{ href: "/book", label: "احجز موعد" }] : []),
   ];
 
   return (
@@ -148,17 +148,19 @@ export function Navbar() {
         <motion.div variants={navItemVariants} className="flex-1 flex justify-end items-center gap-3 sm:gap-6 relative z-10">
           <div className="hidden md:flex items-center gap-4">
             <UserMenu session={session} />
-            <Button
-              asChild
-              className="relative h-11 px-6 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all group overflow-hidden cursor-pointer active:scale-95 hover:-translate-y-1"
-            >
-              <Link href="/book">
-                <span className="relative z-10 flex items-center gap-2">
-                  احجز موعد
-                  <Calendar className="w-4 h-4 transition-transform group-hover:scale-110" />
-                </span>
-              </Link>
-            </Button>
+            {!session && (
+              <Button
+                asChild
+                className="relative h-11 px-6 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all group overflow-hidden cursor-pointer active:scale-95 hover:-translate-y-1"
+              >
+                <Link href="/book">
+                  <span className="relative z-10 flex items-center gap-2">
+                    احجز موعد
+                    <Calendar className="w-4 h-4 transition-transform group-hover:scale-110" />
+                  </span>
+                </Link>
+              </Button>
+            )}
           </div>
 
           <button

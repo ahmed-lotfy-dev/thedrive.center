@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 interface Slide {
   id: string;
@@ -27,6 +28,7 @@ interface HeroCarouselProps {
 }
 
 export function HeroCarousel({ slides = [] }: HeroCarouselProps) {
+  const { data: session } = authClient.useSession();
   const plugin = React.useRef(Autoplay({ delay: 4500, stopOnInteraction: true }));
 
   const displaySlides =
@@ -77,12 +79,12 @@ export function HeroCarousel({ slides = [] }: HeroCarouselProps) {
                   src={slide.imageUrl}
                   alt={slide.title || "صورة الخدمة"}
                   fill
-                  className="object-cover scale-[1.03] transition-transform duration-[7000ms] ease-linear hover:scale-[1.1]"
+                  className="object-cover scale-[1.03] transition-transform duration-7000 ease-linear hover:scale-[1.1]"
                   priority
                 />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/80 via-zinc-950/35 to-zinc-900/10 z-10" />
+              <div className="absolute inset-0 bg-linear-to-tr from-zinc-950/80 via-zinc-950/35 to-zinc-900/10 z-10" />
               <div className="absolute -top-16 -left-14 h-44 w-44 rounded-full bg-teal-300/25 blur-3xl z-10" />
               <div className="absolute -bottom-14 -right-10 h-48 w-48 rounded-full bg-zinc-300/20 blur-3xl z-10" />
 
@@ -102,26 +104,30 @@ export function HeroCarousel({ slides = [] }: HeroCarouselProps) {
 
                   {slide.linkUrl && (
                     <div className="flex flex-wrap gap-4 pt-4">
-                      <Button
-                        asChild
-                        size="lg"
-                        className="h-12 px-8 rounded-full bg-accent hover:bg-accent/90 text-white shadow-xl hover:shadow-accent/40 transition-all duration-300 shine"
-                      >
-                        <Link href={slide.linkUrl}>{slide.buttonText || "احجز الآن"}</Link>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="h-12 px-8 rounded-full border-white/40 bg-black/20 text-white hover:bg-white/10 shadow-lg transition-all duration-300"
-                      >
-                        <Link href="/book">احجز موعد</Link>
-                      </Button>
+                      {(!session || slide.linkUrl !== "/book") && (
+                        <Button
+                          asChild
+                          size="lg"
+                          className="h-12 px-8 rounded-full bg-accent hover:bg-accent/90 text-white shadow-xl hover:shadow-accent/40 transition-all duration-300 shine"
+                        >
+                          <Link href={slide.linkUrl}>{slide.buttonText || "احجز الآن"}</Link>
+                        </Button>
+                      )}
+                      {!session && (
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          className="h-12 px-8 rounded-full border-white/40 bg-black/20 text-white hover:bg-white/10 shadow-lg transition-all duration-300"
+                        >
+                          <Link href="/book">احجز موعد</Link>
+                        </Button>
+                      )}
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent z-20" />
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-background to-transparent z-20" />
             </div>
           </CarouselItem>
         ))}
