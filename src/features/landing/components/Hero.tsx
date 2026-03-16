@@ -99,7 +99,7 @@ export function Hero({ imageUrl }: HeroProps) {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-14 rounded-2xl border-white/10 bg-white/5 backdrop-blur-md text-white font-bold px-8 hover:bg-white/10 transition-all cursor-pointer active:scale-95 hover:-translate-y-1"
+                className="h-14 rounded-2xl border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 font-bold px-8 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all cursor-pointer active:scale-95 hover:-translate-y-1"
               >
                 <Link href="/cars" className="flex items-center gap-2">
                   عرض أعمالنا
