@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { customerCars } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
+import { normalizePlateNumber } from "@/lib/utils";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -50,7 +51,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
       notes: validated.notes || null,
     };
 
-    const cleanPlateNumber = validated.plateNumber.replace(/\s+/g, "").toUpperCase();
+    const cleanPlateNumber = normalizePlateNumber(validated.plateNumber);
     
     let car = await db.query.customerCars.findFirst({
       where: eq(customerCars.plateNumber, cleanPlateNumber),

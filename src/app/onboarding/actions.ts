@@ -6,6 +6,7 @@ import { customerCars, user } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { normalizePlateNumber } from "@/lib/utils";
 
 export async function submitOnboarding(prevState: any, formData: FormData) {
   const session = await auth.api.getSession({
@@ -30,7 +31,7 @@ export async function submitOnboarding(prevState: any, formData: FormData) {
   }
 
   // Clean the plate number string to ensure consistent formatting
-  const cleanPlateNumber = plateNumber.replace(/\s+/g, "").toUpperCase();
+  const cleanPlateNumber = normalizePlateNumber(plateNumber);
 
   try {
     // Check if car already exists in the system (e.g. added by admin)

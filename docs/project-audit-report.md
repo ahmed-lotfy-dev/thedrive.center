@@ -58,6 +58,15 @@ Last Updated: **2026-03-15**
 | FilterBar had its own inline `Select` mapping | → Replaced with `ServiceSelect` (`showAllOption={true}`) |
 | `AddServiceRecordModal` used `bg-zinc-950` | → `bg-background border-border/50` |
 
+### 1.6 Egyptian License Plate Normalization
+**Status**: ✅ FIXED
+
+| Issue | Fix |
+|---|---|
+| Arabic license plates treated as different due to character variations (أ, إ, آ, ة, ى) | → Centralized `normalizePlateNumber()` in `utils.ts` |
+| Variations like "س م أ" vs "س م ا" caused duplicate car records | → Consistent character mapping: Alef variations to "ا", "ة" to "ه", "ي" to "ى" |
+| Inconsistent normalization regex in different actions | → All actions now use the unified utility function |
+
 ---
 
 ## 2. Security Audit

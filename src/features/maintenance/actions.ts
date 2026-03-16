@@ -6,6 +6,7 @@ import { eq, and, desc, ilike, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { normalizePlateNumber } from "@/lib/utils";
 import { customerCarSchema, serviceRecordSchema, maintenanceTrackingSchema } from "./schema";
 
 async function isAdmin() {
@@ -50,7 +51,7 @@ export async function linkCarByPlate(plateNumber: string) {
 
   if (!session?.user) return { error: "يرجى تسجيل الدخول أولاً" };
 
-  const cleanPlate = plateNumber.replace(/[-\s]/g, "").toUpperCase();
+  const cleanPlate = normalizePlateNumber(plateNumber);
 
   try {
     const car = await db.query.customerCars.findFirst({
@@ -85,7 +86,7 @@ export async function addCustomerCarAction(data: any) {
 
   try {
     const validated = customerCarSchema.parse(data);
-    const cleanPlate = validated.plateNumber.replace(/[-\s]/g, "").toUpperCase();
+    const cleanPlate = normalizePlateNumber(validated.plateNumber);
 
     const existing = await db.query.customerCars.findFirst({
       where: eq(customerCars.plateNumber, cleanPlate),
@@ -151,7 +152,7 @@ export async function searchCustomerCars(query: string) {
     }
 
     const searchTerm = `%${trimmedQuery}%`;
-    const normalizedPlateQuery = trimmedQuery.replace(/[-\s]/g, "").toUpperCase();
+    const normalizedPlateQuery = normalizePlateNumber(trimmedQuery);
     const plateSearchTerm = `%${normalizedPlateQuery}%`;
     
     // 1. Primary Search (Plate, Make, Model)
