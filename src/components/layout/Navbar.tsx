@@ -97,7 +97,8 @@ export function Navbar() {
       initial="hidden"
       animate="visible"
     >
-      <div
+      <motion.div
+        variants={navContainerVariants}
         className={cn(
           "mx-auto flex h-16 md:h-20 container items-center justify-between rounded-4xl border transition-all duration-500 px-4 sm:px-8 relative",
           isScrolled

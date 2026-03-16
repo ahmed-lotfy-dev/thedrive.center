@@ -66,7 +66,10 @@ export function Hero({ imageUrl }: HeroProps) {
           initial="hidden"
           animate="visible"
         >
-          <div className="w-full lg:w-1/2 space-y-8 relative z-20 text-right md:text-right">
+          <motion.div 
+            className="w-full lg:w-1/2 space-y-8 relative z-20 text-right md:text-right"
+            variants={containerVariants}
+          >
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-sm">
               <Sparkles className="w-4 h-4" />
               <span className="text-sm font-bold tracking-wide">المركز الأول في المـحـلـة الكـبـرى</span>
