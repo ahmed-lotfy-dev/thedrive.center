@@ -30,7 +30,7 @@ import { createAppointment } from "@/server/actions/appointments";
 import { authClient } from "@/lib/auth-client";
 import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
 import { ServiceSelect } from "@/components/shared/ServiceSelect";
-import { CAR_MAKERS } from "@/lib/constants";
+import { CAR_MAKERS, VEHICLE_TYPES } from "@/lib/constants";
 
 const formSchema = z.object({
   guestName: z.string().min(1, "الاسم مطلوب"),
@@ -228,9 +228,11 @@ export function AppointmentForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="sedan">ملاكي (Sedan/Hatchback)</SelectItem>
-                    <SelectItem value="suv">4x4 / SUV</SelectItem>
-                    <SelectItem value="truck">نقل / فان (Truck/Van)</SelectItem>
+                    {VEHICLE_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

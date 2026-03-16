@@ -1,5 +1,6 @@
 "use server";
 
+import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { customerCars, user } from "@/db/schema";
@@ -8,29 +9,39 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { normalizePlateNumber } from "@/lib/utils";
 
+const onboardingSchema = z.object({
+  make: z.string().min(1, "ماركة السيارة مطلوبة"),
+  model: z.string().min(1, "موديل السيارة مطلوب"),
+  year: z.coerce.number().min(1900).max(new Date().getFullYear() + 1).optional(),
+  plateNumber: z.string().min(1, "رقم اللوحة مطلوب"),
+  color: z.string().optional(),
+});
+
 export async function submitOnboarding(prevState: any, formData: FormData) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     return { error: "غير مصرح لك بالوصول. يرجى تسجيل الدخول أولاً." };
   }
 
-  const userId = session.user.id;
-  const make = formData.get("make") as string;
-  const model = formData.get("model") as string;
-  const yearStr = formData.get("year") as string;
-  const plateNumber = formData.get("plateNumber") as string;
-  const color = formData.get("color") as string;
+  const rawData = {
+    make: formData.get("make"),
+    model: formData.get("model"),
+    year: formData.get("year"),
+    plateNumber: formData.get("plateNumber"),
+    color: formData.get("color"),
+  };
 
-  const year = yearStr ? parseInt(yearStr, 10) : null;
+  const validated = onboardingSchema.safeParse(rawData);
 
-  if (!make || !model || !plateNumber) {
-    return { error: "برجاء إدخال ماركة وموديل السيارة ورقم اللوحة." };
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message };
   }
 
-  // Clean the plate number string to ensure consistent formatting
+  const { make, model, year, plateNumber, color } = validated.data;
+  const userId = session.user.id;
   const cleanPlateNumber = normalizePlateNumber(plateNumber);
 
   try {

@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
 import { formatLicensePlate } from "@/lib/utils";
+import { CAR_MAKERS, VEHICLE_TYPES } from "@/lib/constants";
 import {
   Dialog,
   DialogContent,
@@ -63,10 +64,12 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const getCarDisplayName = (car: any) => {
-    const make = car.make === "Unknown" ? "سيارة" : car.make;
-    const model = car.model === "washing_machine" ? "ملاكي" : 
-                 car.model === "refrigerator" ? "SUV" : 
-                 car.model === "water_filter" ? "نقل" : car.model;
+    const maker = CAR_MAKERS.find(m => m.value === car.make.toLowerCase());
+    const make = maker ? maker.label : (car.make === "Unknown" ? "سيارة" : car.make);
+    
+    const vType = VEHICLE_TYPES.find(t => t.value === car.model.toLowerCase());
+    const model = vType ? vType.label : car.model;
+    
     return `${make} ${model}`;
   };
   
@@ -172,7 +175,7 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
           <div key={car.id} className="relative group">
             <Link
               href={`/admin/customer-cars/${car.id}`}
-              className="block w-full text-right p-6 rounded-3xl border bg-card/40 border-border/50 hover:border-emerald-500/40 transition-all duration-300 flex flex-col gap-3 relative overflow-hidden"
+              className="flex w-full text-right p-6 rounded-3xl border bg-card/40 border-border/50 hover:border-emerald-500/40 transition-all duration-300 flex-col gap-3 relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
               

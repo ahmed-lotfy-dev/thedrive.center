@@ -13,7 +13,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { CAR_MAKERS } from "@/lib/constants";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2, Car, Hash, Palette, Calendar, Plus } from "lucide-react";
@@ -65,13 +73,20 @@ export function AddCarForm({ onSuccess }: AddCarFormProps) {
                     <Car className="size-4 text-emerald-500/80" />
                     <FormLabel className="text-muted-foreground font-black uppercase text-[11px] tracking-[0.15em] font-sans">ماركة السيارة</FormLabel>
                   </div>
-                  <FormControl>
-                    <Input 
-                      placeholder="BMW" 
-                      {...field} 
-                      className="bg-muted/50 border-border/50 rounded-2xl h-14 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all font-bold placeholder:text-muted-foreground/30 text-base cursor-text border-2" 
-                    />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="bg-muted/50 border-border/50 rounded-2xl h-14 focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all font-bold placeholder:text-muted-foreground/30 text-base border-2">
+                        <SelectValue placeholder="BMW" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {CAR_MAKERS.map((maker) => (
+                        <SelectItem key={maker.value} value={maker.value}>
+                          {maker.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage className="text-xs text-red-400/80 mr-1 mt-1.5" />
                 </FormItem>
               )}

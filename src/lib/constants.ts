@@ -31,3 +31,12 @@ export const CAR_MAKERS = [
 ] as const;
 
 export type CarMakerValue = (typeof CAR_MAKERS)[number]["value"];
+
+export const VEHICLE_TYPES = [
+  { value: "sedan", label: "ملاكي (Sedan/Hatchback)" },
+  { value: "suv", label: "4x4 / SUV" },
+  { value: "truck", label: "نقل / فان (Truck/Van)" },
+  { value: "other", label: "أخرى / Other" },
+] as const;
+
+export type VehicleTypeValue = (typeof VEHICLE_TYPES)[number]["value"];
