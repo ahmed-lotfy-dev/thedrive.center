@@ -172,7 +172,7 @@ export function Navbar() {
             {isOpen ? <X className="size-5 md:size-6 text-foreground dark:text-white" /> : <Menu className="size-5 md:size-6 text-foreground dark:text-white" />}
           </button>
         </motion.div>
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {isOpen && (

@@ -126,7 +126,7 @@ export function Hero({ imageUrl }: HeroProps) {
                 </Card>
               ))}
             </motion.div>
-          </div>
+          </motion.div>
 
           <motion.div 
             className="w-full lg:w-1/2 relative lg:h-[600px] flex items-center justify-center p-4 lg:p-0"
