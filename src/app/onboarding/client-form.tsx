@@ -5,8 +5,10 @@ import { submitOnboarding } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Sparkles, AlertCircle, Fingerprint } from "lucide-react";
+import { ShieldCheck, Sparkles, AlertCircle, Fingerprint, Car } from "lucide-react";
 import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CAR_MAKERS } from "@/lib/constants";
 
 export function OnboardingForm() {
   const [state, formAction, isPending] = useActionState(submitOnboarding, null);
@@ -23,14 +25,24 @@ export function OnboardingForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="make" className="text-base font-bold text-zinc-700 dark:text-zinc-300">ماركة السيارة</Label>
-          <Input 
-            id="make" 
-            name="make" 
-            placeholder="مثل: Toyota" 
-            required 
-            className="h-12 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:ring-emerald-500 rounded-xl"
-          />
+          <Label htmlFor="make" className="text-base font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+            <Car className="size-4 text-emerald-500" />
+            ماركة السيارة
+          </Label>
+          <Select name="make" required>
+            <FormControl>
+              <SelectTrigger className="h-12 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:ring-emerald-500 rounded-xl">
+                <SelectValue placeholder="اختر ماركة السيارة" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              {CAR_MAKERS.map((maker) => (
+                <SelectItem key={maker.value} value={maker.value}>
+                  {maker.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-2">
           <Label htmlFor="model" className="text-base font-bold text-zinc-700 dark:text-zinc-300">الموديل</Label>

@@ -10,7 +10,8 @@ import {
   Wrench,
   User as UserIcon,
   Phone,
-  Hash
+  Hash,
+  Car
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -29,6 +30,7 @@ import { createAppointment } from "@/server/actions/appointments";
 import { authClient } from "@/lib/auth-client";
 import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
 import { ServiceSelect } from "@/components/shared/ServiceSelect";
+import { CAR_MAKERS } from "@/lib/constants";
 
 const formSchema = z.object({
   guestName: z.string().min(1, "الاسم مطلوب"),
@@ -36,6 +38,7 @@ const formSchema = z.object({
   guestPhone: z.string().min(10, "رقم الموبايل مطلوب"),
   plateNumber: z.string().min(1, "رقم اللوحة مطلوب"),
   serviceType: z.string().min(1, "نوع الخدمة مطلوب"),
+  make: z.string().min(1, "ماركة السيارة مطلوبة"),
   machineType: z.string().min(1, "نوع العربية مطلوب"),
   date: z.date(),
   notes: z.string().optional(),
@@ -56,6 +59,7 @@ export function AppointmentForm() {
       guestPhone: "",
       plateNumber: "",
       serviceType: "",
+      make: "",
       machineType: "",
       notes: "",
     },
@@ -182,20 +186,51 @@ export function AppointmentForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
+            name="make"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-2 mb-2">
+                  <Car className="size-4 text-primary/80" />
+                  <FormLabel className="font-bold text-xs uppercase tracking-wider">ماركة السيارة *</FormLabel>
+                </div>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="bg-muted/30 border-border/50 rounded-xl h-12">
+                      <SelectValue placeholder="اختر ماركة السيارة" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {CAR_MAKERS.map((maker) => (
+                      <SelectItem key={maker.value} value={maker.value}>
+                        {maker.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="machineType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>نوع العربية *</FormLabel>
+                <div className="flex items-center gap-2 mb-2">
+                  <Wrench className="size-4 text-primary/80" />
+                  <FormLabel className="font-bold text-xs uppercase tracking-wider">نوع العربية *</FormLabel>
+                </div>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-muted/30 border-border/50 rounded-xl h-12">
                       <SelectValue placeholder="اختر نوع العربية" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="sedan">ملاكي</SelectItem>
-                    <SelectItem value="suv">SUV</SelectItem>
-                    <SelectItem value="truck">نقل / فان</SelectItem>
+                    <SelectItem value="sedan">ملاكي (Sedan/Hatchback)</SelectItem>
+                    <SelectItem value="suv">4x4 / SUV</SelectItem>
+                    <SelectItem value="truck">نقل / فان (Truck/Van)</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

@@ -19,6 +19,7 @@ const appointmentSchema = z.object({
   date: z.string().min(1, "Date is required"),
   notes: z.string().optional(),
   plateNumber: z.string().min(1, "Plate number is required"),
+  make: z.string().min(1, "Make is required"),
 });
 
 function isAdminRole(role?: string) {
@@ -60,7 +61,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     if (!car) {
       const [newCar] = await db.insert(customerCars).values({
         plateNumber: cleanPlateNumber,
-        make: "سيارة", 
+        make: validated.make, 
         model: validated.machineType, 
         userId: session?.user?.id || null,
         status: "active",
