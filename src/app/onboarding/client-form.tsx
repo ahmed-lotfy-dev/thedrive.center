@@ -5,6 +5,7 @@ import { submitOnboarding } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { FormControl } from "@/components/ui/form";
 import { ShieldCheck, Sparkles, AlertCircle, Fingerprint, Car } from "lucide-react";
 import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
