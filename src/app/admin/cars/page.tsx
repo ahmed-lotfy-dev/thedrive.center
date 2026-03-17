@@ -14,7 +14,7 @@ export default async function AdminCarsPage() {
         <h1 className="text-3xl font-bold">معرض الأعمال والسيارات</h1>
         <Link
           href="/admin/cars/new"
-          className="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-emerald-700"
+          className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-sm font-black text-zinc-950 shadow-lg shadow-emerald-500/20 hover:bg-emerald-400 transition-all active:scale-95"
         >
           <Plus className="size-4" />
           إضافة سيارة جديدة

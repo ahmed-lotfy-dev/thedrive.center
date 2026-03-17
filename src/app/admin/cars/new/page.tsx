@@ -127,7 +127,7 @@ export default function NewCarPage() {
 
           <div className="space-y-2 flex items-center pt-8">
              <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="featured" className="size-5 accent-emerald-600" />
+              <input type="checkbox" name="featured" className="size-5 accent-emerald-500" />
               <span className="font-medium">تمييز في الصفحة الرئيسية</span>
             </label>
           </div>
@@ -147,7 +147,7 @@ export default function NewCarPage() {
         {/* Media Uploads */}
         <div className="space-y-6 rounded-lg bg-zinc-50 p-6 border">
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            <ImageIcon className="size-5 text-emerald-600"/>
+            <ImageIcon className="size-5 text-emerald-500"/>
             الصور والفيديوهات
           </h2>
 
@@ -164,9 +164,9 @@ export default function NewCarPage() {
                   </button>
                 </div>
               ) : (
-                <label className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50 hover:border-emerald-400 transition-colors">
-                  <UploadCloud className="size-8 text-emerald-600" />
-                  <span className="text-sm font-medium text-emerald-700">رفع صورة</span>
+                <label className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-colors">
+                  <UploadCloud className="size-8 text-emerald-500" />
+                  <span className="text-sm font-medium text-emerald-600">رفع صورة</span>
                   <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'cover')} disabled={uploading} />
                 </label>
               )}
@@ -227,7 +227,7 @@ export default function NewCarPage() {
           <button
             type="submit"
             disabled={loading || uploading || !coverImage}
-            className="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-8 py-2.5 text-sm font-medium text-white shadow hover:bg-emerald-700 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-2.5 text-sm font-black text-zinc-950 shadow-lg shadow-emerald-500/20 hover:bg-emerald-400 transition-all active:scale-95 disabled:opacity-50"
           >
             {loading ? <Loader2 className="size-4 animate-spin" /> : "حفظ التجربة"}
           </button>

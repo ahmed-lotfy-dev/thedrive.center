@@ -54,7 +54,7 @@ export function LinkCarForm({ onSuccess }: LinkCarFormProps) {
       <Button 
         type="submit" 
         disabled={loading || !plateNumber}
-        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-2xl h-16 gap-3.5 shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all hover:scale-[1.01] active:scale-[0.98] uppercase tracking-widest text-sm"
+        className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black rounded-2xl h-16 gap-3.5 shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all hover:scale-[1.01] active:scale-[0.98] uppercase tracking-widest text-sm"
       >
         {loading ? <Loader2 className="size-6 animate-spin" /> : (
           <>

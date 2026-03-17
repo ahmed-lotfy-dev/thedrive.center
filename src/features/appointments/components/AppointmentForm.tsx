@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -13,7 +13,7 @@ import {
   Hash,
   Car
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
@@ -48,6 +48,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function AppointmentForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session } = authClient.useSession();
 
@@ -56,14 +57,25 @@ export function AppointmentForm() {
     defaultValues: {
       guestName: session?.user?.name || "",
       guestEmail: session?.user?.email || "",
-      guestPhone: "",
-      plateNumber: "",
-      serviceType: "",
-      make: "",
-      machineType: "",
+      guestPhone: (session?.user as any)?.phone || "",
+      plateNumber: searchParams.get("plate") || "",
+      serviceType: searchParams.get("service") || "",
+      make: searchParams.get("make") || "",
+      machineType: searchParams.get("type") || "",
       notes: "",
     },
   });
+
+  // Update form if session loads or params change
+  useEffect(() => {
+    if (session?.user) {
+      form.setValue("guestName", session.user.name || "");
+      form.setValue("guestEmail", session.user.email || "");
+      if ((session.user as any).phone) {
+        form.setValue("guestPhone", (session.user as any).phone);
+      }
+    }
+  }, [session, form]);
 
   async function onSubmit(values: FormValues) {
     setIsSubmitting(true);

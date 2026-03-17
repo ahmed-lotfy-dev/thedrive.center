@@ -86,7 +86,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "الرئيسية" },
     { href: "/cars", label: "سجل التميز" },
-    ...(!session ? [{ href: "/book", label: "احجز موعد" }] : []),
+    { href: "/book", label: "احجز موعد" },
   ];
 
   return (
@@ -149,10 +149,10 @@ export function Navbar() {
         <motion.div variants={navItemVariants} className="flex-1 flex justify-end items-center gap-3 sm:gap-6 relative z-10">
           <div className="hidden md:flex items-center gap-4">
             <UserMenu session={session} />
-            {!session && (
+            {!canOpenAdmin && (
               <Button
                 asChild
-                className="relative h-11 px-6 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all group overflow-hidden cursor-pointer active:scale-95 hover:-translate-y-1"
+                className="relative h-11 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/20 transition-all group overflow-hidden cursor-pointer active:scale-95 hover:-translate-y-1"
               >
                 <Link href="/book">
                   <span className="relative z-10 flex items-center gap-2">
@@ -200,7 +200,7 @@ export function Navbar() {
               ))}
               <div className="pt-2 mt-2 border-t border-border/50">
                 {!session ? (
-                  <Button asChild className="w-full rounded-xl h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black shadow-lg shadow-emerald-500/30">
+                  <Button asChild className="w-full rounded-xl h-12 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/30 active:scale-95">
                     <Link href="/sign-in" onClick={() => setIsOpen(false)}>دخول</Link>
                   </Button>
                 ) : (

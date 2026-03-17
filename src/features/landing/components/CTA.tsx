@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import * as motion from "motion/react-client";
 
 const sectionVariants = {
@@ -35,10 +36,19 @@ export function CTA() {
             احجز ميعادك في <span className="text-emerald-400">The Drive</span> وخليك مطمّن على ثبات وأداء عربيتك
           </h2>
           <div className="flex flex-wrap gap-4">
-            <Button asChild size="lg" className="h-16 rounded-3xl bg-emerald-500 hover:bg-emerald-400 text-zinc-900 px-10 text-lg font-black shadow-lg shadow-emerald-500/20 transition-all hover:shadow-emerald-500/40 hover:-translate-y-1 active:scale-95 leading-none">
-              <Link href="/book">احجز ميعادك دلوقتي</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="h-16 rounded-3xl px-10 text-lg font-black border-white/10 bg-white/5 hover:bg-white/10 text-white">
+              <Button
+                asChild
+                size="lg"
+                className="group relative h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black px-8 shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/40 transition-all cursor-pointer overflow-hidden border-none active:scale-95 hover:-translate-y-1"
+              >
+                <Link href="/book">
+                  <span className="relative z-10 flex items-center gap-2">
+                    احجز موعدك الآن
+                    <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                  </span>
+                </Link>
+              </Button>
+            <Button asChild variant="outline" size="lg" className="h-14 rounded-2xl px-8 text-lg font-black border-white/10 bg-white/5 hover:bg-white/10 text-white active:scale-95 hover:-translate-y-1 transition-all">
               <a href="https://wa.me/201017131414" target="_blank" rel="noopener noreferrer">كلمنا واتساب</a>
             </Button>
           </div>

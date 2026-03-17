@@ -10,9 +10,11 @@ import {
   ChevronRight, 
   Clock, 
   Wrench,
-  AlertTriangle
+  AlertTriangle,
+  PlusCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn, formatLicensePlate } from "@/lib/utils";
 import { ServiceHistoryTimeline } from "@/features/maintenance/components/ServiceHistoryTimeline";
@@ -114,17 +116,29 @@ export function CarCard({ car }: CarCardProps) {
           </div>
         </div>
 
-        <Button 
-          variant="outline"
-          onClick={() => setShowHistory(!showHistory)}
-          className="w-full rounded-2xl border-border/50 bg-muted/30 hover:bg-muted font-bold group/btn py-6"
-        >
-          <span className="flex-1 text-right">سجل الخدمات</span>
-          <ChevronRight className={cn(
-            "size-5 transition-transform duration-300",
-            showHistory ? "rotate-90" : "group-hover:translate-x-1"
-          )} />
-        </Button>
+        <div className="grid grid-cols-2 gap-3">
+          <Button 
+            variant="outline"
+            onClick={() => setShowHistory(!showHistory)}
+            className="rounded-2xl border-border/50 bg-muted/30 hover:bg-muted font-bold group/btn py-6 px-4"
+          >
+            <span className="flex-1 text-right">سجل الخدمات</span>
+            <ChevronRight className={cn(
+              "size-5 transition-transform duration-300",
+              showHistory ? "rotate-90" : "group-hover:translate-x-1"
+            )} />
+          </Button>
+
+          <Button 
+            asChild
+            className="rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black py-6 px-4 shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
+          >
+            <Link href={`/book?plate=${car.plateNumber}&make=${car.make}&type=${car.machineType || 'sedan'}`}>
+              <PlusCircle className="size-5 ml-2" />
+              احجز الآن
+            </Link>
+          </Button>
+        </div>
 
         <AnimatePresence>
           {showHistory && (

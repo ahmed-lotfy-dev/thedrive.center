@@ -91,7 +91,7 @@ export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
             <Button 
               onClick={handleAdd} 
               disabled={isPending || !newContent}
-              className="h-14 px-8 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black"
+              className="h-14 px-8 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black transition-all active:scale-95 shadow-lg shadow-emerald-500/10"
             >
               {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "إضافة"}
             </Button>

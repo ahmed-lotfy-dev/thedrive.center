@@ -46,6 +46,11 @@ export const auth = betterAuth({
         defaultValue: false,
         input: false,
       },
+      phone: {
+        type: "string",
+        required: false,
+        input: true,
+      },
     },
   },
   trustedOrigins: process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : [],

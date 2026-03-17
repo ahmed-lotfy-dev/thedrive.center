@@ -21,7 +21,7 @@ interface UserMenuProps {
 export function UserMenu({ session }: UserMenuProps) {
   if (!session) {
     return (
-      <Button asChild size="lg" className="rounded-2xl px-8 h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black shadow-lg shadow-emerald-500/30 transition-all active:scale-95 border border-emerald-400/20">
+      <Button asChild size="lg" className="rounded-2xl px-8 h-12 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/30 transition-all active:scale-95 border border-emerald-400/20">
         <Link href="/sign-in">دخول</Link>
       </Button>
     );

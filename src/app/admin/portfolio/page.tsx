@@ -41,7 +41,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
           </h1>
           <p className="text-muted-foreground/60 font-bold mt-1 text-sm tracking-wide">إضافة وتعديل السيارات التي تظهر في معرض أعمال المركز (Portfolio)</p>
         </div>
-        <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-8 gap-3 font-black shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02]">
+        <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl h-12 px-8 gap-3 font-black shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
           <Link href="/admin/portfolio/new">
             <Plus className="w-6 h-6" />
             إضافة عمل جديد
@@ -53,7 +53,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {allCars.map((car) => (
-          <Card key={car.id} className="group overflow-hidden border-border/50 bg-card/40 backdrop-blur-md rounded-[2rem] hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 hover:border-emerald-500/20">
+          <Card key={car.id} className="group overflow-hidden border-border/50 bg-card/40 backdrop-blur-md rounded-4xl hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 hover:border-emerald-500/20">
             <div className="relative aspect-video">
               <Image
                 src={car.coverImageUrl}
@@ -100,11 +100,11 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
         ))}
 
         {allCars.length === 0 && (
-          <div className="col-span-full py-24 text-center border-2 border-dashed border-border/50 rounded-[2rem] bg-muted/20">
+          <div className="col-span-full py-24 text-center border-2 border-dashed border-border/50 rounded-4xl bg-muted/20">
             <LayoutGrid className="w-16 h-16 text-muted-foreground/20 mx-auto mb-4" />
             <h3 className="text-xl font-black text-muted-foreground/60 tracking-tight">لا توجد أعمال تطابق بحثك</h3>
             <p className="text-muted-foreground/40 font-bold mt-2 mb-8">جرب كلمات بحث مختلفة أو قم بإضافة عمل جديد.</p>
-            <Button asChild className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl h-12 px-8 font-black shadow-lg shadow-emerald-500/20">
+            <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl h-12 px-8 font-black shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
               <Link href="/admin/portfolio/new">إضافة عمل جديد</Link>
             </Button>
           </div>
@@ -117,6 +117,6 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
         baseUrl="/admin/portfolio"
         queryParams={{ search, serviceType }}
       />
-    </div>
+    </div >
   );
 }

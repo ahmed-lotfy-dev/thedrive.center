@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { AddServiceRecordModal } from "@/features/maintenance/components/admin/AddServiceRecordModal";
 import { MaintenanceUpdateForm } from "@/features/maintenance/components/admin/MaintenanceUpdateForm";
+import { ServiceHistoryTimeline } from "@/features/maintenance/components/ServiceHistoryTimeline";
 import Link from "next/link";
 import { formatLicensePlate } from "@/lib/utils";
 
@@ -50,15 +51,15 @@ export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
           </div>
           <Button 
             onClick={() => setShowServiceModal(true)}
-            className="bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-bold h-12 px-6 gap-2"
+            className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-2xl font-black h-12 px-6 gap-2 shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
           >
             <Plus className="size-4" />
             تسجيل خدمة جديدة
           </Button>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
+        {/* Actions Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          <div className="flex flex-col space-y-4 h-full">
             <h3 className="text-lg font-bold flex items-center gap-2">
               <Clock className="text-emerald-500 size-5" />
               تحديث جدول الصيانة
@@ -69,16 +70,34 @@ export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
           </div>
 
           {/* Quick History Overview */}
-          <div className="space-y-4">
-             <h3 className="text-lg font-bold flex items-center gap-2">
-              <History className="text-emerald-500 size-5" />
-              نظرة سريعة على السجل
-            </h3>
-            <div className="bg-black/20 rounded-3xl border border-white/5 p-6 h-full min-h-[200px] flex flex-col justify-center items-center text-center">
-              <p className="text-zinc-500 text-sm mb-4">يمكن للعميل رؤية سجل الخدمات الكامل في حسابه.</p>
-              <Button variant="outline" className="rounded-xl border-white/10 text-xs font-bold h-9 bg-black/10">
-                عرض السجل الكامل
-              </Button>
+          <div className="flex flex-col space-y-4 h-full">
+             <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <History className="text-emerald-500 size-5" />
+                نظرة سريعة على السجل
+              </h3>
+              {car.serviceRecords?.length > 4 && (
+                <Button variant="link" className="text-emerald-500 text-[10px] font-black uppercase tracking-widest h-auto p-0 hover:no-underline opacity-70 hover:opacity-100">
+                  عرض الكل
+                </Button>
+              )}
+            </div>
+            
+            <div className="bg-black/20 rounded-4xl border border-white/5 p-6 flex-1 max-h-[450px] overflow-y-auto scrollbar-hide shadow-inner shadow-black/20">
+              {car.serviceRecords && car.serviceRecords.length > 0 ? (
+                <ServiceHistoryTimeline records={car.serviceRecords.slice(0, 4)} />
+              ) : (
+                <div className="flex flex-col justify-center items-center text-center py-12">
+                  <p className="text-zinc-500 text-sm mb-4">لا يوجد سجل خدمات سابق لهذه السيارة بعد.</p>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowServiceModal(true)}
+                    className="rounded-xl border-white/10 text-[10px] font-black h-9 bg-white/5 hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-400 transition-all font-cairo uppercase tracking-widest"
+                  >
+                    تسجيل أول صيانة
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>

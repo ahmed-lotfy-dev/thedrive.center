@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { CarCard } from "@/features/maintenance/components/CarCard";
 import { LinkCarForm } from "@/features/maintenance/components/LinkCarForm";
-import { Plus, Car as CarIcon } from "lucide-react";
+import { Plus, Car as CarIcon, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 interface GarageDashboardProps {
   initialCars: any[];
@@ -17,18 +18,30 @@ export function GarageDashboard({ initialCars }: GarageDashboardProps) {
 
   return (
     <div className="space-y-10">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap justify-between items-center gap-4">
         <h2 className="text-2xl font-bold flex items-center gap-2">
           <CarIcon className="text-emerald-500" />
           سياراتي
         </h2>
-        <Button 
-          onClick={() => setShowLinkForm(!showLinkForm)}
-          className="bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold gap-2"
-        >
-          <Plus className="size-4" />
-          {showLinkForm ? "إغلاق" : "إضافة سيارة"}
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            asChild
+            variant="outline"
+            className="rounded-xl font-bold gap-2 border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all"
+          >
+            <Link href="/book">
+              <Calendar className="size-4" />
+              حجز موعد جديد
+            </Link>
+          </Button>
+          <Button 
+            onClick={() => setShowLinkForm(!showLinkForm)}
+            className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl font-black gap-2 transition-all active:scale-95 shadow-lg shadow-emerald-500/10"
+          >
+            <Plus className="size-4" />
+            {showLinkForm ? "إغلاق" : "إضافة سيارة"}
+          </Button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -57,13 +70,23 @@ export function GarageDashboard({ initialCars }: GarageDashboardProps) {
           <p className="text-muted-foreground max-w-sm">
             قم بإضافة سيارتك باستخدام رقم اللوحة للوصول إلى سجل الصيانة الخاص بك.
           </p>
-          <Button 
-            variant="link" 
-            onClick={() => setShowLinkForm(true)}
-            className="mt-4 text-emerald-500 font-bold"
-          >
-            سجل سيارتك الآن
-          </Button>
+          <div className="flex flex-wrap gap-4 mt-4">
+            <Button 
+              variant="link" 
+              onClick={() => setShowLinkForm(true)}
+              className="text-emerald-500 font-bold"
+            >
+              سجل سيارتك الآن
+            </Button>
+            <Button 
+              asChild
+              className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl font-black px-6 transition-all active:scale-95 shadow-lg shadow-emerald-500/10"
+            >
+              <Link href="/book">
+                احجز ميعادك دلوقتي
+              </Link>
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

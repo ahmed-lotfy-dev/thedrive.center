@@ -75,7 +75,7 @@ export function AdvicePopup({ advice, delaySeconds = 30 }: AdvicePopupProps) {
               <div className="pt-2 flex justify-end">
                 <Button 
                   onClick={() => setHasBeenDismissed(true)}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl px-6 font-bold flex items-center gap-2 group/btn transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/20 cursor-pointer active:scale-95"
+                  className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-2xl px-6 font-black flex items-center gap-2 group/btn transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/20 cursor-pointer active:scale-95 shadow-lg shadow-emerald-500/10"
                 >
                   <span>فهمت</span>
                   <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />

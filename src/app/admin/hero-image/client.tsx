@@ -160,7 +160,7 @@ export function HeroImageClient({ initialImageUrl }: HeroImageClientProps) {
               <Button 
                 onClick={handleSave} 
                 disabled={isPending || isUploading || !imageUrl}
-                className="w-full h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-lg transition-all hover:scale-[1.02] shadow-xl shadow-emerald-500/20"
+                className="w-full h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-lg transition-all hover:scale-[1.02] shadow-xl shadow-emerald-500/20 active:scale-95"
               >
                 {isPending ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : "حفظ التغييرات"}
               </Button>

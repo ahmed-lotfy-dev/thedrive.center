@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormControl } from "@/components/ui/form";
-import { ShieldCheck, Sparkles, AlertCircle, Fingerprint, Car } from "lucide-react";
+import { ShieldCheck, Sparkles, AlertCircle, Fingerprint, Car, Phone } from "lucide-react";
 import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CAR_MAKERS } from "@/lib/constants";
@@ -79,6 +79,24 @@ export function OnboardingForm() {
         </div>
       </div>
 
+      <div className="space-y-2">
+        <Label htmlFor="phone" className="text-base font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+          <Phone className="size-4 text-emerald-500" />
+          رقم الهاتف (واتساب)
+        </Label>
+        <Input 
+          id="phone" 
+          name="phone" 
+          type="tel"
+          placeholder="01xxxxxxxxx" 
+          required 
+          className="h-12 bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:ring-emerald-500 rounded-xl"
+        />
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          سنستخدم هذا الرقم لإرسال تنبيهات حالة السيارة والمواعيد عبر واتساب.
+        </p>
+      </div>
+
       <div className="space-y-4">
         <Label htmlFor="plateNumber" className="text-base font-black text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
           <Fingerprint className="w-5 h-5 text-emerald-500" />
@@ -111,7 +129,7 @@ export function OnboardingForm() {
         <Button 
           type="submit" 
           disabled={isPending}
-          className="w-full h-16 bg-emerald-600 hover:bg-emerald-500 text-white rounded-[1.25rem] text-xl font-bold shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none"
+          className="w-full h-16 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-[1.25rem] text-xl font-black shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none"
         >
           {isPending ? "جاري الحفظ..." : "تأكيد البيانات والمتابعة"}
           {!isPending && <Sparkles className="mr-3 w-6 h-6 animate-pulse" />}

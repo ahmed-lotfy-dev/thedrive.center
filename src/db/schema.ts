@@ -12,6 +12,7 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updatedAt").notNull(),
   role: text("role").default("user"),
   onboarded: boolean("onboarded").default(false),
+  phone: text("phone"),
 });
 
 export const session = pgTable("session", {

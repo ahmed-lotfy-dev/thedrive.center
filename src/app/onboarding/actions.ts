@@ -15,6 +15,7 @@ const onboardingSchema = z.object({
   year: z.coerce.number().min(1900).max(new Date().getFullYear() + 1).optional(),
   plateNumber: z.string().min(1, "رقم اللوحة مطلوب"),
   color: z.string().optional(),
+  phone: z.string().regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح (يجب أن يكون رقم مصري صالح)"),
 });
 
 export async function submitOnboarding(prevState: any, formData: FormData) {
@@ -32,6 +33,7 @@ export async function submitOnboarding(prevState: any, formData: FormData) {
     year: formData.get("year"),
     plateNumber: formData.get("plateNumber"),
     color: formData.get("color"),
+    phone: formData.get("phone"),
   };
 
   const validated = onboardingSchema.safeParse(rawData);
@@ -40,7 +42,7 @@ export async function submitOnboarding(prevState: any, formData: FormData) {
     return { error: validated.error.issues[0].message };
   }
 
-  const { make, model, year, plateNumber, color } = validated.data;
+  const { make, model, year, plateNumber, color, phone } = validated.data;
   const userId = session.user.id;
   const cleanPlateNumber = normalizePlateNumber(plateNumber);
 
@@ -79,9 +81,12 @@ export async function submitOnboarding(prevState: any, formData: FormData) {
       });
     }
 
-    // Mark user as onboarded
+    // Mark user as onboarded and save phone
     await db.update(user)
-      .set({ onboarded: true })
+      .set({ 
+        onboarded: true,
+        phone,
+      })
       .where(eq(user.id, userId));
 
   } catch (error: any) {

@@ -17,46 +17,49 @@ interface ServiceHistoryTimelineProps {
   records: ServiceRecord[];
 }
 
+// Redesigned ServiceHistoryTimeline with a more premium, compact feel
 export function ServiceHistoryTimeline({ records }: ServiceHistoryTimelineProps) {
   if (records.length === 0) {
     return (
-      <div className="py-8 text-center bg-zinc-800/20 rounded-2xl border border-white/5">
-        <p className="text-zinc-500 text-sm font-bold">لا يوجد سجل خدمات سابق لهذه السيارة</p>
+      <div className="py-12 text-center bg-zinc-900/40 rounded-3xl border border-dashed border-white/5">
+        <p className="text-zinc-500 text-sm font-bold">لا يوجد سجل خدمات سابق</p>
       </div>
     );
   }
 
   return (
-    <div className="relative space-y-6 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-zinc-800 before:to-transparent">
-      {records.map((record, index) => (
-        <div key={record.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-zinc-900 group-hover:border-emerald-500/50 transition-colors shadow-xl z-10 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-            <CheckCircle2 className="size-5 text-emerald-500" />
-          </div>
-
-          {/* Content */}
-          <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-3xl bg-zinc-800/30 border border-white/5 group-hover:border-white/10 transition-colors shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
-              <time className="text-[10px] font-black uppercase tracking-widest text-emerald-500">
+    <div className="relative pr-6 space-y-8 before:absolute before:inset-0 before:right-2 before:h-full before:w-px before:bg-linear-to-b before:from-emerald-500/50 before:via-emerald-500/10 before:to-transparent">
+      {records.map((record) => (
+        <div key={record.id} className="relative group">
+          <div className="absolute -right-5 top-1.5 size-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-500/10 group-hover:scale-125 transition-transform" />
+          
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <time className="text-[10px] font-black uppercase tracking-widest text-emerald-500/70">
                 {format(new Date(record.serviceDate), "d MMMM yyyy", { locale: ar })}
               </time>
               {record.odometer && (
-                <span className="text-[10px] font-bold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded-full border border-white/5">
-                  {record.odometer.toLocaleString()} كم
+                <span className="text-[9px] font-black text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full">
+                  {record.odometer.toLocaleString()} KM
                 </span>
               )}
             </div>
-            <h4 className="text-sm font-black text-white mb-1">{record.serviceType}</h4>
-            {record.description && (
-              <p className="text-xs text-zinc-400 leading-relaxed">{record.description}</p>
-            )}
-            {record.cost && (
-              <div className="mt-3 pt-3 border-t border-white/5 flex justify-end">
-                <span className="text-[10px] font-black text-emerald-500/80">
-                  {record.cost} ج.م
-                </span>
-              </div>
-            )}
+            
+            <div className="bg-white/5 rounded-2xl p-4 border border-white/5 group-hover:border-emerald-500/20 transition-all">
+              <h4 className="text-sm font-black text-white">{record.serviceType}</h4>
+              {record.description && (
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
+                  {record.description}
+                </p>
+              )}
+              {record.cost && (
+                <div className="mt-3 flex justify-end">
+                   <span className="text-[10px] font-black text-emerald-400">
+                    {record.cost} ج.م
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       ))}
