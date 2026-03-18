@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { AppointmentForm } from "@/features/appointments/components/AppointmentForm";
 
@@ -23,7 +24,9 @@ export default function BookPage() {
 
       <section className="container mx-auto px-4 mt-10" data-animate>
         <div className="max-w-3xl mx-auto">
-          <AppointmentForm />
+          <Suspense fallback={<div className="text-center py-20 text-muted-foreground font-black animate-pulse uppercase tracking-[0.2em] text-[10px]">جاري تحميل البيانات...</div>}>
+            <AppointmentForm />
+          </Suspense>
         </div>
       </section>
     </main>

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getPortfolio } from "@/lib/api/portfolio";
 import { Button } from "@/components/ui/button";
 import { Plus, LayoutGrid, Edit3, ExternalLink } from "lucide-react";
@@ -49,7 +50,9 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
         </Button>
       </div>
 
-      <FilterBar />
+      <Suspense fallback={<div className="h-12 bg-muted/20 animate-pulse rounded-2xl w-full" />}>
+        <FilterBar />
+      </Suspense>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {allCars.map((car) => (

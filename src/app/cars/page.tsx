@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getPortfolio } from "@/lib/api/portfolio";
 import { CarsGalleryView } from "@/features/cars/components/CarsGalleryView";
 
@@ -32,12 +33,14 @@ export default async function CarsGalleryPage({ searchParams }: CarsGalleryProps
 
   return (
     <main dir="rtl" className="min-h-screen bg-background pt-24 md:pt-32 pb-20">
-      <CarsGalleryView 
-        allCars={allCars} 
-        meta={meta} 
-        search={search} 
-        serviceType={serviceType} 
-      />
+      <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center text-muted-foreground animate-pulse font-black uppercase tracking-widest text-[10px]">جاري تحميل الأعمال...</div>}>
+        <CarsGalleryView 
+          allCars={allCars} 
+          meta={meta} 
+          search={search} 
+          serviceType={serviceType} 
+        />
+      </Suspense>
     </main>
   );
 }

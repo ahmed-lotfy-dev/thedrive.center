@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { customerCars, serviceRecords, user } from "@/db/schema";
-import { eq, and, desc, ilike, sql } from "drizzle-orm";
+import { eq, and, or, desc, ilike, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
@@ -18,14 +18,26 @@ async function isAdmin() {
 }
 
 
-export async function getUserCars() {
+export async function getUserCars(page: number = 1, limit: number = 6) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  if (!session?.user) return { data: [], error: "Unauthorized" };
+  if (!session?.user) return { data: [], meta: { totalPages: 0 }, error: "Unauthorized" };
 
   try {
+    const offset = (page - 1) * limit;
+
+    const [totalCountResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(customerCars)
+      .where(
+        and(
+          eq(customerCars.userId, session.user.id),
+          eq(customerCars.status, "active")
+        )
+      );
+
     const cars = await db.query.customerCars.findMany({
       where: and(
         eq(customerCars.userId, session.user.id),
@@ -36,11 +48,21 @@ export async function getUserCars() {
           orderBy: [desc(serviceRecords.serviceDate)],
         },
       },
+      limit,
+      offset,
+      orderBy: [desc(customerCars.createdAt)],
     });
-    return { data: cars, error: null };
+
+    const totalPages = Math.ceil(Number(totalCountResult.count) / limit);
+
+    return { 
+      data: cars, 
+      meta: { totalPages },
+      error: null 
+    };
   } catch (error) {
     console.error("Error fetching user cars:", error);
-    return { data: [], error: "Failed to fetch cars" };
+    return { data: [], meta: { totalPages: 0 }, error: "Failed to fetch cars" };
   }
 }
 
@@ -135,73 +157,64 @@ export async function addServiceRecordAction(data: any) {
   }
 }
 
-export async function searchCustomerCars(query: string) {
-  if (!(await isAdmin())) return { data: [], error: "Unauthorized" };
+export async function searchCustomerCars(query: string, page: number = 1, limit: number = 12) {
+  if (!(await isAdmin())) return { data: [], meta: { totalPages: 0 }, error: "Unauthorized" };
 
   try {
     const trimmedQuery = query.trim();
-    if (!trimmedQuery) {
-      // If empty, return all (or a default set)
-      const all = await db.query.customerCars.findMany({
-        where: eq(customerCars.status, "active"),
-        with: { user: true },
-        orderBy: [desc(customerCars.createdAt)],
-        limit: 20,
-      });
-      return { data: all, error: null };
-    }
-
+    const offset = (page - 1) * limit;
     const searchTerm = `%${trimmedQuery}%`;
     const normalizedPlateQuery = normalizePlateNumber(trimmedQuery);
     const plateSearchTerm = `%${normalizedPlateQuery}%`;
-    
-    // 1. Primary Search (Plate, Make, Model)
-    const carResults = await db.query.customerCars.findMany({
-      where: (fields, { or, ilike, and, eq }) => and(
-        eq(fields.status, "active"),
-        or(
-          ilike(fields.plateNumber, searchTerm),
-          ilike(fields.plateNumber, plateSearchTerm),
-          ilike(sql`REPLACE(${fields.plateNumber}, ' ', '')`, plateSearchTerm),
-          ilike(fields.make, searchTerm),
-          ilike(fields.model, searchTerm)
-        )
-      ),
+
+    // 1. Define base condition
+    const searchCondition = (fields: any, { or, ilike, and, eq }: any) => and(
+      eq(fields.status, "active"),
+      trimmedQuery ? or(
+        ilike(fields.plateNumber, searchTerm),
+        ilike(fields.plateNumber, plateSearchTerm),
+        ilike(sql`REPLACE(${fields.plateNumber}, ' ', '')`, plateSearchTerm),
+        ilike(fields.make, searchTerm),
+        ilike(fields.model, searchTerm)
+      ) : sql`TRUE`
+    );
+
+    // 2. Get total count
+    const [totalCountResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(customerCars)
+      .where(and(
+        eq(customerCars.status, "active"),
+        trimmedQuery ? or(
+          ilike(customerCars.plateNumber, searchTerm),
+          ilike(customerCars.plateNumber, plateSearchTerm),
+          ilike(sql`REPLACE(${customerCars.plateNumber}, ' ', '')`, plateSearchTerm),
+          ilike(customerCars.make, searchTerm),
+          ilike(customerCars.model, searchTerm)
+        ) : sql`TRUE`
+      ));
+
+    // 3. Get paginated results
+    const results = await db.query.customerCars.findMany({
+      where: searchCondition,
       with: {
         user: true,
       },
-      limit: 20,
+      limit,
+      offset,
+      orderBy: [desc(customerCars.createdAt)],
     });
 
-    // 2. Secondary Search (Owner Name) - only if primary results are few
-    // and ONLY if the query doesn't look like a license plate (e.g. contains numbers)
-    // but users might search for "Ahmed 123", so let's just search and merge carefully
-    let allResults = [...carResults];
-    
-    if (carResults.length < 10) {
-      const userMatches = await db.query.user.findMany({
-        where: ilike(user.name, searchTerm),
-        with: {
-          cars: {
-            with: { user: true }
-          }
-        }
-      });
-      
-      const userCars = userMatches.flatMap(u => u.cars);
-      
-      // Merge unique cars
-      userCars.forEach(uc => {
-        if (!allResults.find(r => r.id === uc.id)) {
-          allResults.push(uc as any);
-        }
-      });
-    }
+    const totalPages = Math.ceil(Number(totalCountResult.count) / limit);
 
-    return { data: allResults.slice(0, 20), error: null };
+    return { 
+      data: results, 
+      meta: { totalPages },
+      error: null 
+    };
   } catch (error) {
     console.error("Error searching cars:", error);
-    return { data: [], error: "Search failed" };
+    return { data: [], meta: { totalPages: 0 }, error: "Search failed" };
   }
 }
 
