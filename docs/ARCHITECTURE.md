@@ -67,12 +67,38 @@ All tables are in a PostgreSQL database managed via Drizzle ORM (`src/db/schema.
 
 ---
 
-## 6. Deployment Flow
+## 6. Security & Hardening
 
-```
-git push origin main
-    → Dokploy webhook triggered
-    → Docker container rebuilt from repo
-    → Zero-downtime swap on the VPS
-    → PostgreSQL remains untouched (separate service)
+- **Edge Security**: Cloudflare WAF is positioned to handle DDoS, SQL injection, and common exploits.
+- **Access Control**: Middlewares protect `/admin` and `/dashboard` routes. Role-based checks (`admin`/`owner`) are enforced in both UI logic and Server Actions.
+- **Data Protection**: SSL/TLS is handled at the Dokploy/Nginx proxy level. Environment variables for API keys (Better Auth, R2, WhatsApp) are managed through Dokploy’s encrypted secret store.
+- **CSRF**: Built-in protection via Next.js and Better Auth mechanisms.
+
+---
+
+## 7. Scalability & Recommendations
+
+To maintain the "Pro Max" quality as the business grows, we recommend the following enhancements:
+
+- **Customer Engagement**:
+  - **Automated WhatsApp Alerts**: Send confirmation and reminder messages for appointments via the WhatsApp API.
+  - **Service History PDF**: Allow customers to download a professional PDF summary of their car's service history from their Garage dashboard.
+- **Business Intelligence**:
+  - **Analytics Integration**: Add PostHog or Umami for tracking conversion rates from the "Book Appointment" CTA.
+  - **Customer Feedback Loop**: Automatically pull and display the latest 5-star Google Reviews on the landing page via the Google Places API.
+- **Operations**:
+  - **Inventory Tracking**: A dedicated module for tracking consumables (wheel weights, cleaning supplies) used during services.
+  - **Multi-Admin Logs**: Track which admin performed specific data mutations for accountability.
+
+---
+
+## 8. Deployment Flow
+
+```mermaid
+graph LR
+    A[Git Push] --> B[Dokploy Webhook]
+    B --> C[Docker Build]
+    C --> D[Health Check]
+    D --> E[Zero-Downtime Swap]
+    E --> F[Live VPS]
 ```

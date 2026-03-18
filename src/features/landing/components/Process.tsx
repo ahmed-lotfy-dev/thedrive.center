@@ -1,12 +1,11 @@
 "use client";
 
-import { Timer, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import * as motion from "motion/react-client";
+import { motion, type Variants } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { 
     opacity: 1, 
@@ -14,12 +13,13 @@ const sectionVariants = {
     transition: {
       duration: 0.8,
       ease: [0.22, 1, 0.36, 1],
-      staggerChildren: 0.15
+      staggerChildren: 0.1,
+      delayChildren: 0.1
     }
   }
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: { 
     opacity: 1, 
@@ -53,12 +53,12 @@ export function Process() {
       className="container mx-auto px-4 py-12 md:py-20"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={sectionVariants as any}
+      viewport={{ once: true, margin: "-50px" }}
+      variants={sectionVariants}
     >
       <div className="grid gap-8 lg:grid-cols-2">
         {/* How we work */}
-        <motion.div variants={cardVariants as any}>
+        <motion.div variants={cardVariants}>
           <Card className="relative group overflow-hidden p-8 md:p-12 rounded-4xl border border-border/50 bg-card/40 backdrop-blur-md transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/10 py-12">
             <CardContent>
               <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold mb-4">
@@ -80,7 +80,7 @@ export function Process() {
         </motion.div>
 
         {/* Why us */}
-        <motion.div variants={cardVariants as any}>
+        <motion.div variants={cardVariants}>
           <Card className="relative group overflow-hidden p-8 md:p-12 rounded-4xl border border-border/50 bg-card/40 backdrop-blur-md transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/10 py-12">
             <CardContent>
               <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-500/20 dark:border-emerald-400/20 bg-emerald-500/5 dark:bg-emerald-400/5 px-4 h-8 rounded-full font-bold mb-4">

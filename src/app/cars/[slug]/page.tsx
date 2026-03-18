@@ -47,8 +47,8 @@ export default async function CarDetailPage({
   if (!car) notFound();
 
   return (
-    <main dir="rtl" className="min-h-screen bg-background">
+    <div className="bg-background">
       <CarDetailsView car={car} />
-    </main>
+    </div>
   );
 }

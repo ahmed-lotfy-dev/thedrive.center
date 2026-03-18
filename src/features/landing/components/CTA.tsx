@@ -3,16 +3,18 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import * as motion from "motion/react-client";
+import { motion, type Variants } from "motion/react";
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: { 
     opacity: 1, 
     scale: 1,
     transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1]
+      type: "spring",
+      stiffness: 100,
+      damping: 15,
+      delay: 0.1
     }
   }
 };
@@ -23,8 +25,8 @@ export function CTA() {
       className="container mx-auto px-4 py-18"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true }}
-      variants={sectionVariants as any}
+      viewport={{ once: true, margin: "-50px" }}
+      variants={sectionVariants}
     >
       <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-zinc-900 dark:bg-zinc-950 px-6 py-12 text-white md:px-16 md:py-16 shadow-2xl">
         <div className="pointer-events-none absolute -top-20 -left-14 h-96 w-96 rounded-full bg-emerald-500/10 blur-[100px]" />

@@ -9,28 +9,33 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { HelpCircle } from "lucide-react";
 import { BUSINESS_PHONE } from "@/lib/google-business";
-import * as motion from "motion/react-client";
+import { motion, type Variants } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 20 },
+const sectionVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.8,
       ease: [0.22, 1, 0.36, 1],
-      staggerChildren: 0.1
+      staggerChildren: 0.1,
+      delayChildren: 0.1
     }
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { 
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
   }
 };
 
@@ -64,11 +69,11 @@ export function FAQ() {
       className="container mx-auto px-4 py-20 md:py-32"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={sectionVariants as any}
+      viewport={{ once: true, margin: "-50px" }}
+      variants={sectionVariants}
     >
       <div className="grid lg:grid-cols-2 gap-16 items-start">
-        <motion.div className="space-y-6" variants={itemVariants as any}>
+        <motion.div className="space-y-6" variants={itemVariants}>
           <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
             أسئلة شائعة
           </Badge>
@@ -94,7 +99,7 @@ export function FAQ() {
           </Card>
         </motion.div>
 
-        <motion.div variants={itemVariants as any}>
+        <motion.div variants={itemVariants}>
           <Card className="bg-card/40 backdrop-blur-md p-6 md:p-10 rounded-4xl md:rounded-[3rem] border border-border/50 shadow-xl py-10">
             <CardContent>
               <Accordion type="single" collapsible className="w-full space-y-4">

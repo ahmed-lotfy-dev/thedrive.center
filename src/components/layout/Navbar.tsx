@@ -14,15 +14,15 @@ import { motion, AnimatePresence, type Variants } from "motion/react";
 import { Magnetic } from "../shared/Magnetic";
 
 const navContainerVariants: Variants = {
-  hidden: { opacity: 0, y: -40 },
+  hidden: { opacity: 0, y: -20 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
+      duration: 0.6,
       ease: [0.22, 1, 0.36, 1],
       staggerChildren: 0.1,
-      delayChildren: 0.2,
+      delayChildren: 0.1,
     },
   },
 };
@@ -97,8 +97,7 @@ export function Navbar() {
       initial="hidden"
       animate="visible"
     >
-      <motion.div
-        variants={navContainerVariants}
+      <div
         className={cn(
           "mx-auto flex h-16 md:h-20 container items-center justify-between rounded-4xl border transition-all duration-500 px-4 sm:px-8 relative",
           isScrolled
@@ -172,7 +171,7 @@ export function Navbar() {
             {isOpen ? <X className="size-5 md:size-6 text-foreground dark:text-white" /> : <Menu className="size-5 md:size-6 text-foreground dark:text-white" />}
           </button>
         </motion.div>
-      </motion.div>
+      </div>
 
       <AnimatePresence>
         {isOpen && (

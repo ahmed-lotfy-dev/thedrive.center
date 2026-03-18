@@ -1,16 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Search, X } from "lucide-react";
+import { Search, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SERVICE_TYPES } from "@/lib/constants";
 import { useTransition } from "react";
 import { ServiceSelect } from "./ServiceSelect";
 
@@ -62,19 +54,25 @@ export function FilterBar({
   return (
     <div dir="rtl" className="flex flex-col md:flex-row items-stretch gap-4 mb-8">
       <div className="relative flex-1 group">
-        <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/40 group-focus-within:text-emerald-500 transition-colors" />
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 flex items-center justify-center">
+          {isPending ? (
+            <Loader2 className="h-4 w-4 text-emerald-500 animate-spin" />
+          ) : (
+            <Search className="h-5 w-5 text-muted-foreground/40 group-focus-within:text-emerald-500 transition-colors" />
+          )}
+        </div>
         <Input
           placeholder={placeholder}
           defaultValue={currentSearch}
           onChange={(e) => handleSearch(e.target.value)}
-          aria-label="بحث في سجل التميز"
-          className="h-12! pr-12 bg-card/50 backdrop-blur-md border-border/50 rounded-2xl group-focus-within:border-emerald-500/50 transition-all shadow-sm text-foreground font-bold placeholder:text-muted-foreground/40"
+          aria-label="بحث"
+          className="h-14! pr-12 bg-card/40 backdrop-blur-xl border-border/50 rounded-2xl group-focus-within:border-emerald-500/50 group-focus-within:ring-4 group-focus-within:ring-emerald-500/10 transition-all shadow-sm text-foreground font-bold placeholder:text-muted-foreground/30"
         />
         {currentSearch && (
           <button
             onClick={() => handleSearch("")}
             aria-label="مسح البحث"
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-xl hover:bg-muted text-muted-foreground transition-colors"
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-9 w-9 flex items-center justify-center rounded-xl hover:bg-muted text-muted-foreground transition-all group-hover:scale-105 active:scale-95"
           >
             <X className="h-5 w-5" />
           </button>
@@ -85,15 +83,9 @@ export function FilterBar({
         <ServiceSelect 
           value={currentService} 
           onValueChange={handleServiceChange}
-          className="md:w-[260px] h-12!"
+          className="md:w-[300px] h-14! bg-card/40 backdrop-blur-xl border-border/50 rounded-2xl hover:border-emerald-500/30 transition-all font-bold"
           showAllOption={true}
         />
-      )}
-      
-      {isPending && (
-        <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-emerald-500 animate-pulse pr-2 whitespace-nowrap">
-           جاري التحديث...
-        </div>
       )}
     </div>
   );

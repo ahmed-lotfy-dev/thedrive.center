@@ -10,24 +10,29 @@ import * as motion from "motion/react-client";
 import { Card, CardContent } from "@/components/ui/card";
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 30 },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: {
       duration: 0.8,
       ease: [0.22, 1, 0.36, 1],
-      staggerChildren: 0.15
+      staggerChildren: 0.1,
+      delayChildren: 0.1
     }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { 
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
   }
 };
 
@@ -79,7 +84,7 @@ export function Services() {
         className="container mx-auto px-4 md:px-6 pt-12 scroll-mt-24"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-50px" }}
         variants={sectionVariants as any}
       >
         <Card className="relative overflow-hidden rounded-4xl md:rounded-[4rem] bg-card/40 backdrop-blur-3xl border border-border/50 shadow-2xl transition-colors duration-500 py-12 md:py-20 lg:py-24">
@@ -170,7 +175,7 @@ export function Services() {
         className="container mx-auto px-4 py-12 md:py-24"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-50px" }}
         variants={sectionVariants as any}
       >
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 px-4">

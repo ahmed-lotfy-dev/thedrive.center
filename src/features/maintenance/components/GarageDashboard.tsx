@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CarCard } from "@/features/maintenance/components/CarCard";
 import { LinkCarForm } from "@/features/maintenance/components/LinkCarForm";
 import { Plus, Car as CarIcon, Calendar } from "lucide-react";
@@ -8,13 +8,23 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
+import { PaginationControls } from "@/components/shared/PaginationControls";
+
 interface GarageDashboardProps {
   initialCars: any[];
+  meta?: {
+    totalPages: number;
+    page?: number;
+  };
 }
 
-export function GarageDashboard({ initialCars }: GarageDashboardProps) {
+export function GarageDashboard({ initialCars, meta }: GarageDashboardProps) {
   const [cars, setCars] = useState(initialCars);
   const [showLinkForm, setShowLinkForm] = useState(false);
+
+  useEffect(() => {
+    setCars(initialCars);
+  }, [initialCars]);
 
   return (
     <div className="space-y-10">
@@ -89,11 +99,19 @@ export function GarageDashboard({ initialCars }: GarageDashboardProps) {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {cars.map((car) => (
             <CarCard key={car.id} car={car} />
           ))}
         </div>
+      )}
+
+      {meta && meta.totalPages > 1 && (
+        <PaginationControls
+          currentPage={meta.page || 1}
+          totalPages={meta.totalPages}
+          baseUrl="/dashboard/garage"
+        />
       )}
     </div>
   );

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, Star, Facebook, Lightbulb } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import * as motion from "motion/react-client";
+import { motion, type Variants } from "motion/react";
 import {
   FACEBOOK_URL,
   INSTAGRAM_URL,
@@ -16,7 +16,7 @@ import {
   getReviewsUrl,
 } from "@/lib/google-business";
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -24,17 +24,22 @@ const sectionVariants = {
     transition: {
       duration: 0.8,
       ease: [0.22, 1, 0.36, 1],
-      staggerChildren: 0.1
-    } as any
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5 }
+    transition: { 
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
   }
 };
 
@@ -49,12 +54,12 @@ export function LocationSection() {
       className="container mx-auto px-4 py-20 md:py-32"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={sectionVariants as any}
+      viewport={{ once: true, margin: "-50px" }}
+      variants={sectionVariants}
     >
       <div className="grid gap-12 lg:grid-cols-2 items-start">
         <div className="space-y-6">
-          <motion.div className="space-y-4" variants={itemVariants as any}>
+          <motion.div className="space-y-4" variants={itemVariants}>
             <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
               موقعنا وتواصلنا
             </Badge>
@@ -66,7 +71,7 @@ export function LocationSection() {
             </p>
           </motion.div>
 
-          <motion.div className="flex flex-col gap-4" variants={itemVariants as any}>
+          <motion.div className="flex flex-col gap-4" variants={itemVariants}>
             <Card className="relative overflow-hidden bg-card/40 backdrop-blur-xl border-border/50 group/addr">
               <CardContent className="">
                 <div className="flex items-start gap-4">
@@ -119,7 +124,7 @@ export function LocationSection() {
             </div>
           </motion.div>
 
-          <motion.div className="flex flex-wrap items-center gap-2 pt-2" variants={itemVariants as any}>
+          <motion.div className="flex flex-wrap items-center gap-2 pt-2" variants={itemVariants}>
             <Button asChild size="lg" className="rounded-2xl h-12 px-6 bg-emerald-600 hover:bg-emerald-500 text-sm font-bold shadow-lg shadow-emerald-500/20 group">
               <Link href={directionsUrl} target="_blank" rel="noopener noreferrer">
                 افتح الخريطة
@@ -187,7 +192,7 @@ export function LocationSection() {
 
         <motion.div
           className="relative group p-2 rounded-[3.5rem] bg-zinc-200/50 dark:bg-zinc-800/50 border-4 border-white dark:border-white/5 shadow-2xl overflow-hidden"
-          variants={itemVariants as any}
+          variants={itemVariants}
         >
           <iframe
             src={mapSrc}

@@ -16,18 +16,23 @@ import {
 } from "lucide-react";
 import { PortfolioCarWithMedia } from "@/types/portfolio";
 import { SERVICE_TYPES } from "@/lib/constants";
+import { authClient } from "@/lib/auth-client";
 
 interface CarDetailsViewProps {
   car: PortfolioCarWithMedia;
 }
 
 export function CarDetailsView({ car }: CarDetailsViewProps) {
+  const { data: session } = authClient.useSession();
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
+  const isManagement = userRole === "admin" || userRole === "owner";
+
   const serviceLabel =
     SERVICE_TYPES.find((s) => s.value === car.serviceType)?.label ||
     car.serviceType;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       {/* ─── HERO ────────────────────────────────────────────────── */}
       <section className="relative w-full h-[55vh] md:h-[65vh] overflow-hidden bg-zinc-100 dark:bg-zinc-950">
         <Image
@@ -41,37 +46,37 @@ export function CarDetailsView({ car }: CarDetailsViewProps) {
         <div className="absolute inset-0 bg-linear-to-t dark:from-zinc-950/90 dark:via-zinc-950/50 from-black/60 via-black/20 to-transparent" />
         <div className="absolute inset-0 bg-linear-to-r dark:from-zinc-950/40 from-black/20 to-transparent" />
 
-        {/* Back Link */}
-        <div className="absolute top-24 md:top-28 right-4 md:right-8">
-          <Link
-            href="/cars"
-            className="inline-flex items-center gap-2 text-sm font-bold text-white/90 hover:text-emerald-400 transition-colors bg-black/30 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl hover:bg-black/40 cursor-pointer"
-          >
-            <ArrowRight className="w-4 h-4" />
-            <span>سجل التميز</span>
-            <ChevronRight className="w-4 h-4 opacity-50" />
-            <span className="text-emerald-400">{car.title}</span>
-          </Link>
-        </div>
-
         {/* Hero Content */}
         <div className="absolute bottom-0 right-0 left-0 animate-in fade-in slide-in-from-bottom-6 duration-700">
-          <div className="container mx-auto px-4 sm:px-6 pb-12 md:pb-16">
-            <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-500/30 backdrop-blur-md font-bold h-8 px-4 rounded-xl text-xs uppercase tracking-wider">
-              {serviceLabel}
-            </Badge>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-3 drop-shadow-lg">
-              {car.title}
-            </h1>
-            <div className="flex items-center gap-2 text-white/70 text-sm">
-              <Calendar className="w-4 h-4" />
-              <span>
-                {new Date(car.createdAt!).toLocaleDateString("ar-EG", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
+          <div className="container mx-auto px-4 sm:px-6 pb-12 md:pb-16 flex flex-col items-start gap-4">
+            {/* Breadcrumb relocated here */}
+            <Link
+              href="/cars"
+              className="inline-flex items-center gap-2 text-sm font-bold text-white/90 hover:text-emerald-400 transition-colors bg-black/30 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl hover:bg-black/40 cursor-pointer w-fit"
+            >
+              <ArrowRight className="w-4 h-4" />
+              <span>سجل التميز</span>
+              <ChevronRight className="w-4 h-4 opacity-50" />
+              <span className="text-emerald-400">{car.title}</span>
+            </Link>
+
+            <div className="flex flex-col items-start gap-2">
+              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 backdrop-blur-md font-bold h-8 px-4 rounded-xl text-xs uppercase tracking-wider w-fit">
+                {serviceLabel}
+              </Badge>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-1 drop-shadow-lg">
+                {car.title}
+              </h1>
+              <div className="flex items-center gap-2 text-white/70 text-sm">
+                <Calendar className="w-4 h-4" />
+                <span>
+                  {new Date(car.createdAt!).toLocaleDateString("ar-EG", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -147,23 +152,25 @@ export function CarDetailsView({ car }: CarDetailsViewProps) {
                 <VideoEmbed url={car.videoUrl} title={`فيديو ${car.title}`} />
 
                 {/* CTA right below video */}
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-4xl p-5 space-y-3">
-                  <p className="text-zinc-700 dark:text-zinc-200 font-bold leading-relaxed text-sm">
-                    أعجبك ما شاهدته؟ احجز موعدك الآن وسنهتم بسيارتك بنفس
-                    الاحترافية.
-                  </p>
-                  <Button
-                    asChild
-                    className="w-full h-11 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-sm shadow-lg shadow-emerald-500/25 transition-all hover:shadow-emerald-500/40 hover:scale-[1.02] cursor-pointer"
-                  >
-                    <Link href="/book">احجز موعدك الآن</Link>
-                  </Button>
-                </div>
+                {!isManagement && (
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-4xl p-5 space-y-3">
+                    <p className="text-zinc-700 dark:text-zinc-200 font-bold leading-relaxed text-sm">
+                      أعجبك ما شاهدته؟ احجز موعدك الآن وسنهتم بسيارتك بنفس
+                      الاحترافية.
+                    </p>
+                    <Button
+                      asChild
+                      className="w-full h-11 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-sm shadow-lg shadow-emerald-500/25 transition-all hover:shadow-emerald-500/40 hover:scale-[1.02] cursor-pointer"
+                    >
+                      <Link href="/book">احجز موعدك الآن</Link>
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 
             {/* CTA when there's no video */}
-            {!car.videoUrl && (
+            {!car.videoUrl && !isManagement && (
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-4xl p-6 space-y-3">
                 <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                 <h3 className="text-lg font-black text-zinc-900 dark:text-white">

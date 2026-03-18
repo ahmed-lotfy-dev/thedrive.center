@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -47,8 +48,10 @@
   --radius: 1.25rem;
 
   /* Pro Max Light Theme - Sophisticated & Clean */
-  --background: #f8fafc; /* Softer, airy foundation */
-  --foreground: #0f172a; /* Deep charcoal for premium readability */
+  --background: #f8fafc;
+  /* Softer, airy foundation */
+  --foreground: #0f172a;
+  /* Deep charcoal for premium readability */
 
   --card: #ffffff;
   --card-foreground: #0f172a;
@@ -56,22 +59,28 @@
   --popover: #ffffff;
   --popover-foreground: #0f172a;
 
-  --primary: #0f172a; /* Slate 900 */
+  --primary: #0f172a;
+  /* Slate 900 */
   --primary-foreground: #f8fafc;
 
-  --secondary: #e2e8f0; /* Slate 200 */
+  --secondary: #e2e8f0;
+  /* Slate 200 */
   --secondary-foreground: #1e293b;
 
-  --muted: #f1f5f9; /* Slate 100 */
-  --muted-foreground: #64748b; /* Slate 500 - Clear but secondary */
+  --muted: #f1f5f9;
+  /* Slate 100 */
+  --muted-foreground: #64748b;
+  /* Slate 500 - Clear but secondary */
 
-  --accent: #10b981; /* Keep Emerald for consistency */
+  --accent: #10b981;
+  /* Keep Emerald for consistency */
   --accent-foreground: #ffffff;
 
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  --border: #e2e8f0; /* Soft borders for premium feel */
+  --border: #e2e8f0;
+  /* Soft borders for premium feel */
   --input: #e2e8f0;
   --ring: #10b981;
 
@@ -140,7 +149,7 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image: 
+    background-image:
       radial-gradient(circle at 100% 0%, rgb(16 185 129 / 8%) 0%, transparent 40%),
       radial-gradient(circle at 0% 100%, rgb(16 185 129 / 5%) 0%, transparent 30%);
     background-attachment: fixed;
@@ -256,20 +265,24 @@
   }
 
   @keyframes floatY {
+
     0%,
     100% {
       transform: translateY(0);
     }
+
     50% {
       transform: translateY(-8px);
     }
   }
 
   @keyframes drift {
+
     0%,
     100% {
       transform: translate3d(0, 0, 0) scale(1);
     }
+
     50% {
       transform: translate3d(8px, -12px, 0) scale(1.06);
     }
@@ -279,9 +292,11 @@
     0% {
       right: -130%;
     }
+
     55% {
       right: 130%;
     }
+
     100% {
       right: 130%;
     }
@@ -296,18 +311,31 @@
     transform: rotate(var(--wheel-rot, 0deg));
     will-change: transform;
   }
+
   @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
+
   @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+
+    to {
+      height: 0;
+    }
   }
 
   .animate-accordion-down {
     animation: accordion-down 0.2s ease-out;
   }
+
   .animate-accordion-up {
     animation: accordion-up 0.2s ease-out;
   }
