@@ -99,11 +99,11 @@ export function Services() {
                   <span className="text-sm font-black tracking-widest uppercase">الخدمة الأقوى لدينا</span>
                 </div>
                 
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-zinc-900 dark:text-white leading-[1.1]">
+                <h2 className="text-[clamp(2.25rem,5vw,3.75rem)] font-black text-zinc-900 dark:text-white leading-[1.1]">
                   الفحص <span className="text-emerald-500">الشامل</span> <br />قبل البيع والشراء
                 </h2>
                 
-                <p className="text-lg md:text-xl text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium">
+                <p className="text-[clamp(1.125rem,1.5vw,1.25rem)] text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium">
                   بنقدم لك أدق تقرير فني في مصر لحالة الهيكل (البوية) والميكانيكا والعفشة، عشان تشتري وأنت مطمن ١٠٠٪.
                 </p>
                 
@@ -183,13 +183,13 @@ export function Services() {
             <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
               صيانة ودقة
             </Badge>
-            <h2 className="text-balance text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight text-zinc-900 dark:text-white">
+            <h2 className="text-balance text-[clamp(1.875rem,4vw,3rem)] font-black tracking-tight leading-tight text-zinc-900 dark:text-white">
               خدمات <span className="text-emerald-500">الصيانة</span> المتخصصة
             </h2>
           </motion.div>
           <motion.div variants={itemVariants as any}>
             <p 
-              className="max-w-md text-base sm:text-lg leading-relaxed text-muted-foreground font-medium border-r-4 border-emerald-500/20 pr-6"
+              className="max-w-md text-[clamp(1rem,1.5vw,1.125rem)] leading-relaxed text-muted-foreground font-medium border-r-4 border-emerald-500/20 pr-6"
             >
               بجانب الفحص، نقدم خدمات الضبط الدقيق بأحدث الأجهزة المتطورة لضمان أقصى درجات الثبات.
             </p>

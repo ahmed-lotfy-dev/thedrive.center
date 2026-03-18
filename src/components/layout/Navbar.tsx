@@ -92,14 +92,14 @@ export function Navbar() {
   return (
     <motion.nav
       ref={navRef as any}
-      className="fixed top-0 left-0 right-0 z-50 px-4 pt-4 md:pt-6"
+      className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-4 lg:px-8 pt-4 md:pt-6"
       variants={navContainerVariants}
       initial="hidden"
       animate="visible"
     >
       <div
         className={cn(
-          "mx-auto flex h-16 md:h-20 container items-center justify-between rounded-4xl border transition-all duration-500 px-4 sm:px-8 relative",
+          "mx-auto flex h-16 md:h-20 w-full max-w-[1400px] items-center justify-between rounded-4xl border transition-all duration-500 px-3 md:px-6 relative",
           isScrolled
             ? "bg-background/80 shadow-lg dark:shadow-2xl backdrop-blur-2xl border-border/50"
             : "bg-background/40 backdrop-blur-xl border-border/20"
@@ -115,11 +115,11 @@ export function Navbar() {
                 <img src="/logo.png" alt="The Drive Logo" className="w-full h-full object-cover" />
               </div>
             </div>
-            <div className="leading-tight hidden sm:block">
-              <h1 className="text-xl md:text-3xl font-black tracking-tighter text-foreground dark:text-white group-hover:text-emerald-500 transition-colors uppercase italic italic-bold px-1">The Drive Center</h1>
+            <div className="leading-tight flex flex-col justify-center">
+              <h1 className="text-[clamp(1rem,4.5vw,1.875rem)] font-black tracking-tighter text-foreground dark:text-white group-hover:text-emerald-500 transition-colors uppercase italic px-1">The Drive Center</h1>
               <div className="flex items-center gap-2">
-                <span className="w-8 h-px bg-emerald-500/50" />
-                <p className="text-[9px] md:text-[10px] text-muted-foreground font-black tracking-[0.2em] uppercase">Precision Service</p>
+                <span className="w-4 sm:w-8 h-px bg-emerald-500/50 shrink-0" />
+                <p className="text-[clamp(0.5rem,2vw,0.625rem)] text-muted-foreground font-black tracking-[0.1em] sm:tracking-[0.2em] uppercase whitespace-nowrap">Precision Service</p>
               </div>
             </div>
           </Link>

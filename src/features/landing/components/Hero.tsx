@@ -59,15 +59,15 @@ export function Hero({ imageUrl }: HeroProps) {
       <div className="absolute top-1/4 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 left-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 -translate-x-1/2 translate-y-1/2" />
 
-      <div className="container mx-auto relative z-10 w-full mb-8">
+      <div className="w-full max-w-[1400px] mx-auto relative z-10 px-4 md:px-8 mb-8">
         <motion.div 
-          className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20"
+          className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           <motion.div 
-            className="w-full lg:w-1/2 space-y-8 relative z-20 text-right md:text-right"
+            className="w-full lg:w-[55%] space-y-6 md:space-y-8 relative z-20 text-right"
             variants={containerVariants}
           >
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-sm">
@@ -75,12 +75,12 @@ export function Hero({ imageUrl }: HeroProps) {
               <span className="text-sm font-bold tracking-wide">المركز الأول في المـحـلـة الكـبـرى</span>
             </motion.div>
             
-            <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-[4rem] font-extrabold text-foreground leading-[1.15] tracking-tight text-balance">
+            <motion.h1 variants={itemVariants} className="text-[clamp(2.25rem,4.5vw,4rem)] font-extrabold text-foreground leading-[1.15] tracking-tight text-balance">
               مركز <span className="text-transparent bg-clip-text bg-linear-to-l from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400 drop-shadow-sm">The Drive Center</span><br />
               لضبط الزوايا والترصيص
             </motion.h1>
             
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground/90 max-w-[90%] md:ml-auto leading-relaxed font-medium">
+            <motion.p variants={itemVariants} className="text-[clamp(1rem,1.5vw,1.25rem)] text-muted-foreground/90 max-w-[95%] leading-relaxed font-medium">
               فحص آلي حديث بأعلى دقة، ترصيص متطور، وتكويد باور ستيرنج لضمان ثبات تام وأداء مثالي لعربيتك على الطريق.
             </motion.p>
             
@@ -129,12 +129,12 @@ export function Hero({ imageUrl }: HeroProps) {
           </motion.div>
 
           <motion.div 
-            className="w-full lg:w-1/2 relative lg:h-[600px] flex items-center justify-center p-4 lg:p-0"
+            className="w-full lg:w-[45%] relative lg:h-[600px] flex items-center justify-center p-4 lg:p-0"
             variants={imageVariants}
           >
             <div className="w-full relative">
               <div className="absolute inset-0 -m-6 bg-linear-to-tr from-emerald-500/20 to-emerald-500/20 rounded-[3rem] blur-2xl -z-10 opacity-60" />
-              <div className="relative w-full aspect-4/3 lg:aspect-square max-h-[500px] rounded-4xl overflow-hidden shadow-2xl border-4 border-white/50 dark:border-white/10 bg-black/5 group">
+              <div className="relative w-full aspect-4/3 lg:aspect-square rounded-4xl overflow-hidden shadow-2xl border-4 border-white/50 dark:border-white/10 bg-black/5 group">
                 <Image
                   src={activeImage}
                   alt="مركز خدمة The Drive Center"
