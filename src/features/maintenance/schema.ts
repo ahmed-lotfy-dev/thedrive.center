@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { isKnownCarMaker } from "@/lib/constants";
 
 export const customerCarSchema = z.object({
-  make: z.string().min(1, "ماركة السيارة مطلوبة"),
+  make: z.string().min(1, "ماركة السيارة مطلوبة").refine(isKnownCarMaker, "ماركة السيارة غير مدعومة"),
   model: z.string().min(1, "موديل السيارة مطلوب"),
   year: z.coerce.number().min(1900).max(new Date().getFullYear() + 1).optional(),
   plateNumber: z.string().min(1, "رقم اللوحة مطلوب"),

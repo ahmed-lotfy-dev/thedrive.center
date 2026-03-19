@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { appointments } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
+import type { AppointmentStatusValue } from "@/lib/constants";
 
 export const appointmentQueries = {
   findAll: async () => {
@@ -27,7 +28,7 @@ export const appointmentQueries = {
     return appointment;
   },
 
-  updateStatus: async (id: string, status: string) => {
+  updateStatus: async (id: string, status: AppointmentStatusValue) => {
     const [updated] = await db
       .update(appointments)
       .set({ status })

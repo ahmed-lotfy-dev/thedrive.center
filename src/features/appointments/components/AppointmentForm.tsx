@@ -30,7 +30,7 @@ import { createAppointment } from "@/server/actions/appointments";
 import { authClient } from "@/lib/auth-client";
 import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
 import { ServiceSelect } from "@/components/shared/ServiceSelect";
-import { CAR_MAKERS, VEHICLE_TYPES } from "@/lib/constants";
+import { CAR_MAKERS, VEHICLE_TYPES, isKnownCarMaker, isKnownVehicleType } from "@/lib/constants";
 
 const formSchema = z.object({
   guestName: z.string().min(1, "الاسم مطلوب"),
@@ -38,8 +38,8 @@ const formSchema = z.object({
   guestPhone: z.string().min(10, "رقم الموبايل مطلوب"),
   plateNumber: z.string().min(1, "رقم اللوحة مطلوب"),
   serviceType: z.string().min(1, "نوع الخدمة مطلوب"),
-  make: z.string().min(1, "ماركة السيارة مطلوبة"),
-  machineType: z.string().min(1, "نوع العربية مطلوب"),
+  make: z.string().min(1, "ماركة السيارة مطلوبة").refine(isKnownCarMaker, "ماركة السيارة غير مدعومة"),
+  vehicleType: z.string().min(1, "نوع العربية مطلوب").refine(isKnownVehicleType, "نوع العربية غير مدعوم"),
   date: z.date(),
   notes: z.string().optional(),
 });
@@ -61,7 +61,7 @@ export function AppointmentForm() {
       plateNumber: searchParams.get("plate") || "",
       serviceType: searchParams.get("service") || "",
       make: searchParams.get("make") || "",
-      machineType: searchParams.get("type") || "",
+      vehicleType: searchParams.get("vehicleType") || searchParams.get("type") || "",
       notes: "",
     },
   });
@@ -226,7 +226,7 @@ export function AppointmentForm() {
 
           <FormField
             control={form.control}
-            name="machineType"
+            name="vehicleType"
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center gap-2 mb-2">

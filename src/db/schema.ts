@@ -1,4 +1,11 @@
 import { pgTable, text, timestamp, uuid, integer, boolean, decimal } from "drizzle-orm/pg-core";
+import type {
+  AppointmentStatusValue,
+  CarMediaTypeValue,
+  CustomerCarStatusValue,
+  ServiceTypeValue,
+  VehicleTypeValue,
+} from "@/lib/constants";
 
 // --- Better Auth Core Tables ---
 
@@ -72,10 +79,10 @@ export const appointments = pgTable("appointments", {
   guestName: text("guest_name"),
   guestEmail: text("guest_email"),
   guestPhone: text("guest_phone"),
-  serviceType: text("service_type").notNull(),
-  machineType: text("machine_type").default("sedan"),
+  serviceType: text("service_type").$type<ServiceTypeValue>().notNull(),
+  vehicleType: text("vehicle_type").$type<VehicleTypeValue>().default("sedan"),
   date: timestamp("date").notNull(),
-  status: text("status").default("pending"),
+  status: text("status").$type<AppointmentStatusValue>().default("pending"),
   notes: text("notes"),
   technicianId: uuid("technician_id").references(() => user.id),
   estimatedPrice: decimal("estimated_price", { precision: 10, scale: 2 }),
@@ -94,7 +101,7 @@ export const cars = pgTable("cars", {
   description: text("description"), // Detailed description of the work done
   coverImageUrl: text("cover_image_url").notNull(), // Cloudflare R2 URL for the main image
   videoUrl: text("video_url"), // Cloudflare R2 URL for the single video as requested
-  serviceType: text("service_type").notNull(), // E.g., 'alignment_balancing', 'inspection', 'steering_coding'
+  serviceType: text("service_type").$type<ServiceTypeValue>().notNull(), // E.g., 'alignment_balancing', 'inspection', 'steering_coding'
   featured: boolean("featured").default(false), // To show on the homepage if needed
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -104,7 +111,7 @@ export const carMedia = pgTable("car_media", {
   id: uuid("id").primaryKey().defaultRandom(),
   carId: uuid("car_id").references(() => cars.id, { onDelete: "cascade" }).notNull(),
   url: text("url").notNull(), // Cloudflare R2 URL for gallery images
-  type: text("type").notNull(), // 'image' or 'video' but the user mostly asked for " صور وفيديو كل عربيه" so we can keep multiple photos here
+  type: text("type").$type<CarMediaTypeValue>().notNull(), // 'image' or 'video' but the user mostly asked for " صور وفيديو كل عربيه" so we can keep multiple photos here
   order: integer("order").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -126,7 +133,7 @@ export const customerCars = pgTable("customer_cars", {
   nextServiceDate: timestamp("next_service_date"),
   nextServiceOdometer: integer("next_service_odometer"),
   nextAlignmentDate: timestamp("next_alignment_date"),
-  status: text("status").default("active").notNull(), // 'active', 'archived'
+  status: text("status").$type<CustomerCarStatusValue>().default("active").notNull(), // 'active', 'archived'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -137,7 +144,7 @@ export const serviceRecords = pgTable("service_records", {
     .notNull()
     .references(() => customerCars.id, { onDelete: "cascade" }),
   serviceDate: timestamp("service_date").notNull().defaultNow(),
-  serviceType: text("service_type").notNull(), // e.g. 'Oil Change', 'Alignment'
+  serviceType: text("service_type").$type<ServiceTypeValue>().notNull(), // e.g. 'Oil Change', 'Alignment'
   description: text("description"),
   odometer: integer("odometer"),
   cost: decimal("cost", { precision: 10, scale: 2 }),

@@ -32,7 +32,7 @@ All tables are in a PostgreSQL database managed via Drizzle ORM (`src/db/schema.
 ### Application Layer
 | Table | Purpose |
 |---|---|
-| `appointments` | Booking requests. Links to `user` (nullable for guests) and `customer_cars`. Tracks `serviceType`, `machineType`, `date`, `status`, estimated/actual price. |
+| `appointments` | Booking requests. Links to `user` (nullable for guests) and `customer_cars`. Tracks `serviceType`, `vehicleType`, `date`, `status`, estimated/actual price. |
 | `customer_cars` | Every car tracked by the center. Has `plateNumber` (unique), `make`, `model`, `year`, `color`, `status` (active/archived). Links to `user`. |
 | `service_records` | Immutable log of completed services per car. Tracks `serviceType`, `cost`, `odometer`, `description`. |
 | `cars` | Portfolio items ("سجل التميز"). Not customer cars — these are showcase work entries with `title`, `slug`, `coverImageUrl`, `videoUrl`, `serviceType`, `featured`. |

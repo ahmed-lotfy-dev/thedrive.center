@@ -25,15 +25,16 @@ import {
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { formatLicensePlate } from "@/lib/utils";
+import type { AppointmentStatusValue } from "@/lib/constants";
 
 interface AppointmentCardProps {
   appointment: any;
   statusColors: Record<string, string>;
   statusLabels: Record<string, string>;
-  machineTypeLabels: Record<string, string>;
+  vehicleTypeLabels: Record<string, string>;
   serviceTypeLabels: Record<string, string>;
   loadingId: string | null;
-  onStatusUpdate: (id: string, status: string) => void;
+  onStatusUpdate: (id: string, status: AppointmentStatusValue) => void;
   onDeleteRequest: (id: string) => void;
 }
 
@@ -41,14 +42,14 @@ export function AppointmentCard({
   appointment, 
   statusColors, 
   statusLabels, 
-  machineTypeLabels, 
+  vehicleTypeLabels, 
   serviceTypeLabels,
   loadingId,
   onStatusUpdate,
   onDeleteRequest
 }: AppointmentCardProps) {
   const statusKey = (appointment.status || "pending") as keyof typeof statusLabels;
-  const machineLabel = machineTypeLabels[appointment.machineType || ""] || (appointment.machineType || "غير محدد");
+  const vehicleLabel = vehicleTypeLabels[appointment.vehicleType || ""] || (appointment.vehicleType || "غير محدد");
   const serviceLabel = serviceTypeLabels[appointment.serviceType] || appointment.serviceType;
 
   return (
@@ -83,7 +84,7 @@ export function AppointmentCard({
                 <div className="min-w-0">
                   <p className="text-[clamp(9px,0.5vw+4px,11px)] font-black uppercase text-muted-foreground/60 leading-none mb-1">العربية</p>
                   <div className="flex flex-col gap-1">
-                    <p className="text-[clamp(12px,0.6vw+6px,14px)] font-bold truncate leading-none text-foreground">{machineLabel}</p>
+                    <p className="text-[clamp(12px,0.6vw+6px,14px)] font-bold truncate leading-none text-foreground">{vehicleLabel}</p>
                     {appointment.car?.plateNumber && (
                       <p className="text-[10px] font-black text-emerald-500 bg-emerald-500/5 px-1.5 py-0.5 rounded border border-emerald-500/10 inline-block w-fit leading-none">
                         {formatLicensePlate(appointment.car.plateNumber)}

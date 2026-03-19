@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
+import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
+import { isKnownServiceType, isKnownCarMediaType } from "@/lib/constants";
 
 const carSchema = z.object({
   id: z.string().optional(),
@@ -14,11 +16,20 @@ const carSchema = z.object({
   description: z.string().min(10, "الوصف مطلوب"),
   coverImageUrl: z.string().url("رابط الصورة الغلاف غير صحيح"),
   videoUrl: z.string().optional(),
-  serviceType: z.string().min(2, "نوع الخدمة مطلوب"),
+  serviceType: z.string().min(2, "نوع الخدمة مطلوب").refine(isKnownServiceType, "نوع الخدمة غير مدعوم"),
   galleryUrls: z.string().optional(), // Comma separated URLs
 });
 
 export async function createPortfolioEntry(formData: FormData) {
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: "Unauthorized" };
+    }
+    throw error;
+  }
+
   const result = carSchema.safeParse({
     title: formData.get("title"),
     description: formData.get("description"),
@@ -44,30 +55,30 @@ export async function createPortfolioEntry(formData: FormData) {
   const uniqueId = randomBytes(3).toString("hex");
   const slug = `${baseSlug ? baseSlug + "-" : "car-"}${uniqueId}`;
 
-  // 1. Create the main car entry
-  const [newCar] = await db.insert(cars).values({
-    title,
-    description,
-    coverImageUrl,
-    videoUrl,
-    serviceType,
-    slug,
-    featured: true,
-  }).returning();
+  await db.transaction(async (tx) => {
+    const [newCar] = await tx.insert(cars).values({
+      title,
+      description,
+      coverImageUrl,
+      videoUrl,
+      serviceType,
+      slug,
+      featured: true,
+    }).returning();
 
-  // 2. Add gallery images if any
-  if (galleryUrls) {
-    const urls = galleryUrls.split(",").map(u => u.trim()).filter(Boolean);
-    if (urls.length > 0) {
-      const mediaData = urls.map((url, index) => ({
-        carId: newCar.id,
-        url,
-        type: "image",
-        order: index,
-      }));
-      await db.insert(carMedia).values(mediaData);
+    if (galleryUrls) {
+      const urls = galleryUrls.split(",").map(u => u.trim()).filter(Boolean);
+      if (urls.length > 0) {
+        const mediaData = urls.map((url, index) => ({
+          carId: newCar.id,
+          url,
+          type: isKnownCarMediaType("image") ? "image" : (() => { throw new Error("Invalid media type"); })(),
+          order: index,
+        }));
+        await tx.insert(carMedia).values(mediaData);
+      }
     }
-  }
+  });
 
   revalidatePath("/cars");
   revalidatePath("/admin/portfolio");
@@ -78,17 +89,30 @@ export async function createPortfolioEntry(formData: FormData) {
 
 export async function deletePortfolioEntry(id: string) {
   try {
+    await requireAdmin();
     await db.delete(cars).where(eq(cars.id, id));
     revalidatePath("/cars");
     revalidatePath("/admin/portfolio");
     return { success: true };
   } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: "Unauthorized" };
+    }
     console.error("Failed to delete portfolio entry:", error);
     return { error: "فشل في حذف العمل" };
   }
 }
 
 export async function updatePortfolioEntry(id: string, formData: FormData) {
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      return { error: "Unauthorized" };
+    }
+    throw error;
+  }
+
   const result = carSchema.safeParse({
     title: formData.get("title"),
     description: formData.get("description"),
@@ -104,34 +128,33 @@ export async function updatePortfolioEntry(id: string, formData: FormData) {
 
   const { galleryUrls, title, description, coverImageUrl, videoUrl, serviceType } = result.data;
 
-  // 1. Update the main car entry
-  await db.update(cars)
-    .set({
-      title,
-      description,
-      coverImageUrl,
-      videoUrl,
-      serviceType,
-      updatedAt: new Date(),
-    })
-    .where(eq(cars.id, id));
+  await db.transaction(async (tx) => {
+    await tx.update(cars)
+      .set({
+        title,
+        description,
+        coverImageUrl,
+        videoUrl,
+        serviceType,
+        updatedAt: new Date(),
+      })
+      .where(eq(cars.id, id));
 
-  // 2. Update gallery images
-  // Simplest approach: delete existing media and re-insert
-  await db.delete(carMedia).where(eq(carMedia.carId, id));
-  
-  if (galleryUrls) {
-    const urls = galleryUrls.split(",").map(u => u.trim()).filter(Boolean);
-    if (urls.length > 0) {
-      const mediaData = urls.map((url, index) => ({
-        carId: id,
-        url,
-        type: "image",
-        order: index,
-      }));
-      await db.insert(carMedia).values(mediaData);
+    await tx.delete(carMedia).where(eq(carMedia.carId, id));
+
+    if (galleryUrls) {
+      const urls = galleryUrls.split(",").map(u => u.trim()).filter(Boolean);
+      if (urls.length > 0) {
+        const mediaData = urls.map((url, index) => ({
+          carId: id,
+          url,
+          type: isKnownCarMediaType("image") ? "image" : (() => { throw new Error("Invalid media type"); })(),
+          order: index,
+        }));
+        await tx.insert(carMedia).values(mediaData);
+      }
     }
-  }
+  });
 
   revalidatePath("/cars");
   revalidatePath(`/cars/${id}`); // Potentially need to find the slug, but revalidatePath is fine with IDs or we can just revalidate all

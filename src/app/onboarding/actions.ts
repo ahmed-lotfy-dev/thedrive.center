@@ -8,9 +8,10 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { normalizePlateNumber } from "@/lib/utils";
+import { isKnownCarMaker } from "@/lib/constants";
 
 const onboardingSchema = z.object({
-  make: z.string().min(1, "ماركة السيارة مطلوبة"),
+  make: z.string().min(1, "ماركة السيارة مطلوبة").refine(isKnownCarMaker, "ماركة السيارة غير مدعومة"),
   model: z.string().min(1, "موديل السيارة مطلوب"),
   year: z.coerce.number().min(1900).max(new Date().getFullYear() + 1).optional(),
   plateNumber: z.string().min(1, "رقم اللوحة مطلوب"),

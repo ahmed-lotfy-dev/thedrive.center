@@ -9,17 +9,23 @@ import { toast } from "sonner";
 import { AppointmentCard } from "./components/AppointmentCard";
 import { EmptyAppointments } from "./components/EmptyAppointments";
 import { DeleteAppointmentDialog } from "./components/DeleteAppointmentDialog";
+import {
+  APPOINTMENT_STATUSES,
+  SERVICE_TYPES,
+  VEHICLE_TYPES,
+  type AppointmentStatusValue,
+} from "@/lib/constants";
 
 type Appointment = {
   id: string;
   guestName: string | null;
   guestPhone: string | null;
   guestEmail: string | null;
-  machineType: string | null;
+  vehicleType: string | null;
   serviceType: string;
   date: Date | string;
   notes: string | null;
-  status: string | null;
+  status: AppointmentStatusValue | null;
   car?: {
     plateNumber: string;
   } | null;
@@ -36,40 +42,24 @@ const statusColors = {
   cancelled: "bg-red-500/10 text-red-600 border-red-500/20",
 } as const;
 
-const statusLabels = {
-  pending: "قيد المراجعة",
-  confirmed: "مؤكد",
-  completed: "مكتمل",
-  cancelled: "ملغي",
-} as const;
+const statusLabels = Object.fromEntries(
+  APPOINTMENT_STATUSES.map((status) => [status.value, status.label]),
+) as Record<AppointmentStatusValue, string>;
 
-const machineTypeLabels: Record<string, string> = {
-  sedan: "ملاكي (Sedan)",
-  suv: "SUV",
-  van: "فان (Van)",
-  truck: "نقل (Truck)",
-  washing_machine: "ملاكي",
-  refrigerator: "SUV",
-  water_filter: "نقل",
-  other: "أخرى",
-};
+const vehicleTypeLabels: Record<string, string> = Object.fromEntries(
+  VEHICLE_TYPES.map((type) => [type.value, type.label]),
+);
 
-const serviceTypeLabels: Record<string, string> = {
-  repair: "ضبط زوايا",
-  installation: "ترصيص واتزان",
-  maintenance: "فحص شامل قبل البيع والشراء",
-  "ضبط زوايا": "ضبط زوايا",
-  "ترصيص": "ترصيص واتزان",
-  "ترصيص واتزان": "ترصيص واتزان",
-  "فحص شامل": "فحص شامل",
-};
+const serviceTypeLabels: Record<string, string> = Object.fromEntries(
+  SERVICE_TYPES.map((service) => [service.value, service.label]),
+);
 
 export function AdminAppointmentList({ initialAppointments }: AdminAppointmentListProps) {
   const [appointments, setAppointments] = useState(initialAppointments);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleStatusUpdate = async (id: string, newStatus: string) => {
+  const handleStatusUpdate = async (id: string, newStatus: AppointmentStatusValue) => {
     setLoadingId(id);
     const result = await updateAppointmentStatus(id, newStatus);
     setLoadingId(null);
@@ -109,7 +99,7 @@ export function AdminAppointmentList({ initialAppointments }: AdminAppointmentLi
             appointment={appointment}
             statusColors={statusColors}
             statusLabels={statusLabels}
-            machineTypeLabels={machineTypeLabels}
+            vehicleTypeLabels={vehicleTypeLabels}
             serviceTypeLabels={serviceTypeLabels}
             loadingId={loadingId}
             onStatusUpdate={handleStatusUpdate}

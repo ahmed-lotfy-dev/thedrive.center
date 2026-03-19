@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
 import { formatLicensePlate } from "@/lib/utils";
-import { CAR_MAKERS, VEHICLE_TYPES } from "@/lib/constants";
+import { getCarMakerLabel, getVehicleTypeLabel } from "@/lib/constants";
 import {
   Dialog,
   DialogContent,
@@ -64,11 +64,8 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const getCarDisplayName = (car: any) => {
-    const maker = CAR_MAKERS.find(m => m.value === car.make.toLowerCase());
-    const make = maker ? maker.label : (car.make === "Unknown" ? "سيارة" : car.make);
-    
-    const vType = VEHICLE_TYPES.find(t => t.value === car.model.toLowerCase());
-    const model = vType ? vType.label : car.model;
+    const make = car.make === "Unknown" ? "سيارة" : getCarMakerLabel(car.make);
+    const model = getVehicleTypeLabel(car.model);
     
     return `${make} ${model}`;
   };

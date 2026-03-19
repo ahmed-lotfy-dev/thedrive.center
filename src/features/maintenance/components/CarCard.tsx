@@ -133,7 +133,7 @@ export function CarCard({ car }: CarCardProps) {
             asChild
             className="rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black py-6 px-4 shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
           >
-            <Link href={`/book?plate=${car.plateNumber}&make=${car.make}&type=${car.machineType || 'sedan'}`}>
+            <Link href={`/book?plate=${car.plateNumber}&make=${car.make}`}>
               <PlusCircle className="size-5 ml-2" />
               احجز الآن
             </Link>

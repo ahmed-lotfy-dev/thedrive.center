@@ -44,7 +44,7 @@ erDiagram
         text guestPhone
         text guestEmail
         text serviceType
-        text machineType "sedan|suv|truck"
+        text vehicleType "sedan|suv|truck"
         timestamp date
         text status "pending|confirmed|completed|cancelled"
         text notes
