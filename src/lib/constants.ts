@@ -166,3 +166,13 @@ const notificationEventStatusMap = new Map<string, string>(
 export function isKnownNotificationEventStatus(value: string) {
   return notificationEventStatusMap.has(value.trim().toLowerCase());
 }
+
+export const NOTIFICATION_SETTING_KEYS = [
+  "email_notifications_enabled",
+  "whatsapp_notifications_enabled",
+  "notification_from_email",
+  "maintenance_reminder_days",
+] as const;
+
+export type NotificationSettingKey = (typeof NOTIFICATION_SETTING_KEYS)[number];
+

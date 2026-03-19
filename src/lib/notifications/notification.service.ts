@@ -1,6 +1,12 @@
 import { WhatsAppProvider } from "./whatsapp.provider";
 import { OfficialApiProvider } from "./providers/official-api.provider";
 import { MockWhatsAppProvider } from "./providers/mock.provider";
+import { sendEmail } from "./email.provider";
+import { render } from "@react-email/components";
+import { BookingConfirmationEmail } from "./emails/BookingConfirmation";
+import { AppointmentStatusEmail } from "./emails/AppointmentStatus";
+import { MaintenanceReminderEmail } from "./emails/MaintenanceReminder";
+
 
 export class NotificationService {
   private static instance: NotificationService;
@@ -36,28 +42,23 @@ export class NotificationService {
     return this.deliveryEnabled || process.env.NODE_ENV === "development";
   }
 
+  public isEmailEnabled() {
+    return !!process.env.RESEND_API_KEY;
+  }
+
   public getProviderName() {
     return this.providerName;
   }
 
-  /**
-   * Sends a WhatsApp message to a user.
-   * @param phone The user's phone number.
-   * @param message The message content.
-   */
   public async sendWhatsApp(
     phone: string,
     message: string,
   ): Promise<{ success: boolean; error?: string }> {
-    // Basic Egyptian number normalization
     let normalizedPhone = phone.replace(/\D/g, "");
 
-    // If it starts with 01, prepend 20 (Egypt)
     if (normalizedPhone.startsWith("01") && normalizedPhone.length === 11) {
       normalizedPhone = "20" + normalizedPhone.substring(1);
-    }
-    // If it starts with 1, prepend 20 (Egypt)
-    else if (normalizedPhone.startsWith("1") && normalizedPhone.length === 10) {
+    } else if (normalizedPhone.startsWith("1") && normalizedPhone.length === 10) {
       normalizedPhone = "20" + normalizedPhone;
     }
 
@@ -69,9 +70,54 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Specific notification for car history/service updates.
-   */
+  public async sendEmail(
+    to: string,
+    subject: string,
+    html: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    return sendEmail({ to, subject, html });
+  }
+
+  public async sendBookingConfirmationEmail(
+    to: string,
+    customerName: string,
+    serviceType: string,
+    date: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    const html = await render(
+      BookingConfirmationEmail({ customerName, serviceType, date }),
+    );
+    return this.sendEmail(to, "تم استلام طلب حجزك — The Drive Center", html);
+  }
+
+  public async sendAppointmentStatusEmail(
+    to: string,
+    customerName: string,
+    statusLabel: string,
+    statusEmoji: string,
+    serviceType: string,
+    date: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    const html = await render(
+      AppointmentStatusEmail({ customerName, statusLabel, statusEmoji, serviceType, date }),
+    );
+    return this.sendEmail(to, `تحديث حجزك: ${statusLabel} — The Drive Center`, html);
+  }
+
+  public async sendMaintenanceReminderEmail(
+    to: string,
+    customerName: string,
+    reminderLabel: string,
+    reminderDate: string,
+    plateNumber: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    const html = await render(
+      MaintenanceReminderEmail({ customerName, reminderLabel, reminderDate, plateNumber }),
+    );
+    return this.sendEmail(to, `تذكير: موعد ${reminderLabel} لسيارتك — The Drive Center`, html);
+  }
+
+
   public async notifyServiceUpdate(
     phone: string,
     customerName: string,
@@ -84,9 +130,6 @@ export class NotificationService {
     );
   }
 
-  /**
-   * Notification for appointment confirmation.
-   */
   public async notifyAppointment(
     phone: string,
     customerName: string,

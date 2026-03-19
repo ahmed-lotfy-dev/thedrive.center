@@ -168,6 +168,7 @@ export const notificationEvents = pgTable("notification_events", {
   status: text("status").$type<NotificationEventStatusValue>().default("pending").notNull(),
   provider: text("provider").notNull().default("mock"),
   phone: text("phone").notNull(),
+  email: text("email"),
   customerName: text("customer_name"),
   message: text("message").notNull(),
   payload: jsonb("payload").$type<Record<string, unknown>>().default({}).notNull(),

@@ -13,6 +13,7 @@ import {
   LayoutGrid,
   Lightbulb,
   Menu,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -21,6 +22,7 @@ import { authClient } from "@/lib/auth-client";
 const sidebarItems = [
   { title: "نظرة عامة", href: "/admin", icon: LayoutDashboard },
   { title: "الحجوزات", href: "/admin/appointments", icon: CalendarDays },
+  { title: "الإشعارات", href: "/admin/notifications", icon: Bell },
   { title: "سيارات العملاء", href: "/admin/customer-cars", icon: LayoutGrid },
   { title: "سجل التميز", href: "/admin/showcase", icon: LayoutGrid },
   { title: "صورة الهيرو", href: "/admin/hero-image", icon: Images },
