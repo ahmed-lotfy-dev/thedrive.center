@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { MAX_UPLOAD_SIZE_BYTES, validateUploadRequest } from "@/lib/upload-policy";
+import { checkRateLimit, rateLimitPolicies } from "@/lib/rate-limit";
 
 function isAdminRole(role?: string | null) {
   return role === "admin" || role === "owner";
@@ -13,11 +14,29 @@ function isAdminRole(role?: string | null) {
 
 export async function POST(request: Request) {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const requestHeaders = await headers();
+    const session = await auth.api.getSession({ headers: requestHeaders });
     const role = (session?.user as { role?: string } | undefined)?.role;
 
     if (!session?.user || !isAdminRole(role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const rateLimit = await checkRateLimit(rateLimitPolicies.adminUploadSign, {
+      headers: requestHeaders,
+      userId: session.user.id,
+    });
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: rateLimit.message },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
+        },
+      );
     }
 
     const { filename, contentType, size } = await request.json();
@@ -55,11 +74,29 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const requestHeaders = await headers();
+    const session = await auth.api.getSession({ headers: requestHeaders });
     const role = (session?.user as { role?: string } | undefined)?.role;
 
     if (!session?.user || !isAdminRole(role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const rateLimit = await checkRateLimit(rateLimitPolicies.adminUploadDelete, {
+      headers: requestHeaders,
+      userId: session.user.id,
+    });
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: rateLimit.message },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
+        },
+      );
     }
 
     const { filename } = await request.json();

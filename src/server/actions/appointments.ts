@@ -22,6 +22,7 @@ import {
 } from "@/lib/constants";
 import { notificationService } from "@/lib/notifications/notification.service";
 import { processNotificationEvent, queueNotificationEvent } from "@/lib/notifications/outbox";
+import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
 
 const appointmentSchema = z.object({
   guestName: z.string().min(1, "Name is required").optional(),
@@ -59,6 +60,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
   try {
     const validated = appointmentSchema.parse(data);
     const parsedDate = new Date(validated.date);
+    const requestHeaders = await headers();
 
     if (Number.isNaN(parsedDate.getTime())) {
       return {
@@ -75,7 +77,12 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     }
 
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: requestHeaders,
+    });
+
+    await enforceRateLimit(rateLimitPolicies.publicBooking, {
+      headers: requestHeaders,
+      userId: session?.user?.id,
     });
 
     if (!session?.user && !validated.guestName) {
@@ -167,6 +174,12 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     };
   } catch (error) {
     console.error("Error creating appointment:", error);
+    if (error instanceof RateLimitError) {
+      return {
+        success: false,
+        error: error.result.message,
+      };
+    }
     if (error instanceof z.ZodError) {
       return {
         success: false,
@@ -180,7 +193,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
   }
 }
 
-export async function getAppointments() {
+export async function getAppointments(page: number = 1, limit: number = 12) {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -194,11 +207,11 @@ export async function getAppointments() {
       };
     }
 
-    const allAppointments = await appointmentQueries.findAll();
+    const paginatedAppointments = await appointmentQueries.findPaginated(page, limit);
 
     return {
       success: true,
-      data: allAppointments,
+      ...paginatedAppointments,
     };
   } catch (error) {
     console.error("Error fetching appointments:", error);
@@ -211,8 +224,9 @@ export async function getAppointments() {
 
 export async function updateAppointmentStatus(id: string, status: string) {
   try {
+    const requestHeaders = await headers();
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: requestHeaders,
     });
 
     const userRole = (session?.user as { role?: string } | undefined)?.role;
@@ -222,6 +236,11 @@ export async function updateAppointmentStatus(id: string, status: string) {
         error: "Unauthorized",
       };
     }
+
+    await enforceRateLimit(rateLimitPolicies.adminWrite, {
+      headers: requestHeaders,
+      userId: session.user.id,
+    });
 
     const validatedStatus = appointmentStatusSchema.parse(status) as AppointmentStatusValue;
     const { updated, notificationEventId } = await db.transaction(async (tx) => {
@@ -276,6 +295,12 @@ export async function updateAppointmentStatus(id: string, status: string) {
     };
   } catch (error) {
     console.error("Error updating appointment:", error);
+    if (error instanceof RateLimitError) {
+      return {
+        success: false,
+        error: error.result.message,
+      };
+    }
     return {
       success: false,
       error: "Failed to update appointment",
@@ -285,8 +310,9 @@ export async function updateAppointmentStatus(id: string, status: string) {
 
 export async function deleteAppointmentAction(id: string) {
   try {
+    const requestHeaders = await headers();
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: requestHeaders,
     });
 
     const userRole = (session?.user as { role?: string } | undefined)?.role;
@@ -297,6 +323,11 @@ export async function deleteAppointmentAction(id: string) {
       };
     }
 
+    await enforceRateLimit(rateLimitPolicies.adminWrite, {
+      headers: requestHeaders,
+      userId: session.user.id,
+    });
+
     await appointmentQueries.delete(id);
     revalidatePath("/admin/appointments");
 
@@ -306,6 +337,12 @@ export async function deleteAppointmentAction(id: string) {
     };
   } catch (error) {
     console.error("Error deleting appointment:", error);
+    if (error instanceof RateLimitError) {
+      return {
+        success: false,
+        error: error.result.message,
+      };
+    }
     return {
       success: false,
       error: "Failed to delete appointment",

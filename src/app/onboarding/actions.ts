@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { normalizePlateNumber } from "@/lib/utils";
 import { isKnownCarMaker } from "@/lib/constants";
+import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
 
 const onboardingSchema = z.object({
   make: z.string().min(1, "ماركة السيارة مطلوبة").refine(isKnownCarMaker, "ماركة السيارة غير مدعومة"),
@@ -27,8 +28,9 @@ export async function submitOnboarding(
   _prevState: OnboardingState | null,
   formData: FormData,
 ): Promise<OnboardingState | null> {
+  const requestHeaders = await headers();
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: requestHeaders,
   });
 
   if (!session?.user) {
@@ -55,6 +57,11 @@ export async function submitOnboarding(
   const cleanPlateNumber = normalizePlateNumber(plateNumber);
 
   try {
+    await enforceRateLimit(rateLimitPolicies.onboarding, {
+      headers: requestHeaders,
+      userId,
+    });
+
     // Check if car already exists in the system (e.g. added by admin)
     const existingCar = await db.query.customerCars.findFirst({
       where: eq(customerCars.plateNumber, cleanPlateNumber),
@@ -98,6 +105,9 @@ export async function submitOnboarding(
       .where(eq(user.id, userId));
 
   } catch (error: unknown) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Onboarding error:", error);
     return { error: "حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى." };
   }

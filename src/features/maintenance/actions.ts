@@ -11,6 +11,7 @@ import { customerCarSchema, serviceRecordSchema, maintenanceTrackingSchema } fro
 import { getServiceTypeLabel, type ServiceTypeValue } from "@/lib/constants";
 import { notificationService } from "@/lib/notifications/notification.service";
 import { processNotificationEvent, queueNotificationEvent } from "@/lib/notifications/outbox";
+import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
 import type { z } from "zod";
 
 async function isAdmin() {
@@ -19,6 +20,23 @@ async function isAdmin() {
   });
   const role = (session?.user as { role?: string } | undefined)?.role;
   return role === "admin" || role === "owner";
+}
+
+async function getAdminRateLimitContext() {
+  const requestHeaders = await headers();
+  const session = await auth.api.getSession({
+    headers: requestHeaders,
+  });
+  const role = (session?.user as { role?: string } | undefined)?.role;
+
+  if (!session?.user || (role !== "admin" && role !== "owner")) {
+    return null;
+  }
+
+  return {
+    headers: requestHeaders,
+    userId: session.user.id,
+  };
 }
 
 
@@ -71,8 +89,9 @@ export async function getUserCars(page: number = 1, limit: number = 6) {
 }
 
 export async function linkCarByPlate(plateNumber: string) {
+  const requestHeaders = await headers();
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: requestHeaders,
   });
 
   if (!session?.user) return { error: "يرجى تسجيل الدخول أولاً" };
@@ -80,6 +99,11 @@ export async function linkCarByPlate(plateNumber: string) {
   const cleanPlate = normalizePlateNumber(plateNumber);
 
   try {
+    await enforceRateLimit(rateLimitPolicies.carLinking, {
+      headers: requestHeaders,
+      userId: session.user.id,
+    });
+
     const car = await db.query.customerCars.findFirst({
       where: eq(customerCars.plateNumber, cleanPlate),
     });
@@ -102,15 +126,21 @@ export async function linkCarByPlate(plateNumber: string) {
     revalidatePath("/dashboard/garage");
     return { success: true };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Error linking car:", error);
     return { error: "حدث خطأ أثناء محاولة ربط السيارة." };
   }
 }
 
 export async function addCustomerCarAction(data: z.infer<typeof customerCarSchema>) {
-  if (!(await isAdmin())) return { error: "Unauthorized" };
+  const adminContext = await getAdminRateLimitContext();
+  if (!adminContext) return { error: "Unauthorized" };
 
   try {
+    await enforceRateLimit(rateLimitPolicies.adminWrite, adminContext);
+
     const validated = customerCarSchema.parse(data);
     const cleanPlate = normalizePlateNumber(validated.plateNumber);
 
@@ -133,15 +163,21 @@ export async function addCustomerCarAction(data: z.infer<typeof customerCarSchem
     revalidatePath("/admin/customer-cars");
     return { success: true, data: newCar };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Error adding customer car:", error);
     return { error: "فشل في تسجيل السيارة الجديدة." };
   }
 }
 
 export async function addServiceRecordAction(data: z.infer<typeof serviceRecordSchema>) {
-  if (!(await isAdmin())) return { error: "غير مصرح لك بالوصول" };
+  const adminContext = await getAdminRateLimitContext();
+  if (!adminContext) return { error: "غير مصرح لك بالوصول" };
 
   try {
+    await enforceRateLimit(rateLimitPolicies.adminWrite, adminContext);
+
     const validated = serviceRecordSchema.parse(data);
     const validatedServiceType = validated.serviceType as ServiceTypeValue;
     const { notificationEventId, insertedRecord } = await db.transaction(async (tx) => {
@@ -190,6 +226,9 @@ export async function addServiceRecordAction(data: z.infer<typeof serviceRecordS
     revalidatePath("/admin/customer-cars");
     return { success: true, data: insertedRecord };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Error adding service record:", error);
     return { error: "فشل في تسجيل الخدمة." };
   }
@@ -258,9 +297,12 @@ export async function searchCustomerCars(query: string, page: number = 1, limit:
 }
 
 export async function updateMaintenanceTrackingAction(carId: string, data: z.infer<typeof maintenanceTrackingSchema>) {
-  if (!(await isAdmin())) return { error: "Unauthorized" };
+  const adminContext = await getAdminRateLimitContext();
+  if (!adminContext) return { error: "Unauthorized" };
 
   try {
+    await enforceRateLimit(rateLimitPolicies.adminWrite, adminContext);
+
     const validated = maintenanceTrackingSchema.parse(data);
     await db.transaction(async (tx) => {
       await tx.update(customerCars)
@@ -345,15 +387,21 @@ export async function updateMaintenanceTrackingAction(carId: string, data: z.inf
     revalidatePath("/admin/customer-cars");
     return { success: true };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Error updating tracking info:", error);
     return { error: "Update failed" };
   }
 }
 
 export async function deleteCustomerCarAction(carId: string) {
-  if (!(await isAdmin())) return { error: "Unauthorized" };
+  const adminContext = await getAdminRateLimitContext();
+  if (!adminContext) return { error: "Unauthorized" };
 
   try {
+    await enforceRateLimit(rateLimitPolicies.adminWrite, adminContext);
+
     // Check for service records
     const records = await db.query.serviceRecords.findMany({
       where: eq(serviceRecords.carId, carId),
@@ -374,15 +422,21 @@ export async function deleteCustomerCarAction(carId: string) {
     revalidatePath("/admin/customer-cars");
     return { success: true };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Error deleting car:", error);
     return { error: "فشل مسح السيارة." };
   }
 }
 
 export async function archiveCustomerCarAction(carId: string) {
-  if (!(await isAdmin())) return { error: "Unauthorized" };
+  const adminContext = await getAdminRateLimitContext();
+  if (!adminContext) return { error: "Unauthorized" };
 
   try {
+    await enforceRateLimit(rateLimitPolicies.adminWrite, adminContext);
+
     await db.update(customerCars)
       .set({ status: "archived" })
       .where(eq(customerCars.id, carId));
@@ -390,15 +444,21 @@ export async function archiveCustomerCarAction(carId: string) {
     revalidatePath("/admin/customer-cars");
     return { success: true };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Error archiving car:", error);
     return { error: "فشل أرشفة السيارة." };
   }
 }
 
 export async function unlinkCustomerCarAction(carId: string) {
-  if (!(await isAdmin())) return { error: "Unauthorized" };
+  const adminContext = await getAdminRateLimitContext();
+  if (!adminContext) return { error: "Unauthorized" };
 
   try {
+    await enforceRateLimit(rateLimitPolicies.adminWrite, adminContext);
+
     await db.update(customerCars)
       .set({ userId: null })
       .where(eq(customerCars.id, carId));
@@ -406,6 +466,9 @@ export async function unlinkCustomerCarAction(carId: string) {
     revalidatePath("/admin/customer-cars");
     return { success: true };
   } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Error unlinking car:", error);
     return { error: "فشل فك ربط السيارة بالمستخدم." };
   }

@@ -1,13 +1,25 @@
-import { pgTable, text, timestamp, uuid, integer, boolean, decimal, jsonb } from "drizzle-orm/pg-core";
-import type {
-  AppointmentStatusValue,
-  CarMediaTypeValue,
-  CustomerCarStatusValue,
-  NotificationEventStatusValue,
-  NotificationEventTypeValue,
-  ServiceTypeValue,
-  VehicleTypeValue,
+import { pgTable, text, timestamp, uuid, integer, boolean, decimal, jsonb, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  APPOINTMENT_STATUSES,
+  CAR_MEDIA_TYPES,
+  CUSTOMER_CAR_STATUSES,
+  NOTIFICATION_EVENT_STATUSES,
+  NOTIFICATION_EVENT_TYPES,
+  SERVICE_TYPES,
+  VEHICLE_TYPES,
+  type AppointmentStatusValue,
+  type CarMediaTypeValue,
+  type CustomerCarStatusValue,
+  type NotificationEventStatusValue,
+  type NotificationEventTypeValue,
+  type ServiceTypeValue,
+  type VehicleTypeValue,
 } from "@/lib/constants";
+import { sql } from "drizzle-orm";
+
+function sqlStringList(values: readonly string[]) {
+  return sql.raw(values.map((value) => `'${value.replace(/'/g, "''")}'`).join(", "));
+}
 
 // --- Better Auth Core Tables ---
 
@@ -94,7 +106,23 @@ export const appointments = pgTable("appointments", {
   cancellationReason: text("cancellation_reason"),
   rating: integer("rating"),
   createdAt: timestamp("created_at").defaultNow(),
-});
+}, (table) => ({
+  dateIdx: index("appointments_date_idx").on(table.date),
+  statusIdx: index("appointments_status_idx").on(table.status),
+  createdAtIdx: index("appointments_created_at_idx").on(table.createdAt),
+  serviceTypeChk: check(
+    "appointments_service_type_chk",
+    sql`${table.serviceType} IN (${sqlStringList(SERVICE_TYPES.map((item) => item.value))})`,
+  ),
+  vehicleTypeChk: check(
+    "appointments_vehicle_type_chk",
+    sql`${table.vehicleType} IS NULL OR ${table.vehicleType} IN (${sqlStringList(VEHICLE_TYPES.map((item) => item.value))})`,
+  ),
+  statusChk: check(
+    "appointments_status_chk",
+    sql`${table.status} IS NULL OR ${table.status} IN (${sqlStringList(APPOINTMENT_STATUSES.map((item) => item.value))})`,
+  ),
+}));
 
 export const cars = pgTable("cars", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -107,7 +135,12 @@ export const cars = pgTable("cars", {
   featured: boolean("featured").default(false), // To show on the homepage if needed
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+  serviceTypeChk: check(
+    "cars_service_type_chk",
+    sql`${table.serviceType} IN (${sqlStringList(SERVICE_TYPES.map((item) => item.value))})`,
+  ),
+}));
 
 export const carMedia = pgTable("car_media", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -116,7 +149,12 @@ export const carMedia = pgTable("car_media", {
   type: text("type").$type<CarMediaTypeValue>().notNull(), // 'image' or 'video' but the user mostly asked for " صور وفيديو كل عربيه" so we can keep multiple photos here
   order: integer("order").default(0),
   createdAt: timestamp("created_at").defaultNow(),
-});
+}, (table) => ({
+  typeChk: check(
+    "car_media_type_chk",
+    sql`${table.type} IN (${sqlStringList(CAR_MEDIA_TYPES.map((item) => item.value))})`,
+  ),
+}));
 export const advices = pgTable("advices", {
   id: uuid("id").primaryKey().defaultRandom(),
   content: text("content").notNull(),
@@ -141,7 +179,31 @@ export const notificationEvents = pgTable("notification_events", {
   userId: uuid("user_id").references(() => user.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => ({
+  typeChk: check(
+    "notification_events_type_chk",
+    sql`${table.type} IN (${sqlStringList(NOTIFICATION_EVENT_TYPES.map((item) => item.value))})`,
+  ),
+  statusChk: check(
+    "notification_events_status_chk",
+    sql`${table.status} IN (${sqlStringList(NOTIFICATION_EVENT_STATUSES.map((item) => item.value))})`,
+  ),
+}));
+
+export const rateLimitBuckets = pgTable("rate_limit_buckets", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  action: text("action").notNull(),
+  key: text("key").notNull(),
+  count: integer("count").default(1).notNull(),
+  windowStartedAt: timestamp("window_started_at").defaultNow().notNull(),
+  blockedUntil: timestamp("blocked_until"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => ({
+  actionKeyUniqueIdx: uniqueIndex("rate_limit_buckets_action_key_idx").on(table.action, table.key),
+  actionUpdatedAtIdx: index("rate_limit_buckets_action_updated_at_idx").on(table.action, table.updatedAt),
+  blockedUntilIdx: index("rate_limit_buckets_blocked_until_idx").on(table.blockedUntil),
+}));
 
 export const customerCars = pgTable("customer_cars", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -157,7 +219,15 @@ export const customerCars = pgTable("customer_cars", {
   status: text("status").$type<CustomerCarStatusValue>().default("active").notNull(), // 'active', 'archived'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+  userIdIdx: index("customer_cars_user_id_idx").on(table.userId),
+  statusIdx: index("customer_cars_status_idx").on(table.status),
+  createdAtIdx: index("customer_cars_created_at_idx").on(table.createdAt),
+  statusChk: check(
+    "customer_cars_status_chk",
+    sql`${table.status} IN (${sqlStringList(CUSTOMER_CAR_STATUSES.map((item) => item.value))})`,
+  ),
+}));
 
 export const serviceRecords = pgTable("service_records", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -170,7 +240,14 @@ export const serviceRecords = pgTable("service_records", {
   odometer: integer("odometer"),
   cost: decimal("cost", { precision: 10, scale: 2 }),
   createdAt: timestamp("created_at").defaultNow(),
-});
+}, (table) => ({
+  carIdIdx: index("service_records_car_id_idx").on(table.carId),
+  serviceDateIdx: index("service_records_service_date_idx").on(table.serviceDate),
+  serviceTypeChk: check(
+    "service_records_service_type_chk",
+    sql`${table.serviceType} IN (${sqlStringList(SERVICE_TYPES.map((item) => item.value))})`,
+  ),
+}));
 
 import { relations } from "drizzle-orm";
 

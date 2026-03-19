@@ -8,11 +8,13 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
+import { headers } from "next/headers";
 import {
   isKnownServiceType,
   type CarMediaTypeValue,
   type ServiceTypeValue,
 } from "@/lib/constants";
+import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
 
 const carSchema = z.object({
   id: z.string().optional(),
@@ -26,10 +28,17 @@ const carSchema = z.object({
 
 export async function createShowcaseEntry(formData: FormData) {
   try {
-    await requireAdmin();
+    const session = await requireAdmin();
+    await enforceRateLimit(rateLimitPolicies.adminWrite, {
+      headers: await headers(),
+      userId: session.user.id,
+    });
   } catch (error) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
+    }
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
     }
     throw error;
   }
@@ -95,7 +104,11 @@ export async function createShowcaseEntry(formData: FormData) {
 
 export async function deleteShowcaseEntry(id: string) {
   try {
-    await requireAdmin();
+    const session = await requireAdmin();
+    await enforceRateLimit(rateLimitPolicies.adminWrite, {
+      headers: await headers(),
+      userId: session.user.id,
+    });
     await db.delete(cars).where(eq(cars.id, id));
     revalidatePath("/cars");
     revalidatePath("/admin/showcase");
@@ -104,6 +117,9 @@ export async function deleteShowcaseEntry(id: string) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
     }
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
+    }
     console.error("Failed to delete showcase entry:", error);
     return { error: "فشل في حذف العمل" };
   }
@@ -111,10 +127,17 @@ export async function deleteShowcaseEntry(id: string) {
 
 export async function updateShowcaseEntry(id: string, formData: FormData) {
   try {
-    await requireAdmin();
+    const session = await requireAdmin();
+    await enforceRateLimit(rateLimitPolicies.adminWrite, {
+      headers: await headers(),
+      userId: session.user.id,
+    });
   } catch (error) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
+    }
+    if (error instanceof RateLimitError) {
+      return { error: error.result.message };
     }
     throw error;
   }
