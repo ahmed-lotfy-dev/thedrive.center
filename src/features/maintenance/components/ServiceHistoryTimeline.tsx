@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
+import { getServiceTypeLabel } from "@/lib/constants";
 
 interface ServiceRecord {
   id: string;
@@ -52,7 +53,7 @@ export function ServiceHistoryTimeline({
 
             <div className="bg-white/5 rounded-2xl p-4 border border-white/5 group-hover:border-emerald-500/20 transition-all">
               <h4 className="text-sm font-black text-white">
-                {record.serviceType}
+                {getServiceTypeLabel(record.serviceType)}
               </h4>
               {record.description && (
                 <p className="text-xs text-zinc-400 mt-1 leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">

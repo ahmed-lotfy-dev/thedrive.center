@@ -11,7 +11,7 @@ import {
   LogOut,
   Home,
   LayoutGrid,
-  Sparkles,
+  Lightbulb,
   Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ const sidebarItems = [
   { title: "سيارات العملاء", href: "/admin/customer-cars", icon: LayoutGrid },
   { title: "سجل التميز", href: "/admin/showcase", icon: LayoutGrid },
   { title: "صورة الهيرو", href: "/admin/hero-image", icon: Images },
-  { title: "نصيحة اليوم", href: "/admin/advices", icon: Sparkles },
+  { title: "نصيحة اليوم", href: "/admin/advices", icon: Lightbulb },
 ];
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {

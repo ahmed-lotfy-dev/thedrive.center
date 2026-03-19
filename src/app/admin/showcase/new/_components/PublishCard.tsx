@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, Save, Loader2 } from "lucide-react";
+import { Send, Save, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ export function PublishCard({ isEdit, isPending, isUploading }: PublishCardProps
     <Card className="rounded-4xl border-zinc-200/60 dark:border-zinc-800/60 shadow-xl shadow-zinc-200/20 dark:shadow-none bg-zinc-900 text-white sticky top-24">
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-emerald-400" />
+          <Send className="w-5 h-5 text-emerald-400" />
           النشر والمراجعة
         </CardTitle>
       </CardHeader>

@@ -20,10 +20,15 @@ export async function createAdvice(content: string) {
   }
 }
 
-export async function updateAdvice(id: string, content: string, isActive: boolean) {
+export async function updateAdviceState(id: string, isActive: boolean) {
   try {
     await requireAdmin();
-    await adviceQueries.update(id, { content, isActive });
+
+    const updatedAdvice = await adviceQueries.update(id, { isActive });
+    if (!updatedAdvice) {
+      return { error: "النصيحة غير موجودة" };
+    }
+
     revalidatePath("/admin/advices");
     revalidatePath("/");
     return { success: true };

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { createAdvice, updateAdvice, deleteAdvice } from "./actions";
-import { Sparkles, Plus, Trash2, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { createAdvice, updateAdviceState, deleteAdvice } from "./actions";
+import { Lightbulb, Plus, Trash2, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
 interface Advice {
   id: string;
@@ -19,7 +20,8 @@ interface AdvicesClientProps {
 }
 
 export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
-  const [advices] = useState(initialAdvices);
+  const router = useRouter();
+  const [advices, setAdvices] = useState(initialAdvices);
   const [newContent, setNewContent] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -30,7 +32,7 @@ export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
       if (result.success) {
         toast.success("تم إضافة النصيحة بنجاح");
         setNewContent("");
-        window.location.reload(); // Refresh to get the latest DB state
+        router.refresh();
       } else {
         toast.error(result.error);
       }
@@ -39,10 +41,17 @@ export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
 
   function handleToggle(advice: Advice) {
     startTransition(async () => {
-      const result = await updateAdvice(advice.id, advice.content, !advice.isActive);
+      const result = await updateAdviceState(advice.id, !advice.isActive);
       if (result.success) {
+        setAdvices((currentAdvices) =>
+          currentAdvices.map((currentAdvice) =>
+            currentAdvice.id === advice.id
+              ? { ...currentAdvice, isActive: !currentAdvice.isActive }
+              : currentAdvice,
+          ),
+        );
         toast.success("تم تحديث حالة النصيحة");
-        window.location.reload();
+        router.refresh();
       } else {
         toast.error(result.error);
       }
@@ -54,8 +63,11 @@ export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
     startTransition(async () => {
       const result = await deleteAdvice(id);
       if (result.success) {
+        setAdvices((currentAdvices) =>
+          currentAdvices.filter((currentAdvice) => currentAdvice.id !== id),
+        );
         toast.success("تم حذف النصيحة");
-        window.location.reload();
+        router.refresh();
       } else {
         toast.error(result.error);
       }
@@ -104,7 +116,7 @@ export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
             <CardContent className="p-6 flex items-center justify-between gap-4">
               <div className="flex items-center gap-4 flex-1">
                 <div className={`p-3 rounded-2xl ${advice.isActive ? "bg-emerald-500/10" : "bg-muted"}`}>
-                  <Sparkles className={`w-5 h-5 ${advice.isActive ? "text-emerald-500" : "text-muted-foreground"}`} />
+                  <Lightbulb className={`w-5 h-5 ${advice.isActive ? "text-emerald-500" : "text-muted-foreground"}`} />
                 </div>
                 <p className={`font-bold text-lg leading-relaxed ${!advice.isActive && "text-muted-foreground line-through"}`}>
                   {advice.content}
@@ -135,7 +147,7 @@ export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
         {advices.length === 0 && (
           <div className="py-20 text-center space-y-4 bg-muted/20 border-2 border-dashed border-border/50 rounded-4xl">
             <div className="bg-muted p-4 rounded-full w-fit mx-auto">
-              <Sparkles className="w-8 h-8 text-muted-foreground" />
+              <Lightbulb className="w-8 h-8 text-muted-foreground" />
             </div>
             <p className="text-muted-foreground font-medium">لا توجد نصائح حالياً. ابدأ بإضافة نصيحة جديدة!</p>
           </div>

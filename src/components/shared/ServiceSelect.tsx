@@ -29,12 +29,12 @@ export function ServiceSelect({
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className={cn(
-        "bg-card/50 backdrop-blur-md border-border/50 rounded-2xl focus:ring-emerald-500/20 shadow-sm font-black text-foreground hover:bg-muted/50 transition-all",
+        "border-border/50 bg-muted/30 px-5 text-base font-bold shadow-xs md:text-sm",
         className
       )}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="rounded-2xl border-border bg-popover/95 backdrop-blur-xl font-bold shadow-2xl">
+      <SelectContent className="font-bold">
         {showAllOption && (
           <SelectItem value="all" className="font-black italic text-emerald-500">
             كل الخدمات

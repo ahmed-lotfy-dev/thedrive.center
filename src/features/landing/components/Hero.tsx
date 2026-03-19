@@ -38,6 +38,7 @@ const imageVariants: Variants = {
     opacity: 1,
     scale: 1,
     transition: {
+      delay: 1.3,
       duration: 0.5,
       ease: "easeOut",
     },

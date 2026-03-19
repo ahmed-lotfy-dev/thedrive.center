@@ -39,6 +39,13 @@ interface CarDetailViewProps {
   car: CarDetailsRecord;
 }
 
+function sortServiceRecords(records: CarDetailsServiceRecord[]) {
+  return [...records].sort(
+    (left, right) =>
+      new Date(right.serviceDate).getTime() - new Date(left.serviceDate).getTime(),
+  );
+}
+
 export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
   const [car, setCar] = useState(initialCar);
   const [showServiceModal, setShowServiceModal] = useState(false);
@@ -126,6 +133,15 @@ export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
           isOpen={showServiceModal} 
           onClose={() => setShowServiceModal(false)} 
           car={car}
+          onSuccess={(newRecord) => {
+            setCar((currentCar) => ({
+              ...currentCar,
+              serviceRecords: sortServiceRecords([
+                newRecord,
+                ...(currentCar.serviceRecords ?? []),
+              ]),
+            }));
+          }}
         />
       </div>
     </div>

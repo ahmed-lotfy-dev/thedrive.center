@@ -144,15 +144,15 @@ export async function addServiceRecordAction(data: z.infer<typeof serviceRecordS
   try {
     const validated = serviceRecordSchema.parse(data);
     const validatedServiceType = validated.serviceType as ServiceTypeValue;
-    const { notificationEventId } = await db.transaction(async (tx) => {
-      await tx.insert(serviceRecords).values({
+    const { notificationEventId, insertedRecord } = await db.transaction(async (tx) => {
+      const [insertedRecord] = await tx.insert(serviceRecords).values({
         carId: validated.carId,
         serviceDate: new Date(validated.serviceDate),
         serviceType: validatedServiceType,
         description: validated.description,
         odometer: validated.odometer,
         cost: validated.cost?.toString(),
-      });
+      }).returning();
 
       const car = await tx.query.customerCars.findFirst({
         where: eq(customerCars.id, validated.carId),
@@ -180,7 +180,7 @@ export async function addServiceRecordAction(data: z.infer<typeof serviceRecordS
         eventId = event.id;
       }
 
-      return { notificationEventId: eventId };
+      return { notificationEventId: eventId, insertedRecord };
     });
 
     if (notificationEventId) {
@@ -188,7 +188,7 @@ export async function addServiceRecordAction(data: z.infer<typeof serviceRecordS
     }
 
     revalidatePath("/admin/customer-cars");
-    return { success: true };
+    return { success: true, data: insertedRecord };
   } catch (error) {
     console.error("Error adding service record:", error);
     return { error: "فشل في تسجيل الخدمة." };

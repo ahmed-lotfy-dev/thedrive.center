@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { uploadToR2, deleteFromR2, resizeImage } from "@/lib/upload-utils";
 import { updateHeroImage } from "./actions";
-import { ImagePlus, Trash2, Loader2, Globe, Sparkles } from "lucide-react";
+import { ImagePlus, Trash2, Loader2, Globe, Info } from "lucide-react";
 import Image from "next/image";
 
 interface HeroImageClientProps {
@@ -149,7 +149,7 @@ export function HeroImageClient({ initialImageUrl }: HeroImageClientProps) {
             <CardContent className="space-y-4">
               <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 space-y-3">
                 <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                  <Sparkles className="w-4 h-4" />
+                  <Info className="w-4 h-4" />
                   <span className="text-sm font-bold">معلومة سريعة</span>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
