@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { appointments, customerCars } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, gte, inArray, lt } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { normalizePlateNumber } from "@/lib/utils";
 import { headers } from "next/headers";
@@ -23,6 +23,19 @@ import {
 import { notificationService } from "@/lib/notifications/notification.service";
 import { processNotificationEvent, queueNotificationEvent } from "@/lib/notifications/outbox";
 import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+
+type PaginatedAppointments = Awaited<ReturnType<typeof appointmentQueries.findPaginated>>;
+type GetAppointmentsResult =
+  | {
+      success: true;
+      data: PaginatedAppointments["data"];
+      meta: PaginatedAppointments["meta"];
+    }
+  | {
+      success: false;
+      error: string;
+    };
 
 const appointmentSchema = z.object({
   guestName: z.string().min(1, "Name is required").optional(),
@@ -50,6 +63,18 @@ function getStartOfToday() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return today;
+}
+
+function getStartOfDay(date: Date) {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+function getEndOfDay(date: Date) {
+  const end = new Date(date);
+  end.setHours(24, 0, 0, 0);
+  return end;
 }
 
 function isAdminRole(role?: string) {
@@ -104,6 +129,8 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     };
 
     const cleanPlateNumber = normalizePlateNumber(validated.plateNumber);
+    const bookingDayStart = getStartOfDay(parsedDate);
+    const bookingDayEnd = getEndOfDay(parsedDate);
     
     const { appointment, notificationEventId } = await db.transaction(async (tx) => {
       let car = await tx.query.customerCars.findFirst({
@@ -139,10 +166,30 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
 
       appointmentData.carId = car.id;
 
+      const existingSameDayAppointment = await tx.query.appointments.findFirst({
+        where: and(
+          eq(appointments.carId, car.id),
+          gte(appointments.date, bookingDayStart),
+          lt(appointments.date, bookingDayEnd),
+          inArray(appointments.status, ["pending", "confirmed"]),
+        ),
+      });
+
+      if (existingSameDayAppointment) {
+        logger.warn("appointment.duplicate_same_day_rejected", {
+          carId: car.id,
+          plateNumber: cleanPlateNumber,
+          requestedDate: parsedDate.toISOString(),
+          existingAppointmentId: existingSameDayAppointment.id,
+        });
+        throw new Error("DUPLICATE_SAME_DAY_APPOINTMENT");
+      }
+
       const [createdAppointment] = await tx.insert(appointments).values(appointmentData).returning();
       const notificationEvent = await queueNotificationEvent({
         type: "appointment_request_received",
         phone: validated.guestPhone,
+        email: appointmentData.guestEmail ?? null,
         customerName: appointmentData.guestName,
         message: notificationService.buildAppointmentRequestReceivedMessage(
           appointmentData.guestName ?? "عميلنا",
@@ -167,13 +214,30 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     revalidatePath("/admin/appointments");
     revalidatePath("/book");
 
+    logger.info("appointment.created", {
+      appointmentId: appointment.id,
+      carId: appointment.carId,
+      userId: appointment.userId,
+      serviceType: appointment.serviceType,
+      date: parsedDate.toISOString(),
+    });
+
     return {
       success: true,
       data: appointment,
       message: "تم حجز الموعد بنجاح",
     };
   } catch (error) {
-    console.error("Error creating appointment:", error);
+    logger.error("appointment.create_failed", {
+      error,
+      action: "createAppointment",
+    });
+    if (error instanceof Error && error.message === "DUPLICATE_SAME_DAY_APPOINTMENT") {
+      return {
+        success: false,
+        error: "يوجد بالفعل حجز مسجل لهذه السيارة في هذا اليوم.",
+      };
+    }
     if (error instanceof RateLimitError) {
       return {
         success: false,
@@ -193,7 +257,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
   }
 }
 
-export async function getAppointments(page: number = 1, limit: number = 12) {
+export async function getAppointments(page: number = 1, limit: number = 12): Promise<GetAppointmentsResult> {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -260,6 +324,7 @@ export async function updateAppointmentStatus(id: string, status: string) {
                 ? "appointment_completed"
                 : "appointment_cancelled",
           phone: appointment.guestPhone,
+          email: appointment.guestEmail ?? null,
           customerName: appointment.guestName,
           message: notificationService.buildAppointmentStatusMessage(
             appointment.guestName ?? "عميلنا",
@@ -288,13 +353,23 @@ export async function updateAppointmentStatus(id: string, status: string) {
 
     revalidatePath("/admin/appointments");
 
+    logger.info("appointment.status_updated", {
+      appointmentId: updated?.id ?? id,
+      status: validatedStatus,
+      notificationEventId,
+    });
+
     return {
       success: true,
       data: updated,
       message: "Appointment status updated",
     };
   } catch (error) {
-    console.error("Error updating appointment:", error);
+    logger.error("appointment.status_update_failed", {
+      error,
+      appointmentId: id,
+      status,
+    });
     if (error instanceof RateLimitError) {
       return {
         success: false,
@@ -331,12 +406,19 @@ export async function deleteAppointmentAction(id: string) {
     await appointmentQueries.delete(id);
     revalidatePath("/admin/appointments");
 
+    logger.info("appointment.deleted", {
+      appointmentId: id,
+    });
+
     return {
       success: true,
       message: "Appointment deleted successfully",
     };
   } catch (error) {
-    console.error("Error deleting appointment:", error);
+    logger.error("appointment.delete_failed", {
+      error,
+      appointmentId: id,
+    });
     if (error instanceof RateLimitError) {
       return {
         success: false,

@@ -15,9 +15,15 @@ export default async function AppointmentsAdminPage({ searchParams }: Appointmen
   const page = Number(params.page) || 1;
 
   const result = await getAppointments(page, 12);
-  const appointments: Appointment[] = result.success ? (result.data as Appointment[]) : [];
-  const total = result.success ? result.meta?.total ?? appointments.length : 0;
-  const totalPages = result.success ? result.meta?.totalPages ?? 1 : 1;
+  let appointments: Appointment[] = [];
+  let total = 0;
+  let totalPages = 1;
+
+  if (result.success) {
+    appointments = result.data as Appointment[];
+    total = result.meta?.total ?? appointments.length;
+    totalPages = result.meta?.totalPages ?? 1;
+  }
  
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

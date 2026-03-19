@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { syncStatsToDatabase } from "@/lib/google-api";
+import { logger } from "@/lib/logger";
 
 /**
  * GET /api/cron/sync-stats
@@ -12,7 +13,9 @@ export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
 
   if (!cronSecret) {
-    console.error("CRON_SECRET is not configured.");
+    logger.error("cron.sync_stats.misconfigured", {
+      route: "/api/cron/sync-stats",
+    });
     return NextResponse.json(
       { success: false, error: "Cron secret is not configured" },
       { status: 500 },
@@ -20,6 +23,9 @@ export async function GET(request: Request) {
   }
 
   if (authHeader !== `Bearer ${cronSecret}`) {
+    logger.warn("cron.sync_stats.unauthorized", {
+      route: "/api/cron/sync-stats",
+    });
     return NextResponse.json(
       { success: false, error: "Unauthorized" },
       { status: 401 },
@@ -28,9 +34,15 @@ export async function GET(request: Request) {
 
   try {
     await syncStatsToDatabase();
+    logger.info("cron.sync_stats.completed", {
+      route: "/api/cron/sync-stats",
+    });
     return NextResponse.json({ success: true, message: "Stats synced successfully" });
   } catch (error) {
-    console.error("Cron sync failed:", error);
+    logger.error("cron.sync_stats.failed", {
+      route: "/api/cron/sync-stats",
+      error,
+    });
     return NextResponse.json({ success: false, error: "Sync failed" }, { status: 500 });
   }
 }

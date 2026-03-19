@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
 import { headers } from "next/headers";
 import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 export async function createAdvice(content: string) {
   try {
@@ -16,6 +17,9 @@ export async function createAdvice(content: string) {
     await adviceQueries.create({ content });
     revalidatePath("/admin/advices");
     revalidatePath("/");
+    logger.info("admin.advice.created", {
+      contentLength: content.length,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof AuthorizationError) {
@@ -24,7 +28,9 @@ export async function createAdvice(content: string) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error creating advice:", error);
+    logger.error("admin.advice.create_failed", {
+      error,
+    });
     return { error: "فشل إضافة النصيحة" };
   }
 }
@@ -44,6 +50,10 @@ export async function updateAdviceState(id: string, isActive: boolean) {
 
     revalidatePath("/admin/advices");
     revalidatePath("/");
+    logger.info("admin.advice.updated", {
+      adviceId: id,
+      isActive,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof AuthorizationError) {
@@ -52,7 +62,11 @@ export async function updateAdviceState(id: string, isActive: boolean) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error updating advice:", error);
+    logger.error("admin.advice.update_failed", {
+      error,
+      adviceId: id,
+      isActive,
+    });
     return { error: "فشل تحديث النصيحة" };
   }
 }
@@ -67,6 +81,9 @@ export async function deleteAdvice(id: string) {
     await adviceQueries.delete(id);
     revalidatePath("/admin/advices");
     revalidatePath("/");
+    logger.info("admin.advice.deleted", {
+      adviceId: id,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof AuthorizationError) {
@@ -75,7 +92,10 @@ export async function deleteAdvice(id: string) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error deleting advice:", error);
+    logger.error("admin.advice.delete_failed", {
+      error,
+      adviceId: id,
+    });
     return { error: "فشل حذف النصيحة" };
   }
 }

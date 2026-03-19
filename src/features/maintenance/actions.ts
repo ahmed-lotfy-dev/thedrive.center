@@ -12,6 +12,7 @@ import { getServiceTypeLabel, type ServiceTypeValue } from "@/lib/constants";
 import { notificationService } from "@/lib/notifications/notification.service";
 import { processNotificationEvent, queueNotificationEvent } from "@/lib/notifications/outbox";
 import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import type { z } from "zod";
 
 async function isAdmin() {
@@ -124,12 +125,20 @@ export async function linkCarByPlate(plateNumber: string) {
       .where(eq(customerCars.id, car.id));
 
     revalidatePath("/dashboard/garage");
+    logger.info("garage.car_linked", {
+      carId: car.id,
+      userId: session.user.id,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error linking car:", error);
+    logger.error("garage.car_link_failed", {
+      error,
+      plateNumber: cleanPlate,
+      userId: session.user.id,
+    });
     return { error: "حدث خطأ أثناء محاولة ربط السيارة." };
   }
 }
@@ -161,12 +170,18 @@ export async function addCustomerCarAction(data: z.infer<typeof customerCarSchem
     }).returning();
 
     revalidatePath("/admin/customer-cars");
+    logger.info("admin.customer_car.created", {
+      carId: newCar.id,
+      plateNumber: newCar.plateNumber,
+    });
     return { success: true, data: newCar };
   } catch (error) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error adding customer car:", error);
+    logger.error("admin.customer_car.create_failed", {
+      error,
+    });
     return { error: "فشل في تسجيل السيارة الجديدة." };
   }
 }
@@ -224,12 +239,19 @@ export async function addServiceRecordAction(data: z.infer<typeof serviceRecordS
     }
 
     revalidatePath("/admin/customer-cars");
+    logger.info("admin.service_record.created", {
+      serviceRecordId: insertedRecord.id,
+      carId: insertedRecord.carId,
+      serviceType: insertedRecord.serviceType,
+    });
     return { success: true, data: insertedRecord };
   } catch (error) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error adding service record:", error);
+    logger.error("admin.service_record.create_failed", {
+      error,
+    });
     return { error: "فشل في تسجيل الخدمة." };
   }
 }
@@ -385,12 +407,18 @@ export async function updateMaintenanceTrackingAction(carId: string, data: z.inf
     });
 
     revalidatePath("/admin/customer-cars");
+    logger.info("admin.maintenance_tracking.updated", {
+      carId,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error updating tracking info:", error);
+    logger.error("admin.maintenance_tracking.update_failed", {
+      error,
+      carId,
+    });
     return { error: "Update failed" };
   }
 }
@@ -420,12 +448,18 @@ export async function deleteCustomerCarAction(carId: string) {
 
     await db.delete(customerCars).where(eq(customerCars.id, carId));
     revalidatePath("/admin/customer-cars");
+    logger.info("admin.customer_car.deleted", {
+      carId,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error deleting car:", error);
+    logger.error("admin.customer_car.delete_failed", {
+      error,
+      carId,
+    });
     return { error: "فشل مسح السيارة." };
   }
 }
@@ -442,12 +476,18 @@ export async function archiveCustomerCarAction(carId: string) {
       .where(eq(customerCars.id, carId));
 
     revalidatePath("/admin/customer-cars");
+    logger.info("admin.customer_car.archived", {
+      carId,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error archiving car:", error);
+    logger.error("admin.customer_car.archive_failed", {
+      error,
+      carId,
+    });
     return { error: "فشل أرشفة السيارة." };
   }
 }
@@ -464,12 +504,18 @@ export async function unlinkCustomerCarAction(carId: string) {
       .where(eq(customerCars.id, carId));
 
     revalidatePath("/admin/customer-cars");
+    logger.info("admin.customer_car.unlinked", {
+      carId,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error unlinking car:", error);
+    logger.error("admin.customer_car.unlink_failed", {
+      error,
+      carId,
+    });
     return { error: "فشل فك ربط السيارة بالمستخدم." };
   }
 }

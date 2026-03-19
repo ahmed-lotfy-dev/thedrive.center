@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
 import { headers } from "next/headers";
 import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 export async function updateHeroImage(imageUrl: string) {
   try {
@@ -16,6 +17,9 @@ export async function updateHeroImage(imageUrl: string) {
     await siteSettingQueries.set("hero_image_url", imageUrl);
     revalidatePath("/");
     revalidatePath("/admin/hero-image");
+    logger.info("admin.hero_image.updated", {
+      imageUrl,
+    });
     return { success: true };
   } catch (error) {
     if (error instanceof AuthorizationError) {
@@ -24,7 +28,10 @@ export async function updateHeroImage(imageUrl: string) {
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Error updating hero image:", error);
+    logger.error("admin.hero_image.update_failed", {
+      error,
+      imageUrl,
+    });
     return { error: "فشل تحديث صورة الهيرو" };
   }
 }
