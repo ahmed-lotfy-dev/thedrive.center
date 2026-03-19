@@ -1,5 +1,4 @@
 import { drizzle } from "drizzle-orm/node-postgres"
-import { Pool } from "pg"
 import * as schema from "./schema"
 
 const getSslConfig = () => {
@@ -30,10 +29,12 @@ const getSslConfig = () => {
 };
 
 const sslConfig = getSslConfig();
+const connection = process.env.DATABASE_URL
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: sslConfig,
+export const db = drizzle<typeof schema>({
+  connection: {
+    connectionString: connection,
+    ssl: sslConfig,
+  },
+  schema,
 })
-
-export const db = drizzle<typeof schema>(pool, { schema })
