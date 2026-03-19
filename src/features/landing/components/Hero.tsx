@@ -59,7 +59,7 @@ export function Hero({ imageUrl }: HeroProps) {
       <div className="absolute top-1/4 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 left-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 -translate-x-1/2 translate-y-1/2" />
 
-      <div className="w-full max-w-[1400px] mx-auto relative z-10 px-4 md:px-8 mb-8">
+      <div className="container relative z-10 mx-auto mb-8 px-4 md:px-6">
         <motion.div 
           className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16"
           variants={containerVariants}

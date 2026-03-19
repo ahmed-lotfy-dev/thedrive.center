@@ -2,7 +2,8 @@
 
 ## 1. Business Overview
 
-**The Drive Center** (`المركز الهندسى`) is a specialized automotive service center located at:
+**The Drive Center** is a specialized automotive service center located at:
+
 > منشية البكري، ٨ شارع طلعت النجار، **المحلة الكبرى**، محافظة الغربية، مصر
 
 - **Phone / WhatsApp**: 010 1713 1414
@@ -19,16 +20,17 @@ The center is **المركز الأول في المحلة الكبرى** for pre
 
 These are the exact services taken from `src/lib/constants.ts` and `Services.tsx`:
 
-| Value | Label (Arabic) | Description |
-|---|---|---|
-| `alignment_balancing` | ضبط زوايا وترصيص | Computer-based precision alignment and balancing |
-| `inspection` | فحص شامل | Comprehensive inspection before vehicle purchase/sale |
-| `steering_coding` | تكويد طارة | Electronic power steering programming/calibration |
-| `suspension_repair` | إصلاح عفشة | Suspension system repair and calibration |
-| `tire_service` | خدمة إطارات | Tire services |
-| `other` | أخرى | Other services |
+| Value                 | Label (Arabic)   | Description                                           |
+| --------------------- | ---------------- | ----------------------------------------------------- |
+| `alignment_balancing` | ضبط زوايا وترصيص | Computer-based precision alignment and balancing      |
+| `inspection`          | فحص شامل         | Comprehensive inspection before vehicle purchase/sale |
+| `steering_coding`     | تكويد طارة       | Electronic power steering programming/calibration     |
+| `suspension_repair`   | إصلاح عفشة       | Suspension system repair and calibration              |
+| `tire_service`        | خدمة إطارات      | Tire services                                         |
+| `other`               | أخرى             | Other services                                        |
 
 ### Inspection Tools Used
+
 - **قلم فحص البوية** — Basic paint inspection tool for quick surface checks
 - **جهاز قياس سمك الدهان** — Digital professional micron-level paint thickness gauge
 - **ماسح الأشعة (UV)** — Exclusive UV scanner that reveals hidden repairs and damage
@@ -40,12 +42,14 @@ These are the exact services taken from `src/lib/constants.ts` and `Services.tsx
 A full-stack web platform that digitizes the center's operations:
 
 ### Client-Facing
+
 - **Appointment Booking** (`/book`): Online booking form with license plate recognition, service and vehicle type selection, and date picker.
 - **Portfolio Gallery** (`/cars`, `/cars/[slug]`): Visual showcase of completed work with images and video per car.
 - **Sign In / Onboarding** (`/sign-in`, `/onboarding`): Account registration linking a user to their cars.
 - **Garage Dashboard** (`/dashboard/garage`): Personal space for registered users to see their car's service history.
 
 ### Admin Panel (`/admin/*`)
+
 - **Appointments**: View, update status, and delete appointment requests.
 - **Customer Cars**: Full CRM for all vehicles registered in the system, with service history per car.
 - **Portfolio Management**: Add, edit, and manage portfolio entries (the "سجل التميز").

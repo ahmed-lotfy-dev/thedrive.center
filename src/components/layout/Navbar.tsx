@@ -99,7 +99,7 @@ export function Navbar() {
     >
       <div
         className={cn(
-          "mx-auto flex h-16 md:h-20 w-full max-w-[1400px] items-center justify-between rounded-4xl border transition-all duration-500 px-3 md:px-6 relative",
+          "container mx-auto flex h-16 md:h-20 w-full items-center justify-between rounded-4xl border px-3 md:px-6 relative transition-all duration-500",
           isScrolled
             ? "bg-background/80 shadow-lg dark:shadow-2xl backdrop-blur-2xl border-border/50"
             : "bg-background/40 backdrop-blur-xl border-border/20"
@@ -179,7 +179,7 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mx-auto mt-2 container rounded-2xl border bg-background/95 backdrop-blur-md p-4 md:hidden shadow-2xl relative z-40"
+            className="container relative z-40 mx-auto mt-2 rounded-2xl border bg-background/95 p-4 shadow-2xl backdrop-blur-md md:hidden"
           >
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
@@ -199,7 +199,11 @@ export function Navbar() {
               ))}
               <div className="pt-2 mt-2 border-t border-border/50">
                 {!session ? (
-                  <Button asChild className="w-full rounded-xl h-12 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/30 active:scale-95">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-12 w-full rounded-xl border-emerald-500/25 bg-emerald-500/6 font-black text-emerald-600 shadow-none transition-all active:scale-95 hover:border-emerald-500/40 hover:bg-emerald-500/10 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+                  >
                     <Link href="/sign-in" onClick={() => setIsOpen(false)}>دخول</Link>
                   </Button>
                 ) : (
