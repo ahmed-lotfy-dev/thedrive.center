@@ -96,7 +96,7 @@ export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
                 <History className="text-emerald-500 size-5" />
                 نظرة سريعة على السجل
               </h3>
-              {car.serviceRecords?.length > 4 && (
+              {(car.serviceRecords?.length ?? 0) > 4 && (
                 <Button variant="link" className="text-emerald-500 text-[10px] font-black uppercase tracking-widest h-auto p-0 hover:no-underline opacity-70 hover:opacity-100">
                   عرض الكل
                 </Button>

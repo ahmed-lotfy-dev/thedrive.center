@@ -38,10 +38,17 @@ export function AddServiceRecordModal({ isOpen, onClose, car }: AddServiceRecord
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
+    const odometer = formData.odometer.trim() === "" ? undefined : Number(formData.odometer);
+    const cost = formData.cost.trim() === "" ? undefined : Number(formData.cost);
+
     const result = await addServiceRecordAction({
-      ...formData,
       carId: car.id,
+      serviceType: formData.serviceType,
+      serviceDate: formData.serviceDate,
+      description: formData.description,
+      odometer,
+      cost,
     });
     
     setLoading(false);

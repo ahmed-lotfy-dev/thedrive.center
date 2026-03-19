@@ -17,6 +17,8 @@ import {
   isKnownServiceType,
   isKnownVehicleType,
   type AppointmentStatusValue,
+  type ServiceTypeValue,
+  type VehicleTypeValue,
 } from "@/lib/constants";
 import { notificationService } from "@/lib/notifications/notification.service";
 import { processNotificationEvent, queueNotificationEvent } from "@/lib/notifications/outbox";
@@ -88,8 +90,8 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
       guestName: session?.user?.name || validated.guestName || null,
       guestEmail: validated.guestEmail || session?.user?.email || null,
       guestPhone: validated.guestPhone,
-      serviceType: validated.serviceType,
-      vehicleType: validated.vehicleType,
+      serviceType: validated.serviceType as ServiceTypeValue,
+      vehicleType: validated.vehicleType as VehicleTypeValue,
       date: parsedDate,
       notes: validated.notes || null,
     };

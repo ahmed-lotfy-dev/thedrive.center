@@ -25,7 +25,16 @@ export function MaintenanceUpdateForm({ car, onUpdate }: MaintenanceUpdateFormPr
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const result = await updateMaintenanceTrackingAction(car.id, formData);
+    const nextServiceOdometer =
+      String(formData.nextServiceOdometer).trim() === ""
+        ? undefined
+        : Number(formData.nextServiceOdometer);
+
+    const result = await updateMaintenanceTrackingAction(car.id, {
+      nextServiceDate: formData.nextServiceDate,
+      nextServiceOdometer,
+      nextAlignmentDate: formData.nextAlignmentDate,
+    });
     setLoading(false);
     
     if (result.error) {
@@ -35,7 +44,7 @@ export function MaintenanceUpdateForm({ car, onUpdate }: MaintenanceUpdateFormPr
       onUpdate({
         ...car,
         nextServiceDate: formData.nextServiceDate,
-        nextServiceOdometer: formData.nextServiceOdometer,
+        nextServiceOdometer: nextServiceOdometer ?? null,
         nextAlignmentDate: formData.nextAlignmentDate,
       });
     }

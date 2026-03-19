@@ -33,7 +33,6 @@ export function SignInForm({ onSwitch }: SignInFormProps) {
       
       <CardContent className="px-6 md:px-10 pb-8 space-y-8">
         <SocialProviderButton 
-          provider="google" 
           onClick={handleGoogleSignIn} 
           isLoading={isSocialLoading}
         >

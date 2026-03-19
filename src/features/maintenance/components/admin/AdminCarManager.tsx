@@ -167,7 +167,7 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
               </DialogTitle>
             </DialogHeader>
             <AddCarForm onSuccess={(newCar) => {
-              setCars(prev => [newCar, ...prev]);
+              setCars(prev => [{ ...newCar, user: null }, ...prev]);
               setIsDialogOpen(false);
             }} />
           </DialogContent>
