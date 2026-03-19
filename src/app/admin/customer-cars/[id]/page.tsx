@@ -1,8 +1,7 @@
 import { db } from "@/db";
 import { customerCars } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
 import { notFound, redirect } from "next/navigation";
 import { CarDetailView } from "@/features/maintenance/components/admin/CarDetailView";
 
@@ -11,12 +10,13 @@ interface CarPageProps {
 }
 
 export default async function AdminCarDetailPage({ params }: CarPageProps) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (session?.user?.role !== "admin") {
-    redirect("/");
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      redirect("/sign-in");
+    }
+    throw error;
   }
 
   const { id } = await params;

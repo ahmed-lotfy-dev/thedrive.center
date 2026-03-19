@@ -1,16 +1,16 @@
 import { searchCustomerCars } from "@/features/maintenance/actions";
 import { AdminCarManager } from "@/features/maintenance/components/admin/AdminCarManager";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
 
 export default async function AdminCustomerCarsPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (session?.user?.role !== "admin") {
-    redirect("/");
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      redirect("/sign-in");
+    }
+    throw error;
   }
 
   const { data: cars } = await searchCustomerCars("");

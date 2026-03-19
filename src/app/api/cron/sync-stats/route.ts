@@ -8,11 +8,23 @@ import { syncStatsToDatabase } from "@/lib/google-api";
  * Can be triggered via a cron job (e.g., Vercel Cron or GitHub Actions).
  */
 export async function GET(request: Request) {
-  // Optional: Add simple secret check if needed
-  // const authHeader = request.headers.get('authorization');
-  // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-  //   return new NextResponse('Unauthorized', { status: 401 });
-  // }
+  const cronSecret = process.env.CRON_SECRET;
+  const authHeader = request.headers.get("authorization");
+
+  if (!cronSecret) {
+    console.error("CRON_SECRET is not configured.");
+    return NextResponse.json(
+      { success: false, error: "Cron secret is not configured" },
+      { status: 500 },
+    );
+  }
+
+  if (authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" },
+      { status: 401 },
+    );
+  }
 
   try {
     await syncStatsToDatabase();

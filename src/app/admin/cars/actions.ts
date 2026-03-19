@@ -4,9 +4,19 @@ import { db } from "@/db";
 import { cars, carMedia } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "crypto";
-// import { auth } from "@/lib/auth"; // ensure admin protection
+import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
+import { isKnownCarMediaType, isKnownServiceType } from "@/lib/constants";
 
 export async function createCarAction(formData: FormData) {
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      throw new Error("Unauthorized");
+    }
+    throw error;
+  }
+
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const coverImageUrl = formData.get("coverImageUrl") as string;
@@ -19,6 +29,10 @@ export async function createCarAction(formData: FormData) {
 
   if (!title || !coverImageUrl || !serviceType) {
     throw new Error("Missing required fields");
+  }
+
+  if (!isKnownServiceType(serviceType)) {
+    throw new Error("Invalid service type");
   }
 
   const baseSlug = title
@@ -48,7 +62,7 @@ export async function createCarAction(formData: FormData) {
       const mediaData = images.map((url, i) => ({
         carId: newCar.id,
         url,
-        type: "image",
+        type: isKnownCarMediaType("image") ? "image" : (() => { throw new Error("Invalid media type"); })(),
         order: i,
       }));
 

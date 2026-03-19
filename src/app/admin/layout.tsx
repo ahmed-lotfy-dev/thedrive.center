@@ -1,30 +1,19 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
-
-function isAdminRole(role?: string, email?: string) {
-  const isAdmin = role === "admin" || role === "owner";
-  const isHardcodedAdmin = process.env.ADMIN_EMAIL && email === process.env.ADMIN_EMAIL;
-  return isAdmin || isHardcodedAdmin;
-}
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user) {
-    redirect("/sign-in");
-  }
-
-  const user = session.user as { role?: string; email: string };
-  if (!isAdminRole(user.role, user.email)) {
-    redirect("/");
+  try {
+    await requireAdmin();
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      redirect("/sign-in");
+    }
+    throw error;
   }
 
   return (
