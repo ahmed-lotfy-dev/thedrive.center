@@ -5,6 +5,12 @@ import Image from "next/image";
 import { Construction, Facebook, Instagram, MessageSquare, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getComingSoonLaunchDate } from "@/lib/site-state";
+import {
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+  TIKTOK_URL,
+  getWhatsAppUrl,
+} from "@/lib/google-business";
 
 type CountdownState = {
   days: number;
@@ -65,6 +71,7 @@ export function SiteStateScreen({
   const [countdown, setCountdown] = useState<CountdownState>(() =>
     getCountdownState(targetDate),
   );
+  const whatsappUrl = getWhatsAppUrl("أهلاً، أريد التواصل مع The Drive Center.");
 
   useEffect(() => {
     if (!showCountdown || countdown.expired) return;
@@ -131,9 +138,10 @@ export function SiteStateScreen({
                 className="h-14 rounded-2xl bg-emerald-500 px-8 text-base font-black text-zinc-950 shadow-[0_10px_30px_rgba(16,185,129,0.18)] transition-all hover:bg-emerald-400 hover:shadow-[0_14px_34px_rgba(16,185,129,0.26)]"
               >
                 <a
-                  href="https://wa.me/201017131414"
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="تواصل معنا عبر واتساب"
                 >
                   <MessageSquare className="size-5" />
                   تواصل معنا عبر واتساب
@@ -142,17 +150,17 @@ export function SiteStateScreen({
 
               <div className="flex items-center gap-3">
                 <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#1877F2] hover:bg-[#1877F2]/12 hover:text-[#1877F2] hover:shadow-[0_0_24px_rgba(24,119,242,0.28)]">
-                  <a href={process.env.NEXT_PUBLIC_FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="group">
+                  <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="group">
                     <Facebook className="size-5 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.8} />
                   </a>
                 </Button>
                 <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#ee2a7b]/70 hover:bg-[linear-gradient(135deg,rgba(249,206,52,0.18),rgba(238,42,123,0.28),rgba(98,40,215,0.24))] hover:text-white hover:shadow-[0_0_24px_rgba(238,42,123,0.24)]">
-                  <a href={process.env.NEXT_PUBLIC_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group">
+                  <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group">
                     <Instagram className="size-5 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.8} />
                   </a>
                 </Button>
                 <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#25F4EE] hover:bg-[linear-gradient(135deg,rgba(37,244,238,0.14),rgba(254,44,85,0.14))] hover:text-[#25F4EE] hover:shadow-[0_0_24px_rgba(37,244,238,0.18)]">
-                  <a href={process.env.NEXT_PUBLIC_TIKTOK_URL} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="group">
+                  <a href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="group">
                     <svg viewBox="0 0 24 24" fill="currentColor" className="size-5 transition-transform duration-200 group-hover:scale-110 group-hover:drop-shadow-[1px_0_0_#fe2c55]">
                       <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.27 1.76-.23.84-.04 1.77.47 2.45.47.66 1.25 1.05 2.04 1.13.73.07 1.48-.11 2.09-.52.66-.41 1.11-1.06 1.25-1.83.07-1.4.03-2.81.04-4.21V0l.02.02z" />
                     </svg>
