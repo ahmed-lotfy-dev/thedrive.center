@@ -15,8 +15,28 @@ import { ServiceHistoryTimeline } from "@/features/maintenance/components/Servic
 import Link from "next/link";
 import { formatLicensePlate } from "@/lib/utils";
 
+type CarDetailsServiceRecord = {
+  id: string;
+  serviceDate: string | Date;
+  serviceType: string;
+  description?: string | null;
+  odometer?: number | null;
+  cost?: string | number | null;
+};
+
+export type CarDetailsRecord = {
+  id: string;
+  make: string;
+  model: string;
+  plateNumber: string;
+  nextServiceDate?: string | Date | null;
+  nextServiceOdometer?: number | string | null;
+  nextAlignmentDate?: string | Date | null;
+  serviceRecords?: CarDetailsServiceRecord[] | null;
+};
+
 interface CarDetailViewProps {
-  car: any;
+  car: CarDetailsRecord;
 }
 
 export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
@@ -64,7 +84,7 @@ export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
               <Clock className="text-emerald-500 size-5" />
               تحديث جدول الصيانة
             </h3>
-            <MaintenanceUpdateForm car={car} onUpdate={(updatedCar: any) => {
+            <MaintenanceUpdateForm car={car} onUpdate={(updatedCar) => {
               setCar(updatedCar);
             }} />
           </div>

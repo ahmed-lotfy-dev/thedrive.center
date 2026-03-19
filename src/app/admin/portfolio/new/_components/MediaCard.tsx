@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Image as ImageIcon, Video, LayoutGrid, X } from "lucide-react";
 import { PortfolioCarWithMedia } from "@/types/portfolio";
+import Image from "next/image";
 
 interface MediaCardProps {
   coverImageUrl: string;
@@ -85,7 +86,7 @@ function CoverImageSection({
       <Label>صورة الغلاف (Cover Image)</Label>
       {coverImageUrl ? (
         <div className="relative aspect-video rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
-          <img src={coverImageUrl} alt="Cover Preview" className="object-cover w-full h-full" />
+          <Image src={coverImageUrl} alt="Cover Preview" className="object-cover w-full h-full" />
           <Button
             type="button"
             variant="destructive"
@@ -136,7 +137,7 @@ function GallerySection({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {galleryUrls.map((url, i) => (
           <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
-            <img src={url} alt={`Gallery ${i}`} className="object-cover w-full h-full" />
+            <Image src={url} alt={`Gallery ${i}`} className="object-cover w-full h-full" />
             <Button
               type="button"
               variant="destructive"

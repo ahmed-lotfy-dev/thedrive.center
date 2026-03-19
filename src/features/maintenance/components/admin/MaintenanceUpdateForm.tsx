@@ -7,10 +7,11 @@ import { Label } from "@/components/ui/label";
 import { updateMaintenanceTrackingAction } from "../../actions";
 import { toast } from "sonner";
 import { Calendar, Gauge, Save, Loader2, Sparkles } from "lucide-react";
+import type { CarDetailsRecord } from "./CarDetailView";
 
 interface MaintenanceUpdateFormProps {
-  car: any;
-  onUpdate: (updatedCar: any) => void;
+  car: CarDetailsRecord;
+  onUpdate: (updatedCar: CarDetailsRecord) => void;
 }
 
 export function MaintenanceUpdateForm({ car, onUpdate }: MaintenanceUpdateFormProps) {

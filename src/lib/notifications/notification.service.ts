@@ -5,17 +5,21 @@ import { MockWhatsAppProvider } from "./providers/mock.provider";
 export class NotificationService {
   private static instance: NotificationService;
   private provider: WhatsAppProvider;
+  private readonly deliveryEnabled: boolean;
+  private readonly providerName: string;
 
   private constructor() {
-    // Choose provider based on environment
-    const useMock =
-      process.env.NODE_ENV === "development" ||
-      !process.env.WHATSAPP_ACCESS_TOKEN;
+    this.deliveryEnabled =
+      process.env.WHATSAPP_NOTIFICATIONS_ENABLED === "true" &&
+      !!process.env.WHATSAPP_ACCESS_TOKEN &&
+      !!process.env.WHATSAPP_PHONE_NUMBER_ID;
 
-    if (useMock) {
-      this.provider = new MockWhatsAppProvider();
-    } else {
+    if (this.deliveryEnabled) {
       this.provider = new OfficialApiProvider();
+      this.providerName = "official_api";
+    } else {
+      this.provider = new MockWhatsAppProvider();
+      this.providerName = process.env.NODE_ENV === "development" ? "mock" : "disabled";
     }
 
     this.provider.initialize();
@@ -26,6 +30,14 @@ export class NotificationService {
       NotificationService.instance = new NotificationService();
     }
     return NotificationService.instance;
+  }
+
+  public shouldAttemptDelivery() {
+    return this.deliveryEnabled || process.env.NODE_ENV === "development";
+  }
+
+  public getProviderName() {
+    return this.providerName;
   }
 
   /**
@@ -52,8 +64,8 @@ export class NotificationService {
     try {
       const result = await this.provider.sendMessage(normalizedPhone, message);
       return { success: result.success, error: result.error };
-    } catch (error: any) {
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      return { success: false, error: error instanceof Error ? error.message : "Failed to send message" };
     }
   }
 
@@ -66,8 +78,10 @@ export class NotificationService {
     plateNumber: string,
     status: string,
   ) {
-    const message = `أهلاً يا ${customerName} 👋\n\nتم تحديث حالة سيارتك ذات اللوحة (${plateNumber}) إلى: *${status}*.\n\nيمكنك متابعة التفاصيل عبر حسابك في The Drive Center.\nThe Drive Center 🚗`;
-    return this.sendWhatsApp(phone, message);
+    return this.sendWhatsApp(
+      phone,
+      this.buildServiceUpdateMessage(customerName, plateNumber, status),
+    );
   }
 
   /**
@@ -79,8 +93,52 @@ export class NotificationService {
     date: string,
     type: string,
   ) {
-    const message = `أهلاً يا ${customerName} 👋\n\nتم تأكيد موعدك لدى The Drive Center لخدمة: *${type}*.\nالموعد: ${date}\n\nنحن في انتظارك!\nThe Drive Center 🚗`;
-    return this.sendWhatsApp(phone, message);
+    return this.sendWhatsApp(
+      phone,
+      this.buildAppointmentConfirmationMessage(customerName, date, type),
+    );
+  }
+
+  public buildAppointmentRequestReceivedMessage(
+    customerName: string,
+    date: string,
+    type: string,
+  ) {
+    return `أهلاً يا ${customerName} 👋\n\nاستلمنا طلب حجزك لدى The Drive Center لخدمة: *${type}*.\nالتاريخ المطلوب: ${date}\n\nسنراجع الطلب ونتواصل معك لتأكيد الموعد.\nThe Drive Center 🚗`;
+  }
+
+  public buildAppointmentConfirmationMessage(
+    customerName: string,
+    date: string,
+    type: string,
+  ) {
+    return `أهلاً يا ${customerName} 👋\n\nتم تأكيد موعدك لدى The Drive Center لخدمة: *${type}*.\nالموعد: ${date}\n\nنحن في انتظارك!\nThe Drive Center 🚗`;
+  }
+
+  public buildAppointmentStatusMessage(
+    customerName: string,
+    statusLabel: string,
+    date: string,
+    type: string,
+  ) {
+    return `أهلاً يا ${customerName} 👋\n\nتم تحديث حالة حجزك إلى: *${statusLabel}*.\nالخدمة: ${type}\nالموعد: ${date}\n\nلأي استفسار نحن معك عبر واتساب.\nThe Drive Center 🚗`;
+  }
+
+  public buildServiceUpdateMessage(
+    customerName: string,
+    plateNumber: string,
+    status: string,
+  ) {
+    return `أهلاً يا ${customerName} 👋\n\nتم تحديث حالة سيارتك ذات اللوحة (${plateNumber}) إلى: *${status}*.\n\nيمكنك متابعة التفاصيل عبر حسابك في The Drive Center.\nThe Drive Center 🚗`;
+  }
+
+  public buildMaintenanceReminderMessage(
+    customerName: string,
+    reminderLabel: string,
+    reminderDate: string,
+    plateNumber: string,
+  ) {
+    return `أهلاً يا ${customerName} 👋\n\nتذكير من The Drive Center: موعد *${reminderLabel}* لسيارتك ذات اللوحة (${plateNumber}) اقترب.\nالتاريخ المقترح: ${reminderDate}\n\nيسعدنا مساعدتك في حجز الموعد المناسب.\nThe Drive Center 🚗`;
   }
 }
 

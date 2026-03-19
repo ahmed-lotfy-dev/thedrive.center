@@ -56,7 +56,7 @@ export function LicensePlateInput({
     
     if (vLetters !== letters) setLetters(vLetters);
     if (vNumbers !== numbers) setNumbers(vNumbers);
-  }, [value]);
+  }, [value, letters, numbers]);
 
   const handleLettersChange = (val: string) => {
     setError(null);

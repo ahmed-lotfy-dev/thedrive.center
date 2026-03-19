@@ -7,7 +7,6 @@ import { Sparkles, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, type Variants } from "motion/react";
 import { Card } from "@/components/ui/card";
-import { Magnetic } from "@/components/shared/Magnetic";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -56,8 +55,8 @@ export function Hero({ imageUrl }: HeroProps) {
     <section className="relative px-4 pb-20 pt-28 md:pt-40 overflow-hidden min-h-screen flex items-center border-b border-border/40">
       <div className="absolute inset-0 bg-background -z-20" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[32px_32px] -z-20" />
-      <div className="absolute top-1/4 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 left-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 -translate-x-1/2 translate-y-1/2" />
+      <div className="absolute top-1/4 right-0 w-75 sm:w-125 h-75 sm:h-125 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 left-0 w-100 sm:w-150 h-100 sm:h-150 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none -z-10 -translate-x-1/2 translate-y-1/2" />
 
       <div className="container relative z-10 mx-auto mb-8 px-4 md:px-6">
         <motion.div 
@@ -117,7 +116,7 @@ export function Hero({ imageUrl }: HeroProps) {
                 { val: "100+", label: "عميل راضي" },
                 { val: "أحدث", label: "الأجهزة المتطورة" }
               ].map((stat, i) => (
-                <Card key={i} className="flex flex-col p-4 rounded-2xl bg-card border border-border/50 shadow-sm min-w-[120px] py-4">
+                <Card key={i} className="flex flex-col p-4 rounded-2xl bg-card border border-border/50 shadow-sm min-w-30 py-4">
                   <div className="text-2xl md:text-3xl font-black text-foreground drop-shadow-sm">
                     {stat.val.replace(/[%+]/g, '')}
                     <span className="text-emerald-500">{stat.val.match(/[%+]/)?.[0]}</span>
@@ -129,7 +128,7 @@ export function Hero({ imageUrl }: HeroProps) {
           </motion.div>
 
           <motion.div 
-            className="w-full lg:w-[45%] relative lg:h-[600px] flex items-center justify-center p-4 lg:p-0"
+            className="w-full lg:w-[45%] relative lg:h-150 flex items-center justify-center p-4 lg:p-0"
             variants={imageVariants}
           >
             <div className="w-full relative">

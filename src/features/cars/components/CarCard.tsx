@@ -6,7 +6,6 @@ import { ArrowLeft, Calendar, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { PortfolioCar } from "@/types/portfolio";
-import { cn } from "@/lib/utils";
 
 interface CarCardProps {
   car: PortfolioCar;

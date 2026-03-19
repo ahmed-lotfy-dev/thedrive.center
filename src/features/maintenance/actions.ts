@@ -1,13 +1,16 @@
 "use server";
 
 import { db } from "@/db";
-import { customerCars, serviceRecords, user } from "@/db/schema";
-import { eq, and, or, desc, ilike, sql } from "drizzle-orm";
+import { customerCars, notificationEvents, serviceRecords } from "@/db/schema";
+import { eq, and, or, desc, ilike, sql, inArray } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { normalizePlateNumber } from "@/lib/utils";
 import { customerCarSchema, serviceRecordSchema, maintenanceTrackingSchema } from "./schema";
+import { getServiceTypeLabel, type ServiceTypeValue } from "@/lib/constants";
+import { notificationService } from "@/lib/notifications/notification.service";
+import { processNotificationEvent, queueNotificationEvent } from "@/lib/notifications/outbox";
 
 async function isAdmin() {
   const session = await auth.api.getSession({
@@ -103,7 +106,7 @@ export async function linkCarByPlate(plateNumber: string) {
   }
 }
 
-export async function addCustomerCarAction(data: any) {
+export async function addCustomerCarAction(data: z.infer<typeof customerCarSchema>) {
   if (!(await isAdmin())) return { error: "Unauthorized" };
 
   try {
@@ -134,20 +137,54 @@ export async function addCustomerCarAction(data: any) {
   }
 }
 
-export async function addServiceRecordAction(data: any) {
+export async function addServiceRecordAction(data: z.infer<typeof serviceRecordSchema>) {
   if (!(await isAdmin())) return { error: "غير مصرح لك بالوصول" };
 
   try {
     const validated = serviceRecordSchema.parse(data);
+    const validatedServiceType = validated.serviceType as ServiceTypeValue;
+    const { notificationEventId } = await db.transaction(async (tx) => {
+      await tx.insert(serviceRecords).values({
+        carId: validated.carId,
+        serviceDate: new Date(validated.serviceDate),
+        serviceType: validatedServiceType,
+        description: validated.description,
+        odometer: validated.odometer,
+        cost: validated.cost?.toString(),
+      });
 
-    await db.insert(serviceRecords).values({
-      carId: validated.carId,
-      serviceDate: new Date(validated.serviceDate),
-      serviceType: validated.serviceType,
-      description: validated.description,
-      odometer: validated.odometer,
-      cost: validated.cost?.toString(),
+      const car = await tx.query.customerCars.findFirst({
+        where: eq(customerCars.id, validated.carId),
+        with: { user: true },
+      });
+
+      let eventId: string | null = null;
+      if (car?.user?.phone) {
+        const event = await queueNotificationEvent({
+          type: "service_record_added",
+          phone: car.user.phone,
+          customerName: car.user.name,
+          message: notificationService.buildServiceUpdateMessage(
+            car.user.name ?? "عميلنا",
+            car.plateNumber,
+            `تم تسجيل خدمة جديدة: ${getServiceTypeLabel(validatedServiceType)}`,
+          ),
+          carId: car.id,
+          userId: car.user.id,
+          payload: {
+            serviceType: validatedServiceType,
+            serviceDate: new Date(validated.serviceDate).toISOString(),
+          },
+        }, tx);
+        eventId = event.id;
+      }
+
+      return { notificationEventId: eventId };
     });
+
+    if (notificationEventId) {
+      await processNotificationEvent(notificationEventId);
+    }
 
     revalidatePath("/admin/customer-cars");
     return { success: true };
@@ -167,16 +204,17 @@ export async function searchCustomerCars(query: string, page: number = 1, limit:
     const normalizedPlateQuery = normalizePlateNumber(trimmedQuery);
     const plateSearchTerm = `%${normalizedPlateQuery}%`;
 
-    // 1. Define base condition
-    const searchCondition = (fields: any, { or, ilike, and, eq }: any) => and(
-      eq(fields.status, "active"),
-      trimmedQuery ? or(
-        ilike(fields.plateNumber, searchTerm),
-        ilike(fields.plateNumber, plateSearchTerm),
-        ilike(sql`REPLACE(${fields.plateNumber}, ' ', '')`, plateSearchTerm),
-        ilike(fields.make, searchTerm),
-        ilike(fields.model, searchTerm)
-      ) : sql`TRUE`
+    const searchCondition = and(
+      eq(customerCars.status, "active"),
+      trimmedQuery
+        ? or(
+            ilike(customerCars.plateNumber, searchTerm),
+            ilike(customerCars.plateNumber, plateSearchTerm),
+            ilike(sql`REPLACE(${customerCars.plateNumber}, ' ', '')`, plateSearchTerm),
+            ilike(customerCars.make, searchTerm),
+            ilike(customerCars.model, searchTerm),
+          )
+        : sql`TRUE`,
     );
 
     // 2. Get total count
@@ -218,20 +256,90 @@ export async function searchCustomerCars(query: string, page: number = 1, limit:
   }
 }
 
-export async function updateMaintenanceTrackingAction(carId: string, data: any) {
+export async function updateMaintenanceTrackingAction(carId: string, data: z.infer<typeof maintenanceTrackingSchema>) {
   if (!(await isAdmin())) return { error: "Unauthorized" };
 
   try {
     const validated = maintenanceTrackingSchema.parse(data);
+    await db.transaction(async (tx) => {
+      await tx.update(customerCars)
+        .set({
+          nextServiceDate: validated.nextServiceDate ? new Date(validated.nextServiceDate) : null,
+          nextServiceOdometer: validated.nextServiceOdometer,
+          nextAlignmentDate: validated.nextAlignmentDate ? new Date(validated.nextAlignmentDate) : null,
+          updatedAt: new Date(),
+        })
+        .where(eq(customerCars.id, carId));
 
-    await db.update(customerCars)
-      .set({
-        nextServiceDate: validated.nextServiceDate ? new Date(validated.nextServiceDate) : null,
-        nextServiceOdometer: validated.nextServiceOdometer,
-        nextAlignmentDate: validated.nextAlignmentDate ? new Date(validated.nextAlignmentDate) : null,
-        updatedAt: new Date(),
-      })
-      .where(eq(customerCars.id, carId));
+      const car = await tx.query.customerCars.findFirst({
+        where: eq(customerCars.id, carId),
+        with: { user: true },
+      });
+
+      if (!car?.user?.phone) return;
+
+      await tx.delete(notificationEvents).where(
+        and(
+          eq(notificationEvents.carId, carId),
+          eq(notificationEvents.status, "pending"),
+          inArray(notificationEvents.type, [
+            "maintenance_service_reminder",
+            "maintenance_alignment_reminder",
+          ]),
+        ),
+      );
+
+      if (validated.nextServiceDate) {
+        const serviceDate = new Date(validated.nextServiceDate);
+        const scheduledFor = new Date(serviceDate);
+        scheduledFor.setDate(scheduledFor.getDate() - 3);
+
+        await queueNotificationEvent({
+          type: "maintenance_service_reminder",
+          phone: car.user.phone,
+          customerName: car.user.name,
+          message: notificationService.buildMaintenanceReminderMessage(
+            car.user.name ?? "عميلنا",
+            "الصيانة القادمة",
+            serviceDate.toLocaleDateString("ar-EG"),
+            car.plateNumber,
+          ),
+          carId: car.id,
+          userId: car.user.id,
+          scheduledFor,
+          payload: {
+            reminderType: "service",
+            nextServiceDate: serviceDate.toISOString(),
+            nextServiceOdometer: validated.nextServiceOdometer ?? null,
+          },
+        }, tx);
+      }
+
+      if (validated.nextAlignmentDate) {
+        const alignmentDate = new Date(validated.nextAlignmentDate);
+        const scheduledFor = new Date(alignmentDate);
+        scheduledFor.setDate(scheduledFor.getDate() - 3);
+
+        await queueNotificationEvent({
+          type: "maintenance_alignment_reminder",
+          phone: car.user.phone,
+          customerName: car.user.name,
+          message: notificationService.buildMaintenanceReminderMessage(
+            car.user.name ?? "عميلنا",
+            "ضبط الزوايا القادم",
+            alignmentDate.toLocaleDateString("ar-EG"),
+            car.plateNumber,
+          ),
+          carId: car.id,
+          userId: car.user.id,
+          scheduledFor,
+          payload: {
+            reminderType: "alignment",
+            nextAlignmentDate: alignmentDate.toISOString(),
+          },
+        }, tx);
+      }
+    });
 
     revalidatePath("/admin/customer-cars");
     return { success: true };

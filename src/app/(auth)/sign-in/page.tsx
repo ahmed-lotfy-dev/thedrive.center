@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { SignInForm } from "@/features/auth/components/SignInForm";
 import { SignUpForm } from "@/features/auth/components/SignUpForm";
-import { CheckCircle2, ShieldCheck, Sparkles, Wrench } from "lucide-react";
 
 export default function AuthPage() {
   const [view, setView] = useState<"signin" | "signup">("signin");

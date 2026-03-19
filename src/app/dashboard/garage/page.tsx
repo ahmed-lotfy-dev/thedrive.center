@@ -22,7 +22,7 @@ export default async function GaragePage({ searchParams }: GaragePageProps) {
   const { page: pageParam } = await searchParams;
   const page = Number(pageParam) || 1;
 
-  const { data: cars, meta, error } = await getUserCars(page, 6);
+  const { data: cars, meta } = await getUserCars(page, 6);
 
   return (
     <div className="space-y-12 pb-20">

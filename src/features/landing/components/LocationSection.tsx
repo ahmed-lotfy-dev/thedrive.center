@@ -1,5 +1,6 @@
 "use client";
 
+import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -149,7 +150,7 @@ export function LocationSection() {
                 },
                 {
                   name: "Instagram",
-                  icon: (props: any) => (
+                  icon: (props: SVGProps<SVGSVGElement>) => (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
                       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
@@ -161,7 +162,7 @@ export function LocationSection() {
                 },
                 {
                   name: "TikTok",
-                  icon: (props: any) => (
+                  icon: (props: SVGProps<SVGSVGElement>) => (
                     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
                       <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
                     </svg>

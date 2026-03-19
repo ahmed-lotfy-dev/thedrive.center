@@ -3,18 +3,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createCarAction } from "../actions";
-import { Plus, UploadCloud, X, Film, ImageIcon, Loader2 } from "lucide-react";
+import { Plus, UploadCloud, X, ImageIcon, Loader2, Link2 } from "lucide-react";
+import { MAX_UPLOAD_SIZE_BYTES, validateUploadRequest } from "@/lib/upload-policy";
 
 export default function NewCarPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [coverImage, setCoverImage] = useState<string>("");
-  const [videoUrl, setVideoUrl] = useState<string>("");
   const [images, setImages] = useState<string[]>([]);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'video' | 'gallery') => {
+  const getErrorMessage = (error: unknown, fallback: string) =>
+    error instanceof Error ? error.message : fallback;
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'gallery') => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     
@@ -24,15 +27,31 @@ export default function NewCarPage() {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        const validation = validateUploadRequest({
+          filename: file.name,
+          contentType: file.type,
+          size: file.size,
+        });
+
+        if (!validation.valid) {
+          throw new Error(validation.error);
+        }
         
         // 1. Get presigned URL
         const res = await fetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ filename: file.name, contentType: file.type }),
+          body: JSON.stringify({
+            filename: file.name,
+            contentType: file.type,
+            size: file.size,
+          }),
         });
         
-        if (!res.ok) throw new Error("Failed to get upload URL");
+        if (!res.ok) {
+          const error = await res.json().catch(() => null);
+          throw new Error(error?.error || "Failed to get upload URL");
+        }
         const { uploadUrl, publicUrl } = await res.json();
 
         // 2. Upload to Cloudflare R2
@@ -49,14 +68,12 @@ export default function NewCarPage() {
         // 3. Update state with public URL
         if (type === 'cover') {
           setCoverImage(publicUrl);
-        } else if (type === 'video') {
-          setVideoUrl(publicUrl);
         } else {
           setImages(prev => [...prev, publicUrl]);
         }
       }
-    } catch (err: any) {
-      setErrorMsg(err.message || "Upload failed");
+    } catch (err: unknown) {
+      setErrorMsg(getErrorMessage(err, "Upload failed"));
     } finally {
       setUploading(false);
     }
@@ -69,15 +86,14 @@ export default function NewCarPage() {
 
     const formData = new FormData(e.currentTarget);
     formData.set("coverImageUrl", coverImage);
-    if (videoUrl) formData.set("videoUrl", videoUrl);
     formData.set("imagesJson", JSON.stringify(images));
 
     try {
       await createCarAction(formData);
       router.push("/admin/cars");
       router.refresh();
-    } catch (err: any) {
-      setErrorMsg(err.message || "Failed to save");
+    } catch (err: unknown) {
+      setErrorMsg(getErrorMessage(err, "Failed to save"));
       setLoading(false);
     }
   };
@@ -87,7 +103,7 @@ export default function NewCarPage() {
       <div>
         <h1 className="text-3xl font-bold">إضافة سيارة جديدة</h1>
         <p className="mt-2 text-muted-foreground">
-          ارفع صور وفيديو السيارة وتفاصيل الشغل اللي اتعمل فيها.
+          ارفع صور السيارة وأضف رابط الفيديو الخارجي إن وجد مع تفاصيل الشغل اللي اتعمل فيها.
         </p>
       </div>
 
@@ -167,29 +183,30 @@ export default function NewCarPage() {
                 <label className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-colors">
                   <UploadCloud className="size-8 text-emerald-500" />
                   <span className="text-sm font-medium text-emerald-600">رفع صورة</span>
-                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'cover')} disabled={uploading} />
+                  <span className="text-xs text-emerald-500/80">JPG / PNG / WebP حتى {Math.round(MAX_UPLOAD_SIZE_BYTES / (1024 * 1024))}MB</span>
+                  <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => handleFileUpload(e, 'cover')} disabled={uploading} />
                 </label>
               )}
             </div>
 
-            {/* Video Upload */}
+            {/* External Video URL */}
             <div className="space-y-3">
-              <label className="text-sm font-medium block">فيديو العربية (اختياري)</label>
-              {videoUrl ? (
-                <div className="relative aspect-video overflow-hidden rounded-lg border bg-black flex items-center justify-center">
-                  <Film className="size-8 text-white/50 absolute z-0" />
-                  <video src={videoUrl} className="object-contain w-full h-full relative z-10" controls />
-                  <button type="button" onClick={() => setVideoUrl("")} className="absolute right-2 top-2 z-20 rounded-full bg-red-500 p-1.5 text-white hover:bg-red-600">
-                    <X className="size-4" />
-                  </button>
-                </div>
-              ) : (
-                <label className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-zinc-300 bg-white hover:bg-zinc-50 transition-colors">
-                  <Film className="size-8 text-zinc-400" />
-                  <span className="text-sm font-medium text-zinc-600">رفع فيديو MP4</span>
-                  <input type="file" accept="video/*" className="hidden" onChange={(e) => handleFileUpload(e, 'video')} disabled={uploading} />
+              <label className="text-sm font-medium block">رابط فيديو خارجي (اختياري)</label>
+              <div className="rounded-lg border bg-white p-4">
+                <label className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-700">
+                  <Link2 className="size-4 text-emerald-500" />
+                  TikTok / Facebook / YouTube
                 </label>
-              )}
+                <input
+                  name="videoUrl"
+                  type="url"
+                  placeholder="ضع رابط الفيديو هنا..."
+                  className="w-full rounded-md border p-3 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+                <p className="mt-2 text-xs text-zinc-500">
+                  لا يتم رفع الفيديو إلى الموقع. يتم حفظ الرابط الخارجي فقط.
+                </p>
+              </div>
             </div>
             
             {/* Gallery Uploads */}
@@ -208,9 +225,10 @@ export default function NewCarPage() {
                 
                 <label className="flex size-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-zinc-300 bg-white hover:bg-zinc-50 transition-colors">
                   <Plus className="size-6 text-zinc-400" />
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleFileUpload(e, 'gallery')} disabled={uploading} />
+                  <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple className="hidden" onChange={(e) => handleFileUpload(e, 'gallery')} disabled={uploading} />
                 </label>
               </div>
+              <p className="text-xs text-zinc-500">الصور المسموحة: JPG / PNG / WebP حتى {Math.round(MAX_UPLOAD_SIZE_BYTES / (1024 * 1024))}MB لكل ملف.</p>
             </div>
           </div>
         </div>

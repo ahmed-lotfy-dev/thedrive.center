@@ -1,12 +1,11 @@
 export const dynamic = "force-dynamic";
  
 import { getAppointments } from "@/server/actions/appointments";
-import { Calendar } from "lucide-react";
-import { AdminAppointmentList } from "./AdminAppointmentList";
+import { AdminAppointmentList, type Appointment } from "./AdminAppointmentList";
  
 export default async function AppointmentsAdminPage() {
   const result = await getAppointments();
-  const appointments: any[] = result.success ? (result.data as any[]) : [];
+  const appointments: Appointment[] = result.success ? (result.data as Appointment[]) : [];
  
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

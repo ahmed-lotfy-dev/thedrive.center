@@ -8,7 +8,11 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
-import { isKnownServiceType, isKnownCarMediaType } from "@/lib/constants";
+import {
+  isKnownServiceType,
+  type CarMediaTypeValue,
+  type ServiceTypeValue,
+} from "@/lib/constants";
 
 const carSchema = z.object({
   id: z.string().optional(),
@@ -44,6 +48,8 @@ export async function createPortfolioEntry(formData: FormData) {
   }
 
   const { galleryUrls, title, description, coverImageUrl, videoUrl, serviceType } = result.data;
+  const validatedServiceType = serviceType as ServiceTypeValue;
+  const imageMediaType: CarMediaTypeValue = "image";
 
   // Generate a URL-friendly slug: spaces and non-word characters to hyphens
   const baseSlug = title
@@ -61,7 +67,7 @@ export async function createPortfolioEntry(formData: FormData) {
       description,
       coverImageUrl,
       videoUrl,
-      serviceType,
+      serviceType: validatedServiceType,
       slug,
       featured: true,
     }).returning();
@@ -72,7 +78,7 @@ export async function createPortfolioEntry(formData: FormData) {
         const mediaData = urls.map((url, index) => ({
           carId: newCar.id,
           url,
-          type: isKnownCarMediaType("image") ? "image" : (() => { throw new Error("Invalid media type"); })(),
+          type: imageMediaType,
           order: index,
         }));
         await tx.insert(carMedia).values(mediaData);
@@ -127,6 +133,8 @@ export async function updatePortfolioEntry(id: string, formData: FormData) {
   }
 
   const { galleryUrls, title, description, coverImageUrl, videoUrl, serviceType } = result.data;
+  const validatedServiceType = serviceType as ServiceTypeValue;
+  const imageMediaType: CarMediaTypeValue = "image";
 
   await db.transaction(async (tx) => {
     await tx.update(cars)
@@ -135,7 +143,7 @@ export async function updatePortfolioEntry(id: string, formData: FormData) {
         description,
         coverImageUrl,
         videoUrl,
-        serviceType,
+        serviceType: validatedServiceType,
         updatedAt: new Date(),
       })
       .where(eq(cars.id, id));
@@ -148,7 +156,7 @@ export async function updatePortfolioEntry(id: string, formData: FormData) {
         const mediaData = urls.map((url, index) => ({
           carId: id,
           url,
-          type: isKnownCarMediaType("image") ? "image" : (() => { throw new Error("Invalid media type"); })(),
+          type: imageMediaType,
           order: index,
         }));
         await tx.insert(carMedia).values(mediaData);

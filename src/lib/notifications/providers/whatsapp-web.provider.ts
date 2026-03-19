@@ -16,7 +16,7 @@ export class WhatsappWebProvider implements WhatsAppProvider {
     return this.ready;
   }
 
-  async sendMessage(to: string, message: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  async sendMessage(): Promise<{ success: boolean; messageId?: string; error?: string }> {
     if (!this.isReady()) {
       return { success: false, error: "Whatsapp Web provider not yet fully implemented or not ready" };
     }

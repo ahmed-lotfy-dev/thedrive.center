@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 interface SocialProviderButtonProps {
-  provider: "google";
   onClick: () => void;
   isLoading: boolean;
   disabled?: boolean;
@@ -13,7 +12,6 @@ interface SocialProviderButtonProps {
 }
 
 export function SocialProviderButton({
-  provider,
   onClick,
   isLoading,
   disabled,

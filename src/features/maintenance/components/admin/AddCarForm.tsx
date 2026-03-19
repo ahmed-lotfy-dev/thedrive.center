@@ -26,9 +26,14 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2, Car, Hash, Palette, Calendar, Plus } from "lucide-react";
 import { LicensePlateInput } from "@/components/shared/LicensePlateInput";
+import type { z } from "zod";
+import type { customerCars } from "@/db/schema";
+
+type CustomerCarFormValues = z.infer<typeof customerCarSchema>;
+type CustomerCarRecord = typeof customerCars.$inferSelect;
 
 interface AddCarFormProps {
-  onSuccess: (newCar: any) => void;
+  onSuccess: (newCar: CustomerCarRecord) => void;
 }
 
 export function AddCarForm({ onSuccess }: AddCarFormProps) {
@@ -45,7 +50,7 @@ export function AddCarForm({ onSuccess }: AddCarFormProps) {
     },
   });
 
-  async function onSubmit(values: any) {
+  async function onSubmit(values: CustomerCarFormValues) {
     setIsSubmitting(true);
     const result = await addCustomerCarAction(values);
     setIsSubmitting(false);

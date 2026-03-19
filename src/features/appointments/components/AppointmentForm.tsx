@@ -45,19 +45,22 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+type AuthSession = ReturnType<typeof authClient.useSession>["data"];
+type SessionUser = NonNullable<AuthSession>["user"] & { phone?: string | null };
 
 export function AppointmentForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session } = authClient.useSession();
+  const sessionUser = session?.user as SessionUser | undefined;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      guestName: session?.user?.name || "",
-      guestEmail: session?.user?.email || "",
-      guestPhone: (session?.user as any)?.phone || "",
+      guestName: sessionUser?.name || "",
+      guestEmail: sessionUser?.email || "",
+      guestPhone: sessionUser?.phone || "",
       plateNumber: searchParams.get("plate") || "",
       serviceType: searchParams.get("service") || "",
       make: searchParams.get("make") || "",
@@ -68,14 +71,14 @@ export function AppointmentForm() {
 
   // Update form if session loads or params change
   useEffect(() => {
-    if (session?.user) {
-      form.setValue("guestName", session.user.name || "");
-      form.setValue("guestEmail", session.user.email || "");
-      if ((session.user as any).phone) {
-        form.setValue("guestPhone", (session.user as any).phone);
+    if (sessionUser) {
+      form.setValue("guestName", sessionUser.name || "");
+      form.setValue("guestEmail", sessionUser.email || "");
+      if (sessionUser.phone) {
+        form.setValue("guestPhone", sessionUser.phone);
       }
     }
-  }, [session, form]);
+  }, [sessionUser, form]);
 
   async function onSubmit(values: FormValues) {
     setIsSubmitting(true);

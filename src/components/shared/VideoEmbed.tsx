@@ -43,14 +43,8 @@ function parsePlatform(url: string): { platform: Platform; embedUrl?: string; vi
 function TikTokEmbed({ url, videoId }: { url: string; videoId: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
     const el = containerRef.current;
     if (!el) return;
 
@@ -69,11 +63,9 @@ function TikTokEmbed({ url, videoId }: { url: string; videoId: string }) {
       const s = document.getElementById(scriptId);
       if (s) s.remove();
     };
-  }, [videoId, theme, mounted]);
+  }, [videoId, theme]);
 
-  // Use a stable theme for SSR to avoid hydration mismatch
-  // Since the app forces dark theme, we'll use "dark" as the stable default
-  const resolvedTheme = mounted ? (theme === "dark" ? "dark" : "light") : "dark";
+  const resolvedTheme = theme === "light" ? "light" : "dark";
 
   return (
     <div 

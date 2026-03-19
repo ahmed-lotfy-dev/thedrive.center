@@ -10,12 +10,16 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { appointmentQueries } from "@/db/queries/appointments";
 import {
+  getAppointmentStatusLabel,
+  getServiceTypeLabel,
   isKnownAppointmentStatus,
   isKnownCarMaker,
   isKnownServiceType,
   isKnownVehicleType,
   type AppointmentStatusValue,
 } from "@/lib/constants";
+import { notificationService } from "@/lib/notifications/notification.service";
+import { processNotificationEvent, queueNotificationEvent } from "@/lib/notifications/outbox";
 
 const appointmentSchema = z.object({
   guestName: z.string().min(1, "Name is required").optional(),
@@ -79,7 +83,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
       };
     }
 
-    const appointmentData: any = {
+    const appointmentData: typeof appointments.$inferInsert = {
       userId: session?.user?.id || null,
       guestName: session?.user?.name || validated.guestName || null,
       guestEmail: validated.guestEmail || session?.user?.email || null,
@@ -92,7 +96,7 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
 
     const cleanPlateNumber = normalizePlateNumber(validated.plateNumber);
     
-    const appointment = await db.transaction(async (tx) => {
+    const { appointment, notificationEventId } = await db.transaction(async (tx) => {
       let car = await tx.query.customerCars.findFirst({
         where: eq(customerCars.plateNumber, cleanPlateNumber),
       });
@@ -127,8 +131,29 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
       appointmentData.carId = car.id;
 
       const [createdAppointment] = await tx.insert(appointments).values(appointmentData).returning();
-      return createdAppointment;
+      const notificationEvent = await queueNotificationEvent({
+        type: "appointment_request_received",
+        phone: validated.guestPhone,
+        customerName: appointmentData.guestName,
+        message: notificationService.buildAppointmentRequestReceivedMessage(
+          appointmentData.guestName ?? "عميلنا",
+          parsedDate.toLocaleDateString("ar-EG"),
+          getServiceTypeLabel(validated.serviceType),
+        ),
+        appointmentId: createdAppointment.id,
+        carId: car.id,
+        userId: appointmentData.userId,
+        payload: {
+          serviceType: validated.serviceType,
+          vehicleType: validated.vehicleType,
+          date: parsedDate.toISOString(),
+        },
+      }, tx);
+
+      return { appointment: createdAppointment, notificationEventId: notificationEvent.id };
     });
+
+    await processNotificationEvent(notificationEventId);
 
     revalidatePath("/admin/appointments");
     revalidatePath("/book");
@@ -197,7 +222,49 @@ export async function updateAppointmentStatus(id: string, status: string) {
     }
 
     const validatedStatus = appointmentStatusSchema.parse(status) as AppointmentStatusValue;
-    const updated = await appointmentQueries.updateStatus(id, validatedStatus);
+    const { updated, notificationEventId } = await db.transaction(async (tx) => {
+      const [appointment] = await tx
+        .update(appointments)
+        .set({ status: validatedStatus })
+        .where(eq(appointments.id, id))
+        .returning();
+
+      let eventId: string | null = null;
+      if (appointment?.guestPhone) {
+        const event = await queueNotificationEvent({
+          type:
+            validatedStatus === "confirmed"
+              ? "appointment_confirmed"
+              : validatedStatus === "completed"
+                ? "appointment_completed"
+                : "appointment_cancelled",
+          phone: appointment.guestPhone,
+          customerName: appointment.guestName,
+          message: notificationService.buildAppointmentStatusMessage(
+            appointment.guestName ?? "عميلنا",
+            getAppointmentStatusLabel(validatedStatus),
+            new Date(appointment.date).toLocaleDateString("ar-EG"),
+            getServiceTypeLabel(appointment.serviceType),
+          ),
+          appointmentId: appointment.id,
+          carId: appointment.carId,
+          userId: appointment.userId,
+          payload: {
+            status: validatedStatus,
+            date: appointment.date instanceof Date ? appointment.date.toISOString() : String(appointment.date),
+            serviceType: appointment.serviceType,
+          },
+        }, tx);
+        eventId = event.id;
+      }
+
+      return { updated: appointment, notificationEventId: eventId };
+    });
+
+    if (notificationEventId) {
+      await processNotificationEvent(notificationEventId);
+    }
+
     revalidatePath("/admin/appointments");
 
     return {

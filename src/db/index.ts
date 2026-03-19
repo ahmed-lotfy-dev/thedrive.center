@@ -36,4 +36,4 @@ const pool = new Pool({
   ssl: sslConfig,
 })
 
-export const db = drizzle(pool as any, { schema })
+export const db = drizzle<typeof schema>(pool, { schema })

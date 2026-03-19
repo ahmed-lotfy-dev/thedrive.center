@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { getPortfolio } from "@/lib/api/portfolio";
-import { desc } from "drizzle-orm";
 import Link from "next/link";
 import { Plus, LayoutGrid, Eye } from "lucide-react";
 import Image from "next/image";

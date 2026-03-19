@@ -9,7 +9,9 @@ export const SERVICE_TYPES = [
 
 export type ServiceTypeValue = (typeof SERVICE_TYPES)[number]["value"];
 
-const serviceTypeMap = new Map(SERVICE_TYPES.map((service) => [service.value, service.label]));
+const serviceTypeMap = new Map<string, string>(
+  SERVICE_TYPES.map((service) => [service.value, service.label]),
+);
 
 export function isKnownServiceType(value: string) {
   return serviceTypeMap.has(value.trim().toLowerCase());
@@ -42,7 +44,9 @@ export const CAR_MAKERS = [
 
 export type CarMakerValue = (typeof CAR_MAKERS)[number]["value"];
 
-const carMakerMap = new Map(CAR_MAKERS.map((maker) => [maker.value, maker.label]));
+const carMakerMap = new Map<string, string>(
+  CAR_MAKERS.map((maker) => [maker.value, maker.label]),
+);
 
 export function isKnownCarMaker(value: string) {
   return carMakerMap.has(value.trim().toLowerCase());
@@ -61,7 +65,9 @@ export const VEHICLE_TYPES = [
 
 export type VehicleTypeValue = (typeof VEHICLE_TYPES)[number]["value"];
 
-const vehicleTypeMap = new Map(VEHICLE_TYPES.map((type) => [type.value, type.label]));
+const vehicleTypeMap = new Map<string, string>(
+  VEHICLE_TYPES.map((type) => [type.value, type.label]),
+);
 
 export function isKnownVehicleType(value: string) {
   return vehicleTypeMap.has(value.trim().toLowerCase());
@@ -80,7 +86,9 @@ export const APPOINTMENT_STATUSES = [
 
 export type AppointmentStatusValue = (typeof APPOINTMENT_STATUSES)[number]["value"];
 
-const appointmentStatusMap = new Map(APPOINTMENT_STATUSES.map((status) => [status.value, status.label]));
+const appointmentStatusMap = new Map<string, string>(
+  APPOINTMENT_STATUSES.map((status) => [status.value, status.label]),
+);
 
 export function isKnownAppointmentStatus(value: string) {
   return appointmentStatusMap.has(value.trim().toLowerCase());
@@ -97,7 +105,9 @@ export const CUSTOMER_CAR_STATUSES = [
 
 export type CustomerCarStatusValue = (typeof CUSTOMER_CAR_STATUSES)[number]["value"];
 
-const customerCarStatusMap = new Map(CUSTOMER_CAR_STATUSES.map((status) => [status.value, status.label]));
+const customerCarStatusMap = new Map<string, string>(
+  CUSTOMER_CAR_STATUSES.map((status) => [status.value, status.label]),
+);
 
 export function isKnownCustomerCarStatus(value: string) {
   return customerCarStatusMap.has(value.trim().toLowerCase());
@@ -110,8 +120,49 @@ export const CAR_MEDIA_TYPES = [
 
 export type CarMediaTypeValue = (typeof CAR_MEDIA_TYPES)[number]["value"];
 
-const carMediaTypeMap = new Map(CAR_MEDIA_TYPES.map((type) => [type.value, type.label]));
+const carMediaTypeMap = new Map<string, string>(
+  CAR_MEDIA_TYPES.map((type) => [type.value, type.label]),
+);
 
 export function isKnownCarMediaType(value: string) {
   return carMediaTypeMap.has(value.trim().toLowerCase());
+}
+
+export const NOTIFICATION_EVENT_TYPES = [
+  { value: "appointment_request_received", label: "استلام طلب حجز" },
+  { value: "appointment_confirmed", label: "تأكيد موعد" },
+  { value: "appointment_completed", label: "اكتمال موعد" },
+  { value: "appointment_cancelled", label: "إلغاء موعد" },
+  { value: "service_record_added", label: "تحديث خدمة" },
+  { value: "maintenance_service_reminder", label: "تذكير صيانة" },
+  { value: "maintenance_alignment_reminder", label: "تذكير ضبط زوايا" },
+] as const;
+
+export type NotificationEventTypeValue =
+  (typeof NOTIFICATION_EVENT_TYPES)[number]["value"];
+
+const notificationEventTypeMap = new Map<string, string>(
+  NOTIFICATION_EVENT_TYPES.map((type) => [type.value, type.label]),
+);
+
+export function isKnownNotificationEventType(value: string) {
+  return notificationEventTypeMap.has(value.trim().toLowerCase());
+}
+
+export const NOTIFICATION_EVENT_STATUSES = [
+  { value: "pending", label: "قيد الانتظار" },
+  { value: "sent", label: "تم الإرسال" },
+  { value: "failed", label: "فشل الإرسال" },
+  { value: "skipped", label: "تم التجاوز" },
+] as const;
+
+export type NotificationEventStatusValue =
+  (typeof NOTIFICATION_EVENT_STATUSES)[number]["value"];
+
+const notificationEventStatusMap = new Map<string, string>(
+  NOTIFICATION_EVENT_STATUSES.map((status) => [status.value, status.label]),
+);
+
+export function isKnownNotificationEventStatus(value: string) {
+  return notificationEventStatusMap.has(value.trim().toLowerCase());
 }

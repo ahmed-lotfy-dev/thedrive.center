@@ -386,6 +386,8 @@ Resolution:
 
 #### M-06: Notifications are architected but not integrated into core flows
 
+Status: **Fixed on 2026-03-19.**
+
 Affected files:
 
 - `src/lib/notifications/notification.service.ts:5-87`
@@ -403,7 +405,20 @@ Recommendation:
 
 - Either integrate it into appointment confirmation and service updates, or remove it from the claimed feature set until complete.
 
+Resolution:
+
+- Added a persistent notification outbox/log via `notification_events` so notification intent is stored even before live WhatsApp delivery is approved in production
+- Booking flow now creates and processes an immediate `appointment_request_received` notification event after a booking is submitted
+- Appointment status updates now create and process customer-facing notification events for confirmation, completion, and cancellation
+- Service-record creation now creates and processes a customer notification event when a new service update is recorded
+- Maintenance tracking updates now schedule future reminder events for upcoming service dates and alignment dates instead of leaving retention messaging as an unwired concept
+- Added a protected cron endpoint at `src/app/api/cron/process-notifications/route.ts` to process due reminder events later with `CRON_SECRET`
+- Live WhatsApp delivery remains provider-optional: production sending only starts when `WHATSAPP_NOTIFICATIONS_ENABLED`, `WHATSAPP_ACCESS_TOKEN`, and `WHATSAPP_PHONE_NUMBER_ID` are configured
+- Until then, the app still logs and tracks notification events cleanly without falsely claiming full production delivery
+
 #### M-07: Admin upload API lacks file-type and size policy enforcement
+
+Status: **Fixed on 2026-03-19.**
 
 Affected file:
 
@@ -424,23 +439,49 @@ Recommendation:
 - Enforce allowed MIME types and known extensions.
 - Enforce upload size at the client and bucket/presign policy level where possible.
 
+Resolution:
+
+- Added a shared upload policy in `src/lib/upload-policy.ts`
+- Server-side upload signing now validates `filename`, `contentType`, and `size` before generating any pre-signed URL
+- Only approved image MIME/extension pairs are allowed: `jpg`, `jpeg`, `png`, `webp`
+- A 15MB max file size is now enforced before pre-signing
+- Shared upload helper now sends file size to the API and fails early with the real validation error
+- The legacy admin car uploader now uses the same size/type validation rules instead of bypassing them
+- Direct video file uploads were removed from the admin car flow; videos are now expected as external platform URLs only
+- The signed PUT request now includes `ContentLength`, improving alignment between the requested upload and the signed policy
+
 ## Low Findings
 
 #### L-01: Linting is currently broken
 
+Status: **Fixed on 2026-03-19.**
+
 Observed behavior:
 
-- `npm run lint` fails with an ESLint / `@typescript-eslint` runtime error:
-  - `Class extends value undefined is not a constructor or null`
+- The original runtime failure was caused by an ESLint version mismatch:
+  - root `eslint` was on `10.x`
+  - `eslint-config-next` / `@typescript-eslint` in this repo expected `eslint@9.39.2`
 
 Impact:
 
-- Static analysis is not protecting the codebase.
-- CI quality gates are weaker than they appear.
+- The lint toolchain itself no longer blocks static analysis from running.
+- Real lint findings are now visible and can be addressed incrementally.
 
 Recommendation:
 
 - Repair the ESLint toolchain before client release.
+
+Resolution:
+
+- Pinned root ESLint back to the compatible `9.39.2` line in `package.json`
+- Refreshed dependencies so the runtime mismatch is gone
+- Confirmed that `npm run lint` now executes ESLint successfully instead of crashing at startup
+- The lint command currently fails on real code issues, not on a broken toolchain
+
+Follow-up:
+
+- Treat the remaining ESLint output as normal code-cleanup work, not as a tooling failure
+- If you want green CI before release, the next step is a dedicated lint cleanup pass across the flagged files
 
 #### L-02: Automated test coverage is very small
 

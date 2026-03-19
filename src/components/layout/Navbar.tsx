@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -11,7 +12,9 @@ import { Calendar, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { motion, AnimatePresence, type Variants } from "motion/react";
-import { Magnetic } from "../shared/Magnetic";
+
+type AuthSession = ReturnType<typeof authClient.useSession>["data"];
+type SessionUser = NonNullable<AuthSession>["user"] & { role?: string | null };
 
 const navContainerVariants: Variants = {
   hidden: { opacity: 0, y: -20 },
@@ -46,7 +49,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const navRef = React.useRef<HTMLElement>(null);
 
-  const userRole = (session?.user as { role?: string } | undefined)?.role;
+  const userRole = (session?.user as SessionUser | undefined)?.role;
   const canOpenAdmin = userRole === "admin" || userRole === "owner";
 
   useEffect(() => {
@@ -91,7 +94,7 @@ export function Navbar() {
 
   return (
     <motion.nav
-      ref={navRef as any}
+      ref={navRef}
       className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-4 lg:px-8 pt-4 md:pt-6"
       variants={navContainerVariants}
       initial="hidden"
@@ -112,7 +115,7 @@ export function Navbar() {
             <div className="relative">
               <div className="absolute -inset-1 bg-emerald-500/20 rounded-2xl blur-md group-hover:bg-emerald-500/40 transition-all duration-500" />
               <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-card border border-border/60 overflow-hidden transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shrink-0 shadow-lg">
-                <img src="/logo.png" alt="The Drive Logo" className="w-full h-full object-cover" />
+                <Image src="/logo.png" alt="The Drive Logo" fill className="object-cover" sizes="56px" />
               </div>
             </div>
             <div className="leading-tight flex flex-col justify-center">

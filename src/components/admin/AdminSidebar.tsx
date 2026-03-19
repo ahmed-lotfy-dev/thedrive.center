@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -51,7 +51,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
             "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
             pathname === item.href
               ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-md font-bold"
-              : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
           )}
         >
           <item.icon
@@ -59,7 +59,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
               "w-5 h-5 shrink-0",
               pathname === item.href
                 ? "text-sidebar-primary-foreground"
-                : "text-sidebar-foreground/50 group-hover:text-sidebar-accent-foreground"
+                : "text-sidebar-foreground/50 group-hover:text-sidebar-accent-foreground",
             )}
           />
           <span>{item.title}</span>
@@ -93,20 +93,19 @@ function SidebarHeader() {
   return (
     <div className="p-5 border-b border-sidebar-border flex items-center gap-3">
       <div className="bg-emerald-500/20 p-2 rounded-lg w-9 h-9 flex items-center justify-center shrink-0">
-        <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">TD</span>
+        <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">
+          TD
+        </span>
       </div>
-      <span className="font-black text-base font-cairo tracking-wide">إدارة الموقع</span>
+      <span className="font-black text-base font-cairo tracking-wide">
+        إدارة الموقع
+      </span>
     </div>
   );
 }
 
 export function AdminSidebar() {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <>
@@ -127,13 +126,18 @@ export function AdminSidebar() {
         </button>
         <span className="font-black text-sm font-cairo">إدارة الموقع</span>
         <div className="bg-emerald-500/20 p-1.5 rounded-lg w-8 h-8 flex items-center justify-center">
-          <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">TD</span>
+          <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">
+            TD
+          </span>
         </div>
       </div>
 
       {/* ─── MOBILE SHEET ─────────────────────────────────────────── */}
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="w-72 p-0 bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col">
+        <SheetContent
+          side="left"
+          className="w-72 p-0 bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col"
+        >
           <SheetTitle className="sr-only">قائمة الإدارة</SheetTitle>
           <SidebarHeader />
           <SidebarNav onNavigate={() => setOpen(false)} />

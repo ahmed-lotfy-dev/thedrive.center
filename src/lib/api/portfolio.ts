@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { cars } from "@/db/schema";
-import { desc, eq, ilike, or, and, count, sql } from "drizzle-orm";
+import { desc, eq, ilike, or, and, count } from "drizzle-orm";
+import { isKnownServiceType, type ServiceTypeValue } from "@/lib/constants";
 
 export interface PortfolioFilters {
   page?: number;
@@ -25,7 +26,9 @@ export async function getPortfolio(filters: PortfolioFilters = {}) {
   }
 
   if (serviceType && serviceType !== "all") {
-    whereConditions.push(eq(cars.serviceType, serviceType));
+    if (isKnownServiceType(serviceType)) {
+      whereConditions.push(eq(cars.serviceType, serviceType as ServiceTypeValue));
+    }
   }
 
   const where = whereConditions.length > 0 ? and(...whereConditions) : undefined;

@@ -4,7 +4,6 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { createAdvice, updateAdvice, deleteAdvice } from "./actions";
 import { Sparkles, Plus, Trash2, CheckCircle2, XCircle, Loader2 } from "lucide-react";
@@ -20,7 +19,7 @@ interface AdvicesClientProps {
 }
 
 export function AdvicesClient({ initialAdvices }: AdvicesClientProps) {
-  const [advices, setAdvices] = useState(initialAdvices);
+  const [advices] = useState(initialAdvices);
   const [newContent, setNewContent] = useState("");
   const [isPending, startTransition] = useTransition();
 

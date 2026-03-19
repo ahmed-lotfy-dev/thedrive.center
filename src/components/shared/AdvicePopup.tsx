@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Lightbulb, ChevronRight } from "lucide-react";
+import { X,  Lightbulb, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Advice {

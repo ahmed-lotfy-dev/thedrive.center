@@ -5,7 +5,11 @@ import { cars, carMedia } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "crypto";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
-import { isKnownCarMediaType, isKnownServiceType } from "@/lib/constants";
+import {
+  isKnownServiceType,
+  type CarMediaTypeValue,
+  type ServiceTypeValue,
+} from "@/lib/constants";
 
 export async function createCarAction(formData: FormData) {
   try {
@@ -35,6 +39,9 @@ export async function createCarAction(formData: FormData) {
     throw new Error("Invalid service type");
   }
 
+  const validatedServiceType = serviceType as ServiceTypeValue;
+  const imageMediaType: CarMediaTypeValue = "image";
+
   const baseSlug = title
     .trim()
     .toLowerCase()
@@ -51,7 +58,7 @@ export async function createCarAction(formData: FormData) {
         title,
         description,
         coverImageUrl,
-        serviceType,
+        serviceType: validatedServiceType,
         videoUrl: videoUrl || null,
         slug,
         featured,
@@ -59,12 +66,12 @@ export async function createCarAction(formData: FormData) {
       .returning();
 
     if (images.length > 0) {
-      const mediaData = images.map((url, i) => ({
-        carId: newCar.id,
-        url,
-        type: isKnownCarMediaType("image") ? "image" : (() => { throw new Error("Invalid media type"); })(),
-        order: i,
-      }));
+        const mediaData = images.map((url, i) => ({
+          carId: newCar.id,
+          url,
+          type: imageMediaType,
+          order: i,
+        }));
 
       await db.insert(carMedia).values(mediaData);
     }

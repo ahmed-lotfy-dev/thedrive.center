@@ -1,3 +1,5 @@
+import { MAX_UPLOAD_SIZE_BYTES, validateUploadRequest } from "@/lib/upload-policy";
+
 export async function resizeImage(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.9): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -41,6 +43,16 @@ export async function resizeImage(file: File, maxWidth = 1920, maxHeight = 1920,
 }
 
 export async function uploadToR2(file: File | Blob, originalName: string) {
+  const validation = validateUploadRequest({
+    filename: originalName,
+    contentType: file.type || "image/webp",
+    size: file.size,
+  });
+
+  if (!validation.valid) {
+    throw new Error(validation.error);
+  }
+
   // 1. Get signed URL from our API
   const response = await fetch("/api/upload", {
     method: "POST",
@@ -48,11 +60,13 @@ export async function uploadToR2(file: File | Blob, originalName: string) {
     body: JSON.stringify({
       filename: originalName,
       contentType: file.type || "image/webp",
+      size: file.size,
     }),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to get upload URL");
+    const error = await response.json().catch(() => null);
+    throw new Error(error?.error || "Failed to get upload URL");
   }
 
   const { uploadUrl, publicUrl } = await response.json();
@@ -65,7 +79,7 @@ export async function uploadToR2(file: File | Blob, originalName: string) {
   });
 
   if (!uploadResponse.ok) {
-    throw new Error("Upload to R2 failed");
+    throw new Error(`Upload to R2 failed. Max allowed size is ${Math.round(MAX_UPLOAD_SIZE_BYTES / (1024 * 1024))}MB.`);
   }
 
   return publicUrl;

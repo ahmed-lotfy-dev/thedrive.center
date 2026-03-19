@@ -5,12 +5,9 @@ import { format, differenceInDays } from "date-fns";
 import { ar } from "date-fns/locale";
 import { 
   Car as CarIcon, 
-  Calendar, 
   Settings, 
   ChevronRight, 
-  Clock, 
   Wrench,
-  AlertTriangle,
   PlusCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,8 +16,28 @@ import { Button } from "@/components/ui/button";
 import { cn, formatLicensePlate } from "@/lib/utils";
 import { ServiceHistoryTimeline } from "@/features/maintenance/components/ServiceHistoryTimeline";
 
+type CarServiceRecord = {
+  id: string;
+  serviceDate: string | Date;
+  serviceType: string;
+  description?: string | null;
+  odometer?: number | null;
+  cost?: string | number | null;
+};
+
+export type GarageCar = {
+  id: string;
+  make: string;
+  model: string;
+  plateNumber: string;
+  year?: number | null;
+  nextServiceDate?: string | Date | null;
+  nextAlignmentDate?: string | Date | null;
+  serviceRecords?: CarServiceRecord[] | null;
+};
+
 interface CarCardProps {
-  car: any;
+  car: GarageCar;
 }
 
 export function CarCard({ car }: CarCardProps) {

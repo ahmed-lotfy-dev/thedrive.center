@@ -1,7 +1,6 @@
 
 import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { GOOGLE_PLACE_ID, GOOGLE_RATING, GOOGLE_REVIEWS_COUNT } from "./google-business";
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
@@ -91,7 +90,7 @@ export async function getGoogleBusinessStats(): Promise<GoogleBusinessStats> {
     const reviewsCount = settings.find((s) => s.key === "google_reviews_count")?.value || GOOGLE_REVIEWS_COUNT;
 
     return { rating, reviewsCount };
-  } catch (error) {
+  } catch {
     return { rating: GOOGLE_RATING, reviewsCount: GOOGLE_REVIEWS_COUNT };
   }
 }

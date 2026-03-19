@@ -2,10 +2,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { ar } from "date-fns/locale";
-import { CheckCircle2, Timer, XCircle, Clock } from "lucide-react";
+import { CheckCircle2, Timer, XCircle, Clock, type LucideIcon } from "lucide-react";
 
 interface Activity {
   id: string;
@@ -22,7 +21,7 @@ interface RecentActivityProps {
   activities: Activity[];
 }
 
-const statusConfig: Record<string, { icon: any, color: string, label: string }> = {
+const statusConfig: Record<string, { icon: LucideIcon; color: string; label: string }> = {
   pending: { icon: Clock, color: "text-amber-500 bg-amber-500/10", label: "قيد الانتظار" },
   completed: { icon: CheckCircle2, color: "text-emerald-500 bg-emerald-500/10", label: "مكتمل" },
   cancelled: { icon: XCircle, color: "text-red-500 bg-red-500/10", label: "ملغي" },
@@ -39,7 +38,7 @@ export function RecentActivity({ activities }: RecentActivityProps) {
         {activities.length === 0 ? (
           <div className="text-center py-10 text-muted-foreground italic">لا توجد سجلات حديثة</div>
         ) : (
-          activities.map((activity, index) => {
+          activities.map((activity) => {
             const displayName = activity.user?.name || activity.guestName || "عميل مجهول";
             const currentStatus = activity.status || "pending";
             const config = statusConfig[currentStatus] || statusConfig.pending;

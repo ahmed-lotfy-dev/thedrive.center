@@ -5,6 +5,7 @@ import { r2 } from "@/lib/r2";
 import crypto from "crypto";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { MAX_UPLOAD_SIZE_BYTES, validateUploadRequest } from "@/lib/upload-policy";
 
 function isAdminRole(role?: string | null) {
   return role === "admin" || role === "owner";
@@ -19,16 +20,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { filename, contentType } = await request.json();
+    const { filename, contentType, size } = await request.json();
 
-    if (!filename || !contentType) {
-      return NextResponse.json(
-        { error: "Filename and contentType are required" },
-        { status: 400 }
-      );
+    const validation = validateUploadRequest({ filename, contentType, size });
+    if (!validation.valid) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
     }
 
-    const ext = filename.split(".").pop();
+    const ext = filename.split(".").pop()?.toLowerCase();
     const uniqueFilename = `${crypto.randomUUID()}.${ext}`;
     const bucketName = process.env.R2_BUCKET_NAME!;
 
@@ -36,12 +35,18 @@ export async function POST(request: Request) {
       Bucket: bucketName,
       Key: uniqueFilename,
       ContentType: contentType,
+      ContentLength: size,
     });
 
     const signedUrl = await getSignedUrl(r2, command, { expiresIn: 300 });
     const publicUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${uniqueFilename}`;
 
-    return NextResponse.json({ uploadUrl: signedUrl, publicUrl, filename: uniqueFilename });
+    return NextResponse.json({
+      uploadUrl: signedUrl,
+      publicUrl,
+      filename: uniqueFilename,
+      maxSizeBytes: MAX_UPLOAD_SIZE_BYTES,
+    });
   } catch (error) {
     console.error("Error generating pre-signed URL:", error);
     return NextResponse.json({ error: "Failed to generate upload URL" }, { status: 500 });

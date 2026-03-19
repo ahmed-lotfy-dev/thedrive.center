@@ -1,8 +1,10 @@
-import { pgTable, text, timestamp, uuid, integer, boolean, decimal } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, integer, boolean, decimal, jsonb } from "drizzle-orm/pg-core";
 import type {
   AppointmentStatusValue,
   CarMediaTypeValue,
   CustomerCarStatusValue,
+  NotificationEventStatusValue,
+  NotificationEventTypeValue,
   ServiceTypeValue,
   VehicleTypeValue,
 } from "@/lib/constants";
@@ -120,6 +122,25 @@ export const advices = pgTable("advices", {
   content: text("content").notNull(),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const notificationEvents = pgTable("notification_events", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  type: text("type").$type<NotificationEventTypeValue>().notNull(),
+  status: text("status").$type<NotificationEventStatusValue>().default("pending").notNull(),
+  provider: text("provider").notNull().default("mock"),
+  phone: text("phone").notNull(),
+  customerName: text("customer_name"),
+  message: text("message").notNull(),
+  payload: jsonb("payload").$type<Record<string, unknown>>().default({}).notNull(),
+  scheduledFor: timestamp("scheduled_for").defaultNow().notNull(),
+  sentAt: timestamp("sent_at"),
+  error: text("error"),
+  appointmentId: uuid("appointment_id").references(() => appointments.id, { onDelete: "set null" }),
+  carId: uuid("car_id").references(() => customerCars.id, { onDelete: "set null" }),
+  userId: uuid("user_id").references(() => user.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const customerCars = pgTable("customer_cars", {

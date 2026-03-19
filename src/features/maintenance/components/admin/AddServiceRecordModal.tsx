@@ -16,11 +16,12 @@ import { addServiceRecordAction } from "../../actions";
 import { toast } from "sonner";
 import { Loader2, Wrench, Calendar, Gauge, CreditCard, FileText, Sparkles } from "lucide-react";
 import { ServiceSelect } from "@/components/shared/ServiceSelect";
+import type { CarDetailsRecord } from "./CarDetailView";
 
 interface AddServiceRecordModalProps {
   isOpen: boolean;
   onClose: () => void;
-  car: any;
+  car: CarDetailsRecord;
 }
 
 export function AddServiceRecordModal({ isOpen, onClose, car }: AddServiceRecordModalProps) {

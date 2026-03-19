@@ -9,9 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 import { PaginationControls } from "@/components/shared/PaginationControls";
+import type { GarageCar } from "@/features/maintenance/components/CarCard";
 
 interface GarageDashboardProps {
-  initialCars: any[];
+  initialCars: GarageCar[];
   meta?: {
     totalPages: number;
     page?: number;

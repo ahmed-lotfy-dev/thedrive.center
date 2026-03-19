@@ -7,9 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import * as motion from "motion/react-client";
+import type { Variants } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { 
     opacity: 1, 
@@ -23,7 +24,7 @@ const sectionVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
@@ -85,7 +86,7 @@ export function Services() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        variants={sectionVariants as any}
+        variants={sectionVariants}
       >
         <Card className="relative overflow-hidden rounded-4xl md:rounded-[4rem] bg-card/40 backdrop-blur-3xl border border-border/50 shadow-2xl transition-colors duration-500 py-12 md:py-20 lg:py-24">
           <CardContent className="p-0">
@@ -93,7 +94,7 @@ export function Services() {
             
             <div className="grid lg:grid-cols-12 gap-12 px-8 relative z-10">
               {/* Text Side */}
-              <motion.div className="lg:col-span-5 space-y-8" variants={itemVariants as any}>
+              <motion.div className="lg:col-span-5 space-y-8" variants={itemVariants}>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 backdrop-blur-md">
                   <Search className="w-4 h-4" />
                   <span className="text-sm font-black tracking-widest uppercase">الخدمة الأقوى لدينا</span>
@@ -136,9 +137,9 @@ export function Services() {
                  {inspectionTools.map((tool, idx) => (
                    <motion.div 
                      key={idx} 
-                     variants={itemVariants as any}
+                     variants={itemVariants}
                      className={cn(
-                       "relative h-[300px] md:h-[400px] lg:h-[450px] rounded-3xl overflow-hidden group border border-border/50 shadow-lg",
+                       "relative h-75 md:h-100 lg:h-112.5 rounded-3xl overflow-hidden group border border-border/50 shadow-lg",
                        idx === 1 ? "md:-translate-y-8" : ""
                      )}
                    >
@@ -176,10 +177,10 @@ export function Services() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        variants={sectionVariants as any}
+        variants={sectionVariants}
       >
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 px-4">
-          <motion.div className="space-y-4" variants={itemVariants as any}>
+          <motion.div className="space-y-4" variants={itemVariants}>
             <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
               صيانة ودقة
             </Badge>
@@ -187,7 +188,7 @@ export function Services() {
               خدمات <span className="text-emerald-500">الصيانة</span> المتخصصة
             </h2>
           </motion.div>
-          <motion.div variants={itemVariants as any}>
+          <motion.div variants={itemVariants}>
             <p 
               className="max-w-md text-[clamp(1rem,1.5vw,1.125rem)] leading-relaxed text-muted-foreground font-medium border-r-4 border-emerald-500/20 pr-6"
             >
@@ -197,8 +198,8 @@ export function Services() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {secondaryServices.map(({ title, description, icon: Icon }, i) => (
-            <motion.div key={title} variants={itemVariants as any}>
+          {secondaryServices.map(({ title, description, icon: Icon }) => (
+            <motion.div key={title} variants={itemVariants}>
               <Card className="relative group overflow-hidden p-8 rounded-4xl border border-border/50 bg-card/40 backdrop-blur-md transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-2 py-10">
                 <CardContent>
                   <div className="mb-6 inline-flex size-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500">

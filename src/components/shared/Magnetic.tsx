@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { motion, useSpring, useTransform } from "motion/react";
+import React from "react";
+import { motion, useSpring } from "motion/react";
 
 interface MagneticProps {
   children: React.ReactElement;
@@ -9,8 +9,7 @@ interface MagneticProps {
 }
 
 export const Magnetic = ({ children, amount = 0.3 }: MagneticProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const ref = React.useRef<HTMLDivElement>(null);
 
   const springConfig = { damping: 20, stiffness: 150, mass: 0.5 };
   const x = useSpring(0, springConfig);

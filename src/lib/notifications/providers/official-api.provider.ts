@@ -47,7 +47,10 @@ export class OfficialApiProvider implements WhatsAppProvider {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json() as {
+        error?: { message?: string };
+        messages?: Array<{ id?: string }>;
+      };
 
       if (!response.ok) {
         return { 
@@ -60,9 +63,9 @@ export class OfficialApiProvider implements WhatsAppProvider {
         success: true, 
         messageId: data.messages?.[0]?.id 
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("WhatsApp API Error:", error);
-      return { success: false, error: error.message };
+      return { success: false, error: error instanceof Error ? error.message : "Unknown WhatsApp API error" };
     }
   }
 }

@@ -6,7 +6,7 @@ import { appointmentQueries } from "@/db/queries/appointments";
 import { userQueries } from "@/db/queries/users";
 import { BookingCharts } from "@/features/admin/components/BookingCharts";
 import { RecentActivity } from "@/features/admin/components/RecentActivity";
-import { startOfDay, subDays, isSameDay, format } from "date-fns";
+import {  subDays, isSameDay, format } from "date-fns";
 import { ar } from "date-fns/locale";
 
 export default async function AdminDashboard() {

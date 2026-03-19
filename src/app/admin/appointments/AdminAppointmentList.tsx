@@ -16,7 +16,7 @@ import {
   type AppointmentStatusValue,
 } from "@/lib/constants";
 
-type Appointment = {
+export type Appointment = {
   id: string;
   guestName: string | null;
   guestPhone: string | null;

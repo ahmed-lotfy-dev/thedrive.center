@@ -53,8 +53,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AddCarForm } from "./AddCarForm";
 
+type SearchCustomerCarsResult = Awaited<ReturnType<typeof searchCustomerCars>>;
+type SearchableCustomerCar = SearchCustomerCarsResult["data"][number];
+
 interface AdminCarManagerProps {
-  initialCars: any[];
+  initialCars: SearchableCustomerCar[];
 }
 
 export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
@@ -63,7 +66,7 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
-  const getCarDisplayName = (car: any) => {
+  const getCarDisplayName = (car: SearchableCustomerCar) => {
     const make = car.make === "Unknown" ? "سيارة" : getCarMakerLabel(car.make);
     const model = getVehicleTypeLabel(car.model);
     
@@ -90,7 +93,11 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
 
   useEffect(() => {
     if (debouncedSearch !== lastSearchedRef.current) {
-      handleSearch(debouncedSearch);
+      const timeoutId = window.setTimeout(() => {
+        void handleSearch(debouncedSearch);
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
   }, [debouncedSearch, handleSearch]);
 
@@ -168,7 +175,7 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {cars.map((car: any) => (
+        {cars.map((car) => (
           <div key={car.id} className="relative group">
             <Link
               href={`/admin/customer-cars/${car.id}`}

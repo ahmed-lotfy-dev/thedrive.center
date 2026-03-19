@@ -19,7 +19,11 @@ const onboardingSchema = z.object({
   phone: z.string().regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح (يجب أن يكون رقم مصري صالح)"),
 });
 
-export async function submitOnboarding(prevState: any, formData: FormData) {
+type OnboardingState = {
+  error?: string;
+};
+
+export async function submitOnboarding(_prevState: OnboardingState, formData: FormData) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -90,7 +94,7 @@ export async function submitOnboarding(prevState: any, formData: FormData) {
       })
       .where(eq(user.id, userId));
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Onboarding error:", error);
     return { error: "حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى." };
   }

@@ -26,9 +26,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { formatLicensePlate } from "@/lib/utils";
 import type { AppointmentStatusValue } from "@/lib/constants";
+import type { Appointment } from "../AdminAppointmentList";
 
 interface AppointmentCardProps {
-  appointment: any;
+  appointment: Appointment;
   statusColors: Record<string, string>;
   statusLabels: Record<string, string>;
   vehicleTypeLabels: Record<string, string>;

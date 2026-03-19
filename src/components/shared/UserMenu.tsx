@@ -14,8 +14,11 @@ import { LayoutDashboard, LogOut } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 
+type AuthSession = ReturnType<typeof authClient.useSession>["data"];
+type SessionUser = NonNullable<AuthSession>["user"] & { role?: string | null };
+
 interface UserMenuProps {
-  session: any;
+  session: AuthSession;
 }
 
 export function UserMenu({ session }: UserMenuProps) {
@@ -32,7 +35,7 @@ export function UserMenu({ session }: UserMenuProps) {
     );
   }
 
-  const userRole = (session?.user as { role?: string } | undefined)?.role;
+  const userRole = (session?.user as SessionUser | undefined)?.role;
   const canOpenAdmin = userRole === "admin" || userRole === "owner";
 
   return (

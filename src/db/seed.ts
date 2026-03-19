@@ -2,6 +2,7 @@ import "dotenv/config";
 import { db } from "./index.js";
 import { appointments, user, advices } from "./schema.js";
 import { eq } from "drizzle-orm";
+import type { AppointmentStatusValue, ServiceTypeValue, VehicleTypeValue } from "@/lib/constants";
 
 const main = async () => {
   console.log("Seeding service-center MVP database...");
@@ -28,19 +29,19 @@ const main = async () => {
       guestName: "احمد محمد",
       guestPhone: "01001234567",
       guestEmail: "ahmed@example.com",
-      serviceType: "alignment_balancing",
-      vehicleType: "sedan",
+      serviceType: "alignment_balancing" as ServiceTypeValue,
+      vehicleType: "sedan" as VehicleTypeValue,
       date: new Date(Date.now() + 86400000),
-      status: "pending",
+      status: "pending" as AppointmentStatusValue,
     },
     {
       guestName: "سارة علي",
       guestPhone: "01007654321",
       guestEmail: "sara@example.com",
-      serviceType: "inspection",
-      vehicleType: "suv",
+      serviceType: "inspection" as ServiceTypeValue,
+      vehicleType: "suv" as VehicleTypeValue,
       date: new Date(Date.now() + 172800000),
-      status: "pending",
+      status: "pending" as AppointmentStatusValue,
     },
   ];
 

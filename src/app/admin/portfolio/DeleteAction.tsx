@@ -51,7 +51,7 @@ export function DeleteAction({ id, title }: DeleteActionProps) {
         <AlertDialogHeader>
           <AlertDialogTitle className="text-xl font-black">هل أنت متأكد من الحذف؟</AlertDialogTitle>
           <AlertDialogDescription className="text-zinc-500 dark:text-zinc-400">
-            أنت على وشك حذف عمل "{title}" من سجل التميز. هذا الإجراء لا يمكن التراجع عنه.
+            أنت على وشك حذف عمل &quot;{title}&quot; من سجل التميز. هذا الإجراء لا يمكن التراجع عنه.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-3">
