@@ -14,6 +14,7 @@ import type { NotificationSettingKey } from "@/lib/constants";
 interface NotificationSettingsProps {
   settings: {
     email_notifications_enabled: string;
+    admin_booking_alerts_enabled: string;
     whatsapp_notifications_enabled: string;
     notification_from_email: string;
     maintenance_reminder_days: string;
@@ -25,6 +26,9 @@ export function NotificationSettings({ settings, whatsappApiConfigured }: Notifi
   const [isPending, startTransition] = useTransition();
 
   const [emailEnabled, setEmailEnabled] = useState(settings.email_notifications_enabled !== "false");
+  const [adminBookingAlertsEnabled, setAdminBookingAlertsEnabled] = useState(
+    settings.admin_booking_alerts_enabled !== "false",
+  );
   const [fromEmail, setFromEmail] = useState(settings.notification_from_email);
   const [reminderDays, setReminderDays] = useState(settings.maintenance_reminder_days);
   const [whatsappEnabled, setWhatsappEnabled] = useState(
@@ -73,6 +77,22 @@ export function NotificationSettings({ settings, whatsappApiConfigured }: Notifi
               onCheckedChange={(val: boolean) => {
                 setEmailEnabled(val);
                 handleToggle("email_notifications_enabled", val);
+              }}
+              disabled={isPending}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <Label className="text-sm">تنبيه الإدارة عند الحجز الجديد</Label>
+              <p className="text-[11px] text-muted-foreground/70">
+                يرسل إيميل داخلي إلى الإدارة عند وصول حجز جديد من الموقع
+              </p>
+            </div>
+            <Switch
+              checked={adminBookingAlertsEnabled}
+              onCheckedChange={(val: boolean) => {
+                setAdminBookingAlertsEnabled(val);
+                handleToggle("admin_booking_alerts_enabled", val);
               }}
               disabled={isPending}
             />

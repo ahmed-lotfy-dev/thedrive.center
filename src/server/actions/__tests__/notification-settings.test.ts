@@ -49,6 +49,7 @@ describe("notification settings actions", () => {
     getSessionMock.mockResolvedValueOnce({ user: { id: "admin-1", role: "admin" } });
     findManyMock.mockResolvedValueOnce([
       { key: "email_notifications_enabled", value: "false" },
+      { key: "admin_booking_alerts_enabled", value: "true" },
       { key: "whatsapp_notifications_enabled", value: "true" },
       { key: "notification_from_email", value: "hello@example.com" },
       { key: "maintenance_reminder_days", value: "5" },
@@ -60,6 +61,7 @@ describe("notification settings actions", () => {
       success: true,
       data: {
         email_notifications_enabled: "false",
+        admin_booking_alerts_enabled: "true",
         whatsapp_notifications_enabled: "true",
         notification_from_email: "hello@example.com",
         maintenance_reminder_days: "5",

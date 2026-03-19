@@ -9,8 +9,10 @@ const updateSetMock = vi.fn();
 const insertMock = vi.fn();
 const updateMock = vi.fn();
 const sendWhatsAppMock = vi.fn();
+const sendBookingConfirmationEmailMock = vi.fn();
 const shouldAttemptDeliveryMock = vi.fn();
 const getProviderNameMock = vi.fn();
+const isEmailEnabledMock = vi.fn();
 
 const siteSettingsFindFirstMock = vi.fn();
 
@@ -34,8 +36,10 @@ vi.mock("@/db", () => ({
 vi.mock("@/lib/notifications/notification.service", () => ({
   notificationService: {
     sendWhatsApp: sendWhatsAppMock,
+    sendBookingConfirmationEmail: sendBookingConfirmationEmailMock,
     shouldAttemptDelivery: shouldAttemptDeliveryMock,
     getProviderName: getProviderNameMock,
+    isEmailEnabled: isEmailEnabledMock,
   },
 }));
 
@@ -63,6 +67,8 @@ describe("notification outbox", () => {
     getProviderNameMock.mockReturnValue("mock");
     shouldAttemptDeliveryMock.mockReturnValue(true);
     sendWhatsAppMock.mockResolvedValue({ success: true });
+    sendBookingConfirmationEmailMock.mockResolvedValue({ success: true });
+    isEmailEnabledMock.mockReturnValue(true);
     siteSettingsFindFirstMock.mockResolvedValue({ value: "true" });
   });
 
@@ -104,6 +110,35 @@ describe("notification outbox", () => {
       expect.objectContaining({
         status: "skipped",
         provider: "mock",
+      }),
+    );
+    expect(result).toEqual({ success: true, skipped: true });
+  });
+
+  it("still sends email when whatsapp delivery is disabled", async () => {
+    const { processNotificationEvent } = await import("@/lib/notifications/outbox");
+
+    findFirstMock.mockResolvedValueOnce({
+      id: "event-1",
+      status: "pending",
+      type: "appointment_request_received",
+      phone: "01001234567",
+      email: "test@example.com",
+      customerName: "Ahmed",
+      message: "hello",
+      payload: {
+        serviceType: "inspection",
+        date: new Date("2026-03-20T10:00:00.000Z").toISOString(),
+      },
+    });
+    shouldAttemptDeliveryMock.mockReturnValueOnce(false);
+
+    const result = await processNotificationEvent("event-1");
+
+    expect(sendBookingConfirmationEmailMock).toHaveBeenCalledOnce();
+    expect(updateSetMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: "skipped",
       }),
     );
     expect(result).toEqual({ success: true, skipped: true });

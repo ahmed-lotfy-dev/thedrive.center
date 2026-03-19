@@ -10,6 +10,7 @@ import {
   Text,
   Link,
 } from "@react-email/components";
+import { BUSINESS_PHONE, getWhatsAppUrl } from "@/lib/google-business";
 
 interface MaintenanceReminderProps {
   customerName: string;
@@ -24,6 +25,8 @@ export function MaintenanceReminderEmail({
   reminderDate,
   plateNumber,
 }: MaintenanceReminderProps) {
+  const whatsappUrl = getWhatsAppUrl("أهلاً، أريد الحجز أو الاستفسار بخصوص تذكير الصيانة في The Drive Center.");
+
   return (
     <Html dir="rtl" lang="ar">
       <Head />
@@ -64,6 +67,12 @@ export function MaintenanceReminderEmail({
                 حجز موعد الآن
               </Link>
             </Section>
+
+            <Section style={{ textAlign: "center" as const, marginTop: "16px" }}>
+              <Link href={whatsappUrl} style={secondaryButton}>
+                أو كلمنا واتساب مباشرة
+              </Link>
+            </Section>
           </Section>
 
           <Hr style={hr} />
@@ -71,7 +80,7 @@ export function MaintenanceReminderEmail({
             <Text style={footer}>
               The Drive Center — شارع النزهة، مصر الجديدة
               <br />
-              هاتف: 01001234567
+              واتساب: {BUSINESS_PHONE}
             </Text>
           </Section>
         </Container>
@@ -151,6 +160,19 @@ const button = {
   textAlign: "center" as const,
   display: "inline-block",
   padding: "12px 32px",
+};
+
+const secondaryButton = {
+  backgroundColor: "#1a1a1a",
+  borderRadius: "8px",
+  color: "#34d399",
+  fontSize: "15px",
+  fontWeight: "700",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "inline-block",
+  padding: "12px 28px",
+  border: "1px solid #10b981",
 };
 
 const hr = {

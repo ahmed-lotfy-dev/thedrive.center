@@ -6,6 +6,7 @@ import { render } from "@react-email/components";
 import { BookingConfirmationEmail } from "./emails/BookingConfirmation";
 import { AppointmentStatusEmail } from "./emails/AppointmentStatus";
 import { MaintenanceReminderEmail } from "./emails/MaintenanceReminder";
+import { NewBookingAdminAlertEmail } from "./emails/NewBookingAdminAlert";
 
 
 export class NotificationService {
@@ -115,6 +116,30 @@ export class NotificationService {
       MaintenanceReminderEmail({ customerName, reminderLabel, reminderDate, plateNumber }),
     );
     return this.sendEmail(to, `تذكير: موعد ${reminderLabel} لسيارتك — The Drive Center`, html);
+  }
+
+  public async sendNewBookingAdminAlertEmail(
+    to: string,
+    customerName: string,
+    phone: string,
+    email: string,
+    serviceType: string,
+    date: string,
+    plateNumber: string,
+    adminUrl: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    const html = await render(
+      NewBookingAdminAlertEmail({
+        customerName,
+        phone,
+        email,
+        serviceType,
+        date,
+        plateNumber,
+        adminUrl,
+      }),
+    );
+    return this.sendEmail(to, "حجز جديد من الموقع — The Drive Center", html);
   }
 
 

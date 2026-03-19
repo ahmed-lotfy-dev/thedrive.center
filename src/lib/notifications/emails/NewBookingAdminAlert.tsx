@@ -10,66 +10,69 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import { BUSINESS_PHONE, getWhatsAppUrl } from "@/lib/google-business";
 
-interface BookingConfirmationProps {
+interface NewBookingAdminAlertEmailProps {
   customerName: string;
+  phone: string;
+  email: string;
   serviceType: string;
   date: string;
+  plateNumber: string;
+  adminUrl: string;
 }
 
-export function BookingConfirmationEmail({
+export function NewBookingAdminAlertEmail({
   customerName,
+  phone,
+  email,
   serviceType,
   date,
-}: BookingConfirmationProps) {
-  const whatsappUrl = getWhatsAppUrl("أهلاً، عندي استفسار بخصوص طلب الحجز في The Drive Center.");
-
+  plateNumber,
+  adminUrl,
+}: NewBookingAdminAlertEmailProps) {
   return (
     <Html dir="rtl" lang="ar">
       <Head />
-      <Preview>تم استلام طلب حجزك في The Drive Center</Preview>
+      <Preview>حجز جديد من الموقع — The Drive Center</Preview>
       <Body style={body}>
         <Container style={container}>
           <Section style={header}>
-            <Heading style={logo}>The Drive Center 🚗</Heading>
+            <Heading style={logo}>The Drive Center Admin</Heading>
           </Section>
 
           <Section style={content}>
-            <Heading style={h1}>أهلاً يا {customerName} 👋</Heading>
-            <Text style={paragraph}>
-              وصلنا طلب حجزك وإحنا بنراجعه دلوقتي. هنتواصل معك لتأكيد الموعد.
-            </Text>
+            <Heading style={h1}>تم استلام حجز جديد من الموقع</Heading>
 
             <Section style={detailsBox}>
+              <Text style={detailRow}>
+                <strong>العميل:</strong> {customerName}
+              </Text>
+              <Text style={detailRow}>
+                <strong>الهاتف:</strong> {phone}
+              </Text>
+              <Text style={detailRow}>
+                <strong>الإيميل:</strong> {email}
+              </Text>
               <Text style={detailRow}>
                 <strong>الخدمة:</strong> {serviceType}
               </Text>
               <Text style={detailRow}>
-                <strong>التاريخ المطلوب:</strong> {date}
+                <strong>التاريخ:</strong> {date}
               </Text>
               <Text style={detailRow}>
-                <strong>الحالة:</strong> قيد المراجعة ⏳
+                <strong>رقم اللوحة:</strong> {plateNumber}
               </Text>
             </Section>
 
-            <Text style={paragraph}>
-              لو عندك أي استفسار، تقدر تتواصل معنا على واتساب في أي وقت.
-            </Text>
-
             <Section style={ctaSection}>
-              <Link href={whatsappUrl} style={button}>
-                كلمنا واتساب الآن
+              <Link href={adminUrl} style={button}>
+                فتح لوحة الحجوزات
               </Link>
             </Section>
           </Section>
 
           <Hr style={hr} />
-          <Text style={footer}>
-            The Drive Center — أفضل خدمة لعربيتك
-            <br />
-            واتساب: {BUSINESS_PHONE}
-          </Text>
+          <Text style={footer}>تنبيه داخلي تلقائي من The Drive Center</Text>
         </Container>
       </Body>
     </Html>
@@ -113,14 +116,7 @@ const h1 = {
   color: "#ffffff",
   fontSize: "24px",
   fontWeight: "700",
-  margin: "0 0 16px",
-};
-
-const paragraph = {
-  color: "#a1a1aa",
-  fontSize: "15px",
-  lineHeight: "1.7",
-  margin: "0 0 16px",
+  margin: "0 0 20px",
 };
 
 const detailsBox = {
@@ -134,12 +130,7 @@ const detailsBox = {
 const detailRow = {
   color: "#e4e4e7",
   fontSize: "14px",
-  margin: "6px 0",
-};
-
-const hr = {
-  borderColor: "#222",
-  margin: "24px 0 16px",
+  margin: "8px 0",
 };
 
 const ctaSection = {
@@ -157,6 +148,11 @@ const button = {
   textAlign: "center" as const,
   display: "inline-block",
   padding: "12px 32px",
+};
+
+const hr = {
+  borderColor: "#222",
+  margin: "24px 0 16px",
 };
 
 const footer = {

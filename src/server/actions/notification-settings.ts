@@ -31,6 +31,7 @@ export async function getNotificationSettings() {
     success: true as const,
     data: {
       email_notifications_enabled: map["email_notifications_enabled"] ?? "true",
+      admin_booking_alerts_enabled: map["admin_booking_alerts_enabled"] ?? "true",
       whatsapp_notifications_enabled: map["whatsapp_notifications_enabled"] ?? "false",
       notification_from_email: map["notification_from_email"] ?? "",
       maintenance_reminder_days: map["maintenance_reminder_days"] ?? "3",

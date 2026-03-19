@@ -77,29 +77,19 @@ export async function processNotificationEvent(eventId: string) {
 
   // --- WhatsApp delivery ---
   let whatsappResult: { success: boolean; error?: string } = { success: true };
+  let shouldSkipWhatsApp = false;
 
   const whatsappEnabledInDb = await isWhatsAppEnabledInSettings();
 
   if (!notificationService.shouldAttemptDelivery() || !whatsappEnabledInDb) {
-    await db.update(notificationEvents)
-      .set({
-        status: "skipped",
-        provider: notificationService.getProviderName(),
-        error: !whatsappEnabledInDb
-          ? "WhatsApp notifications disabled by admin."
-          : "Delivery disabled until a production WhatsApp provider is approved and enabled.",
-        updatedAt: new Date(),
-      })
-      .where(eq(notificationEvents.id, eventId));
-
     logger.warn("notification.delivery_disabled", {
       eventId,
       provider: notificationService.getProviderName(),
       whatsappEnabledInDb,
     });
 
+    shouldSkipWhatsApp = true;
     whatsappResult = { success: true };
-    return { success: true, skipped: true };
   } else {
     whatsappResult = await notificationService.sendWhatsApp(event.phone, event.message);
     const status: NotificationEventStatusValue = whatsappResult.success ? "sent" : "failed";
@@ -131,6 +121,21 @@ export async function processNotificationEvent(eventId: string) {
         error: err instanceof Error ? err.message : String(err),
       });
     }
+  }
+
+  if (shouldSkipWhatsApp) {
+    await db.update(notificationEvents)
+      .set({
+        status: "skipped",
+        provider: notificationService.getProviderName(),
+        error: !whatsappEnabledInDb
+          ? "تم تعطيل إشعارات واتساب من لوحة الإدارة."
+          : "إرسال واتساب متوقف حاليًا حتى يتم تفعيل مزود واتساب الإنتاجي.",
+        updatedAt: new Date(),
+      })
+      .where(eq(notificationEvents.id, eventId));
+
+    return { success: true, skipped: true };
   }
 
   return whatsappResult.success

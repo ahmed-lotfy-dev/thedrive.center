@@ -5,10 +5,12 @@ import {
   Heading,
   Hr,
   Html,
+  Link,
   Preview,
   Section,
   Text,
 } from "@react-email/components";
+import { BUSINESS_PHONE, getWhatsAppUrl } from "@/lib/google-business";
 
 interface AppointmentStatusProps {
   customerName: string;
@@ -25,6 +27,8 @@ export function AppointmentStatusEmail({
   serviceType,
   date,
 }: AppointmentStatusProps) {
+  const whatsappUrl = getWhatsAppUrl("أهلاً، عندي استفسار بخصوص حالة الحجز في The Drive Center.");
+
   return (
     <Html dir="rtl" lang="ar">
       <Head />
@@ -59,10 +63,20 @@ export function AppointmentStatusEmail({
             <Text style={paragraph}>
               لو عندك أي استفسار، تقدر تتواصل معنا على واتساب في أي وقت.
             </Text>
+
+            <Section style={ctaSection}>
+              <Link href={whatsappUrl} style={button}>
+                تواصل معنا عبر واتساب
+              </Link>
+            </Section>
           </Section>
 
           <Hr style={hr} />
-          <Text style={footer}>The Drive Center — أفضل خدمة لعربيتك</Text>
+          <Text style={footer}>
+            The Drive Center — أفضل خدمة لعربيتك
+            <br />
+            واتساب: {BUSINESS_PHONE}
+          </Text>
         </Container>
       </Body>
     </Html>
@@ -147,6 +161,23 @@ const detailRow = {
 const hr = {
   borderColor: "#222",
   margin: "24px 0 16px",
+};
+
+const ctaSection = {
+  textAlign: "center" as const,
+  marginTop: "24px",
+};
+
+const button = {
+  backgroundColor: "#10b981",
+  borderRadius: "8px",
+  color: "#ffffff",
+  fontSize: "16px",
+  fontWeight: "700",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "inline-block",
+  padding: "12px 32px",
 };
 
 const footer = {

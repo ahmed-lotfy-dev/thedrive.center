@@ -169,10 +169,10 @@ export function isKnownNotificationEventStatus(value: string) {
 
 export const NOTIFICATION_SETTING_KEYS = [
   "email_notifications_enabled",
+  "admin_booking_alerts_enabled",
   "whatsapp_notifications_enabled",
   "notification_from_email",
   "maintenance_reminder_days",
 ] as const;
 
 export type NotificationSettingKey = (typeof NOTIFICATION_SETTING_KEYS)[number];
-

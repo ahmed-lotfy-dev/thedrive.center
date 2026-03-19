@@ -9,7 +9,9 @@ const enforceRateLimitMock = vi.fn();
 const queueNotificationEventMock = vi.fn();
 const processNotificationEventMock = vi.fn();
 const buildAppointmentRequestReceivedMessageMock = vi.fn(() => "message");
+const sendNewBookingAdminAlertEmailMock = vi.fn();
 const transactionMock = vi.fn();
+const siteSettingsFindFirstMock = vi.fn();
 
 class MockRateLimitError extends Error {
   result: {
@@ -54,6 +56,11 @@ vi.mock("@/lib/auth", () => ({
 vi.mock("@/db", () => ({
   db: {
     transaction: transactionMock,
+    query: {
+      siteSettings: {
+        findFirst: siteSettingsFindFirstMock,
+      },
+    },
   },
 }));
 
@@ -84,6 +91,7 @@ vi.mock("@/lib/notifications/notification.service", () => ({
   notificationService: {
     buildAppointmentRequestReceivedMessage: buildAppointmentRequestReceivedMessageMock,
     buildAppointmentStatusMessage: vi.fn(() => "status message"),
+    sendNewBookingAdminAlertEmail: sendNewBookingAdminAlertEmailMock,
   },
 }));
 
@@ -107,7 +115,9 @@ describe("appointment actions", () => {
     deleteAppointmentMock.mockResolvedValue(undefined);
     queueNotificationEventMock.mockResolvedValue({ id: "event-1" });
     processNotificationEventMock.mockResolvedValue(undefined);
+    sendNewBookingAdminAlertEmailMock.mockResolvedValue({ success: true });
     transactionMock.mockReset();
+    siteSettingsFindFirstMock.mockResolvedValue({ value: "true" });
   });
 
   it("returns a guest-name error when unauthenticated booking omits guest name", async () => {
@@ -229,6 +239,150 @@ describe("appointment actions", () => {
       error: "يوجد بالفعل حجز مسجل لهذه السيارة في هذا اليوم.",
     });
     expect(queueNotificationEventMock).not.toHaveBeenCalled();
+  });
+
+  it("sends an internal admin alert email after a successful booking", async () => {
+    process.env.ADMIN_EMAIL = "admin@example.com";
+    process.env.BETTER_AUTH_URL = "https://thedrive.center";
+
+    const { createAppointment } = await import("@/server/actions/appointments");
+
+    transactionMock.mockImplementationOnce(async (callback) => callback({
+      query: {
+        customerCars: {
+          findFirst: vi.fn().mockResolvedValue(null),
+        },
+        appointments: {
+          findFirst: vi.fn().mockResolvedValue(null),
+        },
+      },
+      update: vi.fn(() => ({
+        set: vi.fn(() => ({
+          where: vi.fn(),
+          returning: vi.fn(),
+        })),
+      })),
+      insert: vi.fn()
+        .mockReturnValueOnce({
+          values: vi.fn(() => ({
+            returning: vi.fn().mockResolvedValue([{
+              id: "car-1",
+              plateNumber: "سما123",
+              make: "toyota",
+              model: "غير محدد",
+              userId: null,
+              status: "active",
+            }]),
+          })),
+        })
+        .mockReturnValueOnce({
+          values: vi.fn(() => ({
+            returning: vi.fn().mockResolvedValue([{
+              id: "apt-1",
+              carId: "car-1",
+              userId: null,
+              serviceType: "inspection",
+              date: new Date("2099-03-20T10:00:00.000Z"),
+            }]),
+          })),
+        }),
+    }));
+
+    const result = await createAppointment({
+      guestName: "Ahmed",
+      guestPhone: "01001234567",
+      guestEmail: "ahmed@example.com",
+      serviceType: "inspection",
+      vehicleType: "sedan",
+      date: "2099-03-20T10:00:00.000Z",
+      notes: "",
+      plateNumber: "س م ا 123",
+      make: "toyota",
+    });
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        success: true,
+      }),
+    );
+    expect(sendNewBookingAdminAlertEmailMock).toHaveBeenCalledWith(
+      "admin@example.com",
+      "Ahmed",
+      "01001234567",
+      "ahmed@example.com",
+      "فحص شامل",
+      expect.any(String),
+      "سما123",
+      "https://thedrive.center/admin/appointments",
+    );
+  });
+
+  it("does not send an internal admin alert email when disabled in settings", async () => {
+    process.env.ADMIN_EMAIL = "admin@example.com";
+    process.env.BETTER_AUTH_URL = "https://thedrive.center";
+    siteSettingsFindFirstMock.mockResolvedValueOnce({ value: "false" });
+
+    const { createAppointment } = await import("@/server/actions/appointments");
+
+    transactionMock.mockImplementationOnce(async (callback) => callback({
+      query: {
+        customerCars: {
+          findFirst: vi.fn().mockResolvedValue(null),
+        },
+        appointments: {
+          findFirst: vi.fn().mockResolvedValue(null),
+        },
+      },
+      update: vi.fn(() => ({
+        set: vi.fn(() => ({
+          where: vi.fn(),
+          returning: vi.fn(),
+        })),
+      })),
+      insert: vi.fn()
+        .mockReturnValueOnce({
+          values: vi.fn(() => ({
+            returning: vi.fn().mockResolvedValue([{
+              id: "car-1",
+              plateNumber: "سما123",
+              make: "toyota",
+              model: "غير محدد",
+              userId: null,
+              status: "active",
+            }]),
+          })),
+        })
+        .mockReturnValueOnce({
+          values: vi.fn(() => ({
+            returning: vi.fn().mockResolvedValue([{
+              id: "apt-1",
+              carId: "car-1",
+              userId: null,
+              serviceType: "inspection",
+              date: new Date("2099-03-20T10:00:00.000Z"),
+            }]),
+          })),
+        }),
+    }));
+
+    const result = await createAppointment({
+      guestName: "Ahmed",
+      guestPhone: "01001234567",
+      guestEmail: "ahmed@example.com",
+      serviceType: "inspection",
+      vehicleType: "sedan",
+      date: "2099-03-20T10:00:00.000Z",
+      notes: "",
+      plateNumber: "س م ا 123",
+      make: "toyota",
+    });
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        success: true,
+      }),
+    );
+    expect(sendNewBookingAdminAlertEmailMock).not.toHaveBeenCalled();
   });
 
   it("rejects non-admin appointment status updates", async () => {

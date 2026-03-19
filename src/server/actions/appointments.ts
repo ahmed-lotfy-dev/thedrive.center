@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { appointments, customerCars } from "@/db/schema";
+import { appointments, customerCars, siteSettings } from "@/db/schema";
 import { and, eq, gte, inArray, lt } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { normalizePlateNumber } from "@/lib/utils";
@@ -58,6 +58,7 @@ const appointmentSchema = z.object({
 const appointmentStatusSchema = z.string().refine(isKnownAppointmentStatus, "حالة الحجز غير مدعومة");
 
 const UNKNOWN_CAR_MODEL = "غير محدد";
+const ADMIN_APPOINTMENTS_PATH = "/admin/appointments";
 
 function getStartOfToday() {
   const today = new Date();
@@ -79,6 +80,20 @@ function getEndOfDay(date: Date) {
 
 function isAdminRole(role?: string) {
   return role === "admin" || role === "owner";
+}
+
+function getAdminAppointmentsUrl() {
+  const baseUrl = process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "";
+  if (!baseUrl) return ADMIN_APPOINTMENTS_PATH;
+  return new URL(ADMIN_APPOINTMENTS_PATH, baseUrl).toString();
+}
+
+async function isAdminBookingAlertsEnabled() {
+  const setting = await db.query.siteSettings.findFirst({
+    where: eq(siteSettings.key, "admin_booking_alerts_enabled"),
+  });
+
+  return setting?.value !== "false";
 }
 
 export async function createAppointment(data: z.infer<typeof appointmentSchema>) {
@@ -210,6 +225,37 @@ export async function createAppointment(data: z.infer<typeof appointmentSchema>)
     });
 
     await processNotificationEvent(notificationEventId);
+
+    if (process.env.ADMIN_EMAIL && await isAdminBookingAlertsEnabled()) {
+      const adminAlertResult = await notificationService.sendNewBookingAdminAlertEmail(
+        process.env.ADMIN_EMAIL,
+        appointmentData.guestName ?? "عميلنا",
+        validated.guestPhone,
+        appointmentData.guestEmail ?? "غير متوفر",
+        getServiceTypeLabel(validated.serviceType),
+        parsedDate.toLocaleDateString("ar-EG"),
+        cleanPlateNumber,
+        getAdminAppointmentsUrl(),
+      );
+
+      if (adminAlertResult.success) {
+        logger.info("appointment.admin_alert_sent", {
+          appointmentId: appointment.id,
+          hasAdminRecipient: true,
+        });
+      } else {
+        logger.warn("appointment.admin_alert_failed", {
+          appointmentId: appointment.id,
+          hasAdminRecipient: true,
+          error: adminAlertResult.error ?? "Unknown admin alert email error",
+        });
+      }
+    } else if (process.env.ADMIN_EMAIL) {
+      logger.info("appointment.admin_alert_skipped", {
+        appointmentId: appointment.id,
+        reason: "disabled_by_setting",
+      });
+    }
 
     revalidatePath("/admin/appointments");
     revalidatePath("/book");

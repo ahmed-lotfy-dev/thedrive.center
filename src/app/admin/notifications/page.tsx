@@ -16,6 +16,7 @@ export default async function NotificationsPage() {
     ? settings.data
     : {
         email_notifications_enabled: "true",
+        admin_booking_alerts_enabled: "true",
         whatsapp_notifications_enabled: "false",
         notification_from_email: "",
         maintenance_reminder_days: "3",
