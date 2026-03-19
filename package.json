@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "vitest run && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint && vitest run",
+    "lint": "eslint",
+    "check": "bun run lint && bun run test && bun run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:push": "drizzle-kit push",
