@@ -38,7 +38,7 @@ export function AdvicePopup({ advice, delaySeconds = 30 }: AdvicePopupProps) {
           initial={{ opacity: 0, scale: 0.8, y: 50, x: 50 }}
           animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20, x: 20 }}
-          className="fixed bottom-3 right-3 z-50 w-[calc(100vw-1.5rem)] max-w-[22rem] sm:bottom-6 sm:right-6 sm:w-full sm:max-w-sm"
+          className="fixed bottom-3 right-3 z-50 w-[calc(100vw-1.5rem)] max-w-88 sm:bottom-6 sm:right-6 sm:w-full sm:max-w-sm"
         >
           <div className="relative group">
             {/* Animated Glow Background */}
