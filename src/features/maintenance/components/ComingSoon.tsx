@@ -1,84 +1,248 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Sparkles, Construction, Facebook, Phone, MessageSquare, Instagram } from "lucide-react";
+import { Construction, Facebook, MessageSquare, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+type CountdownState = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  expired: boolean;
+};
+
+function getCountdownState(target: Date): CountdownState {
+  const now = Date.now();
+  const diff = Math.max(target.getTime() - now, 0);
+
+  const secondsTotal = Math.floor(diff / 1000);
+  const days = Math.floor(secondsTotal / 86400);
+  const hours = Math.floor((secondsTotal % 86400) / 3600);
+  const minutes = Math.floor((secondsTotal % 3600) / 60);
+  const seconds = secondsTotal % 60;
+
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+    expired: diff <= 0,
+  };
+}
+
+function formatSegment(value: number) {
+  return value.toString().padStart(2, "0");
+}
+
 export function ComingSoon() {
+  const targetDate = useMemo(() => {
+    // Fixed launch time in Egypt: March 21, 2026 at 7:00 AM (UTC+02:00).
+    const env = process.env.NEXT_PUBLIC_MAINTENANCE_LAUNCH;
+    if (env) {
+      const parsed = new Date(env);
+      if (!Number.isNaN(parsed.getTime())) return parsed;
+    }
+    return new Date("2026-03-21T07:00:00+02:00");
+  }, []);
+
+  const [countdown, setCountdown] = useState<CountdownState>(() =>
+    getCountdownState(targetDate),
+  );
+
+  useEffect(() => {
+    if (countdown.expired) return;
+
+    const id = window.setInterval(() => {
+      setCountdown(getCountdownState(targetDate));
+    }, 1000);
+
+    return () => window.clearInterval(id);
+  }, [targetDate, countdown.expired]);
+
   return (
-    <div dir="rtl" className="min-h-screen w-full relative flex items-center justify-center overflow-hidden bg-zinc-950 text-white">
-      {/* Background Hero Image with heavy overlay */}
+    <div
+      dir="rtl"
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-zinc-950 text-white"
+    >
       <div className="absolute inset-0 z-0">
         <Image
           src="/active-hero-image.jpg"
           alt="مركز خدمة The Drive"
           fill
           priority
-          className="object-cover opacity-30 grayscale-[0.5]"
+          className="object-cover opacity-35 grayscale-[0.35]"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-zinc-950/80 via-zinc-950/40 to-zinc-950" />
+        <div className="absolute inset-0 bg-linear-to-b from-zinc-950/88 via-zinc-950/72 to-zinc-950/92" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.16),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.12),transparent_30%)]" />
       </div>
 
-      {/* Animated Orbs */}
-      <div className="absolute top-1/4 -right-20 w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse delay-700" />
+      <div className="absolute -right-20 top-24 h-72 w-72 rounded-full bg-emerald-500/15 blur-[110px]" />
+      <div className="absolute -left-20 bottom-20 h-72 w-72 rounded-full bg-emerald-500/10 blur-[110px]" />
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 text-center">
-        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 backdrop-blur-xl mb-8">
-          <Construction className="w-5 h-5" />
-          <span className="text-sm font-black tracking-widest uppercase">الموقع تحت الإنشاء</span>
-        </div>
-
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tighter">
-          قريباً <br />
-          <span className="text-transparent bg-clip-text bg-linear-to-l from-emerald-400 via-emerald-500 to-emerald-400">
-            The Drive Center
-          </span>
-        </h1>
-
-        <p className="text-xl md:text-2xl text-zinc-300 max-w-2xl mx-auto leading-relaxed font-medium mb-12">
-          نحن موجودون بالفعل لخدمتكم، ولكننا نعمل حالياً على إطلاق منصتنا الرقمية لنقدم لكم تجربة حجز ومتابعة أسهل وأذكى. ترقبوا انطلاق موقعنا الرسمي قريباً.
-        </p>
-
-        {/* Social Links / Call to Action */}
-        <div className="flex flex-wrap justify-center gap-6">
-          <Button asChild size="lg" className="h-[64px] rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white px-8 text-lg font-bold shadow-xl shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95">
-            <a href="https://wa.me/201017131414" target="_blank" rel="noopener noreferrer">
-              <MessageSquare className="ml-2 w-5 h-5 font-bold" />
-              تواصل معنا واتساب
-            </a>
-          </Button>
-
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" className="w-[64px] h-[64px] rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-[#1877F2] hover:border-[#1877F2] text-white transition-all hover:-translate-y-1 overflow-hidden group">
-              <a href={process.env.NEXT_PUBLIC_FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full p-4">
-                <Facebook className="w-full h-full group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-              </a>
-            </Button>
-            <Button variant="outline" size="icon" className="w-[64px] h-[64px] rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-linear-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] text-white transition-all hover:-translate-y-1 overflow-hidden group">
-              <a href={process.env.NEXT_PUBLIC_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full p-4">
-                <Instagram className="w-full h-full group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-              </a>
-            </Button>
-            <Button variant="outline" size="icon" className="w-[64px] h-[64px] rounded-2xl border-white/10 bg-white/5 backdrop-blur-md hover:bg-black hover:border-black text-white transition-all hover:-translate-y-1 overflow-hidden group">
-              <a href={process.env.NEXT_PUBLIC_TIKTOK_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full p-4">
-                {/* Custom TikTok SVG for maximum accuracy */}
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full group-hover:scale-110 transition-transform">
-                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.27 1.76-.23.84-.04 1.77.47 2.45.47.66 1.25 1.05 2.04 1.13.73.07 1.48-.11 2.09-.52.66-.41 1.11-1.06 1.25-1.83.07-1.4.03-2.81.04-4.21V0l.02.02z" />
-                </svg>
-              </a>
-            </Button>
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mb-8 flex justify-center lg:mb-10 lg:justify-start">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-5 py-2 text-emerald-300 backdrop-blur-xl">
+            <Construction className="w-5 h-5" />
+            <span className="text-sm font-black tracking-[0.18em]">
+              الموقع تحت الإنشاء
+            </span>
           </div>
         </div>
 
-        {/* Decorative footer element */}
-        <div className="mt-20 flex items-center justify-center gap-3 text-zinc-500 text-sm font-bold uppercase tracking-widest">
-          <div className="w-12 h-px bg-zinc-800" />
-          <Sparkles className="w-4 h-4 text-emerald-500" />
-          <span>The Drive Center</span>
-          <div className="w-12 h-px bg-zinc-800" />
+        <div className="mx-auto max-w-5xl">
+          <div className="rounded-[2rem] border border-white/10 bg-black/25 p-6 backdrop-blur-xl shadow-[0_25px_80px_rgba(0,0,0,0.45)] sm:p-8 lg:p-10">
+            <div className="mx-auto max-w-3xl text-center">
+              <h1 className="mb-4 text-5xl font-black tracking-tight text-emerald-400 sm:text-6xl lg:text-7xl">
+                The Drive Center
+              </h1>
+              <p className="mb-4 text-base font-bold tracking-[0.18em] text-emerald-300 sm:text-lg">
+                قريباً
+              </p>
+              <p className="text-lg leading-8 text-zinc-200 sm:text-xl">
+                نحن نعمل الآن على إطلاق منصتنا الرقمية بشكل يليق بخدمتكم داخل
+                المركز. الهدف هو تجربة أوضح وأسرع للحجز ومتابعة حالة السيارة
+                والتواصل معنا بسهولة.
+              </p>
+              <p className="mt-4 text-base leading-7 text-zinc-400 sm:text-lg">
+                إلى أن يكتمل الإطلاق، يمكنكم التواصل معنا مباشرة عبر واتساب أو
+                متابعة صفحاتنا لمعرفة آخر التحديثات.
+              </p>
+            </div>
+
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="h-14 rounded-2xl bg-emerald-500 px-8 text-base font-black text-zinc-950 shadow-[0_10px_30px_rgba(16,185,129,0.18)] transition-all hover:bg-emerald-400 hover:shadow-[0_14px_34px_rgba(16,185,129,0.26)]"
+              >
+                <a
+                  href="https://wa.me/201017131414"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageSquare className="size-5" />
+                  تواصل معنا عبر واتساب
+                </a>
+              </Button>
+
+              <div className="flex items-center gap-3">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#1877F2] hover:bg-[#1877F2]/12 hover:text-[#1877F2] hover:shadow-[0_0_24px_rgba(24,119,242,0.28)]"
+                >
+                  <a
+                    href={process.env.NEXT_PUBLIC_FACEBOOK_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="group"
+                  >
+                    <Facebook
+                      className="size-5 transition-transform duration-200 group-hover:scale-110"
+                      strokeWidth={1.8}
+                    />
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#ee2a7b]/70 hover:bg-[linear-gradient(135deg,rgba(249,206,52,0.18),rgba(238,42,123,0.28),rgba(98,40,215,0.24))] hover:text-white hover:shadow-[0_0_24px_rgba(238,42,123,0.24)]"
+                >
+                  <a
+                    href={process.env.NEXT_PUBLIC_INSTAGRAM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="group"
+                  >
+                    <Instagram
+                      className="size-5 transition-transform duration-200 group-hover:scale-110"
+                      strokeWidth={1.8}
+                    />
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#25F4EE] hover:bg-[linear-gradient(135deg,rgba(37,244,238,0.14),rgba(254,44,85,0.14))] hover:text-[#25F4EE] hover:shadow-[0_0_24px_rgba(37,244,238,0.18)]"
+                >
+                  <a
+                    href={process.env.NEXT_PUBLIC_TIKTOK_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="TikTok"
+                    className="group"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="size-5 transition-transform duration-200 group-hover:scale-110 group-hover:drop-shadow-[1px_0_0_#fe2c55]"
+                    >
+                      <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.27 1.76-.23.84-.04 1.77.47 2.45.47.66 1.25 1.05 2.04 1.13.73.07 1.48-.11 2.09-.52.66-.41 1.11-1.06 1.25-1.83.07-1.4.03-2.81.04-4.21V0l.02.02z" />
+                    </svg>
+                  </a>
+                </Button>
+              </div>
+            </div>
+
+            <div
+              dir="ltr"
+              className="mt-12 rounded-[2rem] border border-emerald-500/25 bg-black/35 p-6 text-center backdrop-blur-2xl shadow-[0_25px_80px_rgba(6,78,59,0.28)] ring-1 ring-emerald-500/15 sm:mt-14 sm:p-7"
+            >
+              <p className="text-sm font-black tracking-[0.16em] text-emerald-300">
+                العد التنازلي للإطلاق
+              </p>
+              <p className="mt-2 text-sm text-zinc-400">وقت تقريبي</p>
+
+              <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/8 pt-6 sm:grid-cols-4 sm:gap-x-4">
+                <div className="px-1">
+                  <span className="block text-4xl font-black leading-none tracking-[-0.04em] text-white sm:text-5xl">
+                    {formatSegment(countdown.days)}
+                  </span>
+                  <span className="mt-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-500">
+                    Days
+                  </span>
+                </div>
+                <div className="px-1 sm:border-l sm:border-white/8">
+                  <span className="block text-4xl font-black leading-none tracking-[-0.04em] text-white sm:text-5xl">
+                    {formatSegment(countdown.hours)}
+                  </span>
+                  <span className="mt-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-500">
+                    Hours
+                  </span>
+                </div>
+                <div className="px-1 sm:border-l sm:border-white/8">
+                  <span className="block text-4xl font-black leading-none tracking-[-0.04em] text-white sm:text-5xl">
+                    {formatSegment(countdown.minutes)}
+                  </span>
+                  <span className="mt-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-500">
+                    Minutes
+                  </span>
+                </div>
+                <div className="px-1 sm:border-l sm:border-white/8">
+                  <span className="block text-4xl font-black leading-none tracking-[-0.04em] text-white sm:text-5xl">
+                    {formatSegment(countdown.seconds)}
+                  </span>
+                  <span className="mt-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-500">
+                    Seconds
+                  </span>
+                </div>
+              </div>
+
+              {countdown.expired && (
+                <p className="mt-5 text-sm font-semibold text-emerald-300">
+                  Countdown complete. Stand by for the next update.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
