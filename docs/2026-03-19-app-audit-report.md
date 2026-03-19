@@ -4,7 +4,7 @@ Date: 2026-03-19
 
 ## Executive Summary
 
-The application is a solid MVP for a service-center website with booking, portfolio, admin management, onboarding, and customer car tracking. The overall stack is coherent: Next.js App Router, Better Auth, Drizzle ORM, PostgreSQL, Cloudflare R2, and a feature-based folder structure. The UI work is strong, and the project already covers the main business flows needed for an early client launch.
+The application is a solid MVP for a service-center website with booking, showcase, admin management, onboarding, and customer car tracking. The overall stack is coherent: Next.js App Router, Better Auth, Drizzle ORM, PostgreSQL, Cloudflare R2, and a feature-based folder structure. The UI work is strong, and the project already covers the main business flows needed for an early client launch.
 
 The main release risk is not design. It is authorization and operational hardening. Several admin-facing server actions do not verify the current user at the action layer, even though the pages are protected in the UI. That is a real security issue because server actions should not rely on page visibility alone. There is also an unauthenticated cron endpoint, weak schema constraints for business-critical fields such as appointment status, and no transaction boundaries around multi-step writes.
 
@@ -28,7 +28,7 @@ This review covered:
 ### Public Site
 
 - Landing page with hero, services, process, FAQ, CTA, and location
-- Portfolio/gallery of completed work
+- Showcase/gallery of completed work
 - Dynamic “tip of the day” popup
 - Maintenance-mode landing page with countdown and social links
 - SEO metadata, robots, and sitemap generation
@@ -51,7 +51,7 @@ This review covered:
 ### Admin
 
 - Admin dashboard shell
-- Portfolio management
+- Showcase management
 - Hero image management
 - Advice/tip management
 - Appointment management
@@ -107,10 +107,9 @@ Affected files:
 - `src/app/admin/advices/actions.ts:18`
 - `src/app/admin/advices/actions.ts:30`
 - `src/app/admin/hero-image/actions.ts:6`
-- `src/app/admin/portfolio/actions.ts:21`
-- `src/app/admin/portfolio/actions.ts:79`
-- `src/app/admin/portfolio/actions.ts:91`
-- `src/app/admin/cars/actions.ts:9`
+- `src/app/admin/showcase/actions.ts:21`
+- `src/app/admin/showcase/actions.ts:79`
+- `src/app/admin/showcase/actions.ts:91`
 
 Details:
 
@@ -131,8 +130,7 @@ Resolution:
 - Wired the guard into:
   - `src/app/admin/advices/actions.ts`
   - `src/app/admin/hero-image/actions.ts`
-  - `src/app/admin/portfolio/actions.ts`
-  - `src/app/admin/cars/actions.ts`
+  - `src/app/admin/showcase/actions.ts`
 - The remaining follow-up is consistency work for admin pages and role checks, which is covered separately in `H-01`
 
 #### C-02: The cron sync endpoint is publicly callable
@@ -332,18 +330,18 @@ Status: **Fixed on 2026-03-19.**
 Affected files:
 
 - `src/server/actions/appointments.ts:57-87`
-- `src/app/admin/portfolio/actions.ts:47-69`
-- `src/app/admin/portfolio/actions.ts:107-133`
+- `src/app/admin/showcase/actions.ts:47-69`
+- `src/app/admin/showcase/actions.ts:107-133`
 
 Details:
 
 - Appointment creation may insert or update `customer_cars` and then create the appointment separately.
-- Portfolio update deletes existing media, then reinserts the new set.
+- Showcase update deletes existing media, then reinserts the new set.
 
 Impact:
 
 - Partial failures can leave the database in an inconsistent state.
-- A failed portfolio media insert can erase the gallery.
+- A failed showcase media insert can erase the gallery.
 
 Recommendation:
 
@@ -352,8 +350,8 @@ Recommendation:
 Resolution:
 
 - Appointment creation now wraps customer-car lookup/update/create and appointment insertion in a single database transaction
-- Portfolio creation now wraps the car insert and gallery-media inserts in a single database transaction
-- Portfolio update now wraps the car update, media deletion, and media reinsertion in a single database transaction
+- Showcase creation now wraps the car insert and gallery-media inserts in a single database transaction
+- Showcase update now wraps the car update, media deletion, and media reinsertion in a single database transaction
 - Partial failures in these flows now roll back together instead of leaving the database in a partially updated state
 
 #### M-05: Maintenance mode blocks admin access entirely
@@ -506,15 +504,16 @@ Recommendation:
 
 #### L-03: Duplicate admin content-management flows increase maintenance cost
 
+Status: **Fixed on 2026-03-19.**
+
 Affected areas:
 
-- `src/app/admin/cars/*`
-- `src/app/admin/portfolio/*`
+- `src/app/admin/showcase/*`
 
 Details:
 
-- There are overlapping concepts for vehicle/portfolio content management.
-- `src/app/admin/cars/actions.ts` and `src/app/admin/portfolio/actions.ts` both create car-like records in different ways.
+- The codebase previously had overlapping concepts for vehicle/showcase content management.
+- Admin and code naming mixed `cars`, `portfolio`, and `showcase` language for the same public work-gallery feature.
 
 Impact:
 
@@ -524,6 +523,14 @@ Impact:
 Recommendation:
 
 - Consolidate on one content-management flow unless both are intentionally distinct.
+
+Resolution:
+
+- `/admin/showcase` is now the single canonical admin flow for public work-gallery content
+- The duplicate `/admin/cars` admin flow was removed entirely
+- Runtime code and route naming were renamed from `portfolio` to `showcase`
+- Shared modules now use `showcase` naming as the single source of truth for this feature
+- Public visitor URLs remain under `/cars`, but the internal/admin naming now matches the business purpose instead of legacy portfolio terminology
 
 ## Schema and Data Model Assessment
 
@@ -610,7 +617,7 @@ The app is close in product shape, but release should wait until the following b
    - send status updates
 3. Audit logging
    - who changed appointment status
-   - who edited portfolio or customer-car records
+   - who edited showcase or customer-car records
 4. Admin security improvements
    - shared `requireAdmin()` helper
    - protected cron token
@@ -631,7 +638,7 @@ The app is close in product shape, but release should wait until the following b
 
 ### Merge or simplify
 
-1. Merge duplicate admin vehicle/portfolio content flows
+1. Merge duplicate admin vehicle/showcase content flows
 2. Decide whether “tip of the day” is a core product feature or a marketing detail
 3. Remove or hide unfinished notification functionality until it is wired end-to-end
 

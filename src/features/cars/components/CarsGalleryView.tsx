@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Camera, Sparkles } from "lucide-react";
-import { PortfolioCar } from "@/types/portfolio";
+import { ShowcaseCar } from "@/types/showcase";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { PaginationControls } from "@/components/shared/PaginationControls";
 import { CarCard } from "./CarCard";
@@ -11,7 +11,7 @@ import * as motion from "motion/react-client";
 import type { Variants } from "motion/react";
 
 interface CarsGalleryViewProps {
-  allCars: PortfolioCar[];
+  allCars: ShowcaseCar[];
   meta: {
     page: number;
     totalPages: number;

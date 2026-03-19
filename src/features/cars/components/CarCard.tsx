@@ -5,10 +5,10 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { PortfolioCar } from "@/types/portfolio";
+import { ShowcaseCar } from "@/types/showcase";
 
 interface CarCardProps {
-  car: PortfolioCar;
+  car: ShowcaseCar;
   index: number;
 }
 

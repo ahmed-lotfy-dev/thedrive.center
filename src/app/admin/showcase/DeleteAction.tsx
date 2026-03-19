@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { deletePortfolioEntry } from "./actions";
+import { deleteShowcaseEntry } from "./actions";
 import { toast } from "sonner";
 import { useTransition } from "react";
 
@@ -27,7 +27,7 @@ export function DeleteAction({ id, title }: DeleteActionProps) {
 
   function handleDelete() {
     startTransition(async () => {
-      const result = await deletePortfolioEntry(id);
+      const result = await deleteShowcaseEntry(id);
       if (result.success) {
         toast.success("تم حذف العمل بنجاح");
       } else {

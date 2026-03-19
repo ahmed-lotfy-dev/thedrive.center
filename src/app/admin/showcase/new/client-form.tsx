@@ -3,18 +3,18 @@
 import { useTransition, useState } from "react";
 import { toast } from "sonner";
 import { resizeImage, uploadToR2, deleteFromR2 } from "@/lib/upload-utils";
-import { createPortfolioEntry, updatePortfolioEntry } from "../actions";
-import { PortfolioCarWithMedia } from "@/types/portfolio";
+import { createShowcaseEntry, updateShowcaseEntry } from "../actions";
+import { ShowcaseCarWithMedia } from "@/types/showcase";
 import { FormHeader } from "./_components/FormHeader";
 import { BasicInfoCard } from "./_components/BasicInfoCard";
 import { MediaCard } from "./_components/MediaCard";
 import { PublishCard } from "./_components/PublishCard";
 
-interface PortfolioFormProps {
-  initialData?: PortfolioCarWithMedia;
+interface ShowcaseFormProps {
+  initialData?: ShowcaseCarWithMedia;
 }
 
-export function PortfolioForm({ initialData }: PortfolioFormProps) {
+export function ShowcaseForm({ initialData }: ShowcaseFormProps) {
   const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
   const [coverImageUrl, setCoverImageUrl] = useState(initialData?.coverImageUrl || "");
@@ -74,8 +74,8 @@ export function PortfolioForm({ initialData }: PortfolioFormProps) {
 
     startTransition(async () => {
       const result = isEdit
-        ? await updatePortfolioEntry(initialData!.id, formData)
-        : await createPortfolioEntry(formData);
+        ? await updateShowcaseEntry(initialData!.id, formData)
+        : await createShowcaseEntry(formData);
 
       if (result?.error) {
         toast.error(typeof result.error === "string" ? result.error : "حدث خطأ أثناء حفظ البيانات");

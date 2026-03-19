@@ -28,7 +28,7 @@ Last Updated: **2026-03-15**
 
 ---
 
-### 1.3 Portfolio Page
+### 1.3 Showcase Page
 **Status**: ✅ FIXED
 
 | Issue | Fix |

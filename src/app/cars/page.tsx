@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getPortfolio } from "@/lib/api/portfolio";
+import { getShowcaseCars } from "@/lib/api/showcase";
 import { CarsGalleryView } from "@/features/cars/components/CarsGalleryView";
 
 export const metadata = {
@@ -24,7 +24,7 @@ export default async function CarsGalleryPage({ searchParams }: CarsGalleryProps
   const search = params.search || "";
   const serviceType = params.serviceType || "";
 
-  const { data: allCars, meta } = await getPortfolio({
+  const { data: allCars, meta } = await getShowcaseCars({
     page,
     limit: 9,
     search,

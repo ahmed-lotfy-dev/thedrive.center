@@ -2,9 +2,9 @@ import { db } from "@/db";
 import { cars } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { PortfolioForm } from "../../new/client-form";
+import { ShowcaseForm } from "../../new/client-form";
 
-export default async function EditPortfolioPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function EditShowcasePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   const car = await db.query.cars.findFirst({
@@ -18,7 +18,7 @@ export default async function EditPortfolioPage({ params }: { params: Promise<{ 
 
   return (
     <div className="container mx-auto py-10 px-4">
-      <PortfolioForm initialData={car} />
+      <ShowcaseForm initialData={car} />
     </div>
   );
 }

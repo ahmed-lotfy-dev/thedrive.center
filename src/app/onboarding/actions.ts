@@ -23,7 +23,10 @@ type OnboardingState = {
   error?: string;
 };
 
-export async function submitOnboarding(_prevState: OnboardingState, formData: FormData) {
+export async function submitOnboarding(
+  _prevState: OnboardingState | null,
+  formData: FormData,
+): Promise<OnboardingState | null> {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

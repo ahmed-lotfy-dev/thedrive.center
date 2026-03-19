@@ -5,14 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Image as ImageIcon, Video, LayoutGrid, X } from "lucide-react";
-import { PortfolioCarWithMedia } from "@/types/portfolio";
+import { ShowcaseCarWithMedia } from "@/types/showcase";
 import Image from "next/image";
 
 interface MediaCardProps {
   coverImageUrl: string;
   galleryUrls: string[];
   isUploading: boolean;
-  initialData?: PortfolioCarWithMedia;
+  initialData?: ShowcaseCarWithMedia;
   onCoverUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onGalleryUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveCover: () => void;

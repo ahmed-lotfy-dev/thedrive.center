@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Info } from "lucide-react";
 import { SERVICE_TYPES } from "@/lib/constants";
-import { PortfolioCarWithMedia } from "@/types/portfolio";
+import { ShowcaseCarWithMedia } from "@/types/showcase";
 
 interface BasicInfoCardProps {
-  initialData?: PortfolioCarWithMedia;
+  initialData?: ShowcaseCarWithMedia;
 }
 
 export function BasicInfoCard({ initialData }: BasicInfoCardProps) {

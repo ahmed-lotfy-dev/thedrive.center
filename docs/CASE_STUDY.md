@@ -20,13 +20,13 @@ A complete operational web platform replacing all manual processes with a premiu
 
 **For clients:**
 - Online appointment booking with Arabic license plate recognition, service type selection, and date scheduling — no account required
-- A cinematic portfolio gallery ("سجل التميز") showcasing finished work with hi-res images and video per car
+- A cinematic showcase gallery ("سجل التميز") showcasing finished work with hi-res images and video per car
 - A personal garage dashboard to track their vehicle's service history (in development)
 
 **For the admin team:**
 - A full appointments control panel — view, confirm, update status, and delete bookings
 - A vehicle CRM tracking every car by plate number, linked to its complete service history (dates, costs, odometer)
-- Content management for the portfolio and client advice tips
+- Content management for the showcase and client advice tips
 
 ---
 
@@ -59,5 +59,5 @@ Car photos and videos are stored on **Cloudflare R2** (S3-compatible) and delive
 
 - Appointments are now captured digitally, with real-time status updates for the admin
 - Every vehicle entering the center gets a permanent, searchable record
-- A professional portfolio increases trust and showcases craftsmanship to potential new clients
+- A professional showcase increases trust and showcases craftsmanship to potential new clients
 - 4.6/5 on Google with 34+ verified reviews — the platform now reinforces this reputation digitally

@@ -14,12 +14,12 @@ import {
   ChevronRight,
   CheckCircle2,
 } from "lucide-react";
-import { PortfolioCarWithMedia } from "@/types/portfolio";
+import { ShowcaseCarWithMedia } from "@/types/showcase";
 import { SERVICE_TYPES } from "@/lib/constants";
 import { authClient } from "@/lib/auth-client";
 
 interface CarDetailsViewProps {
-  car: PortfolioCarWithMedia;
+  car: ShowcaseCarWithMedia;
 }
 
 export function CarDetailsView({ car }: CarDetailsViewProps) {

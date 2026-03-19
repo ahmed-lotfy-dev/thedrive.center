@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getPortfolio } from "@/lib/api/portfolio";
+import { getShowcaseCars } from "@/lib/api/showcase";
 import { Button } from "@/components/ui/button";
 import { Plus, LayoutGrid, Edit3, ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import { DeleteAction } from "./DeleteAction";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { PaginationControls } from "@/components/shared/PaginationControls";
 
-interface PortfolioDashboardProps {
+interface ShowcaseDashboardProps {
   searchParams: Promise<{
     page?: string;
     search?: string;
@@ -18,13 +18,13 @@ interface PortfolioDashboardProps {
   }>;
 }
 
-export default async function PortfolioDashboardPage({ searchParams }: PortfolioDashboardProps) {
+export default async function ShowcaseDashboardPage({ searchParams }: ShowcaseDashboardProps) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
   const search = params.search || "";
   const serviceType = params.serviceType || "";
 
-  const { data: allCars, meta } = await getPortfolio({
+  const { data: allCars, meta } = await getShowcaseCars({
     page,
     limit: 12,
     search,
@@ -39,10 +39,10 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
             <LayoutGrid className="w-8 h-8 text-emerald-500" />
             إدارة سجل التميز
           </h1>
-          <p className="text-muted-foreground/60 font-bold mt-1 text-sm tracking-wide">إضافة وتعديل السيارات التي تظهر في معرض أعمال المركز (Portfolio)</p>
+          <p className="text-muted-foreground/60 font-bold mt-1 text-sm tracking-wide">إضافة وتعديل السيارات التي تظهر في معرض أعمال المركز (Showcase)</p>
         </div>
         <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl h-12 px-8 gap-3 font-black shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
-          <Link href="/admin/portfolio/new">
+          <Link href="/admin/showcase/new">
             <Plus className="w-6 h-6" />
             إضافة عمل جديد
           </Link>
@@ -84,7 +84,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
             <CardFooter className="p-6 pt-0 border-t border-border/50 mt-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button asChild variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50 rounded-xl transition-all">
-                  <Link href={`/admin/portfolio/${car.slug}/edit`}>
+                  <Link href={`/admin/showcase/${car.slug}/edit`}>
                     <Edit3 className="w-5 h-5" />
                   </Link>
                 </Button>
@@ -107,7 +107,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
             <h3 className="text-xl font-black text-muted-foreground/60 tracking-tight">لا توجد أعمال تطابق بحثك</h3>
             <p className="text-muted-foreground/40 font-bold mt-2 mb-8">جرب كلمات بحث مختلفة أو قم بإضافة عمل جديد.</p>
             <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl h-12 px-8 font-black shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
-              <Link href="/admin/portfolio/new">إضافة عمل جديد</Link>
+              <Link href="/admin/showcase/new">إضافة عمل جديد</Link>
             </Button>
           </div>
         )}
@@ -116,7 +116,7 @@ export default async function PortfolioDashboardPage({ searchParams }: Portfolio
       <PaginationControls
         currentPage={meta.page}
         totalPages={meta.totalPages}
-        baseUrl="/admin/portfolio"
+        baseUrl="/admin/showcase"
         queryParams={{ search, serviceType }}
       />
     </div >

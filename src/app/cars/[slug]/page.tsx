@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { cars } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { PortfolioCar, PortfolioCarWithMedia } from "@/types/portfolio";
+import { ShowcaseCar, ShowcaseCarWithMedia } from "@/types/showcase";
 import { CarDetailsView } from "@/features/cars/components/CarDetailsView";
 
 export async function generateMetadata({
@@ -13,7 +13,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const car = (await db.query.cars.findFirst({
     where: eq(cars.slug, slug),
-  })) as PortfolioCar | undefined;
+  })) as ShowcaseCar | undefined;
 
   if (!car) return { title: "غير موجود" };
 
@@ -42,7 +42,7 @@ export default async function CarDetailPage({
     with: {
       media: true,
     },
-  })) as PortfolioCarWithMedia | undefined;
+  })) as ShowcaseCarWithMedia | undefined;
 
   if (!car) notFound();
 

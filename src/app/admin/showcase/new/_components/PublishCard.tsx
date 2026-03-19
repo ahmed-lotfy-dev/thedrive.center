@@ -49,7 +49,7 @@ export function PublishCard({ isEdit, isPending, isUploading }: PublishCardProps
           variant="outline"
           className="w-full h-12 rounded-2xl border-white/10 hover:bg-white/10 text-white"
         >
-          <Link href="/admin/portfolio">إلغاء</Link>
+          <Link href="/admin/showcase">إلغاء</Link>
         </Button>
       </CardContent>
     </Card>

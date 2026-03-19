@@ -3,14 +3,14 @@ import { cars } from "@/db/schema";
 import { desc, eq, ilike, or, and, count } from "drizzle-orm";
 import { isKnownServiceType, type ServiceTypeValue } from "@/lib/constants";
 
-export interface PortfolioFilters {
+export interface ShowcaseFilters {
   page?: number;
   limit?: number;
   search?: string;
   serviceType?: string;
 }
 
-export async function getPortfolio(filters: PortfolioFilters = {}) {
+export async function getShowcaseCars(filters: ShowcaseFilters = {}) {
   const { page = 1, limit = 9, search, serviceType } = filters;
   const offset = (page - 1) * limit;
 

@@ -12,7 +12,7 @@ export function FormHeader({ isEdit }: FormHeaderProps) {
   return (
     <div className="flex items-center gap-4">
       <Button asChild variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-full">
-        <Link href="/admin/portfolio">
+        <Link href="/admin/showcase">
           <ArrowRight className="w-5 h-5" />
         </Link>
       </Button>

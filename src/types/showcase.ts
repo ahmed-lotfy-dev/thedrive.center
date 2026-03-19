@@ -1,4 +1,4 @@
-export interface PortfolioCar {
+export interface ShowcaseCar {
   id: string;
   title: string;
   slug: string;
@@ -11,7 +11,7 @@ export interface PortfolioCar {
   updatedAt: Date | null;
 }
 
-export interface PortfolioCarWithMedia extends PortfolioCar {
+export interface ShowcaseCarWithMedia extends ShowcaseCar {
   media: {
     id: string;
     url: string;
@@ -20,7 +20,7 @@ export interface PortfolioCarWithMedia extends PortfolioCar {
   }[];
 }
 
-export interface PortfolioFormValues {
+export interface ShowcaseFormValues {
   id?: string;
   title: string;
   description: string;

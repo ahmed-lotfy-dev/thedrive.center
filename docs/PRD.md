@@ -44,7 +44,7 @@ A full-stack web platform that digitizes the center's operations:
 ### Client-Facing
 
 - **Appointment Booking** (`/book`): Online booking form with license plate recognition, service and vehicle type selection, and date picker.
-- **Portfolio Gallery** (`/cars`, `/cars/[slug]`): Visual showcase of completed work with images and video per car.
+- **Showcase Gallery** (`/cars`, `/cars/[slug]`): Visual showcase of completed work with images and video per car.
 - **Sign In / Onboarding** (`/sign-in`, `/onboarding`): Account registration linking a user to their cars.
 - **Garage Dashboard** (`/dashboard/garage`): Personal space for registered users to see their car's service history.
 
@@ -52,7 +52,7 @@ A full-stack web platform that digitizes the center's operations:
 
 - **Appointments**: View, update status, and delete appointment requests.
 - **Customer Cars**: Full CRM for all vehicles registered in the system, with service history per car.
-- **Portfolio Management**: Add, edit, and manage portfolio entries (the "سجل التميز").
+- **Showcase Management**: Add, edit, and manage showcase entries (the "سجل التميز").
 - **Advices**: Manage dynamic tips shown to users.
 - **Hero Image**: Update the landing page hero image.
 - **Admin Dashboard**: Overview with booking charts and recent activity.

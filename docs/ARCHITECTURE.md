@@ -35,8 +35,8 @@ All tables are in a PostgreSQL database managed via Drizzle ORM (`src/db/schema.
 | `appointments` | Booking requests. Links to `user` (nullable for guests) and `customer_cars`. Tracks `serviceType`, `vehicleType`, `date`, `status`, estimated/actual price. |
 | `customer_cars` | Every car tracked by the center. Has `plateNumber` (unique), `make`, `model`, `year`, `color`, `status` (active/archived). Links to `user`. |
 | `service_records` | Immutable log of completed services per car. Tracks `serviceType`, `cost`, `odometer`, `description`. |
-| `cars` | Portfolio items ("سجل التميز"). Not customer cars — these are showcase work entries with `title`, `slug`, `coverImageUrl`, `videoUrl`, `serviceType`, `featured`. |
-| `car_media` | Gallery images/videos linked to a portfolio `car` entry (cascade delete). |
+| `cars` | Showcase items ("سجل التميز"). Not customer cars — these are showcase work entries with `title`, `slug`, `coverImageUrl`, `videoUrl`, `serviceType`, `featured`. |
+| `car_media` | Gallery images/videos linked to a showcase `car` entry (cascade delete). |
 | `advices` | Dynamic text tips shown in the UI, toggled via `isActive`. |
 | `site_settings` | Key-value store for dynamic site configuration. |
 
@@ -50,7 +50,7 @@ All tables are in a PostgreSQL database managed via Drizzle ORM (`src/db/schema.
 - `src/features/maintenance/` — Admin car management, service records, garage dashboard
 - `src/features/landing/` — All public-facing landing page sections (Hero, Services, CTA, etc.)
 - `src/features/admin/` — Admin-specific charts and recent activity
-- `src/features/cars/` — Public portfolio views
+- `src/features/cars/` — Public showcase views
 - `src/components/shared/` — Reusable components: `FilterBar`, `ServiceSelect`, `LicensePlateInput`, `UserMenu`, etc.
 - `src/components/ui/` — Shadcn-based (Radix UI) base component library
 

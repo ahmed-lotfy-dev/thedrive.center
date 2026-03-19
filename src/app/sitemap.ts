@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === "" ? 1 : 0.8,
   }));
 
-  // Dynamic routes from portfolio
+  // Dynamic routes from showcase
   try {
     const allCars = await db.query.cars.findMany({
       columns: {

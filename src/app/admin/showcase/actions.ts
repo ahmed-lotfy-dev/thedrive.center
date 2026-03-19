@@ -24,7 +24,7 @@ const carSchema = z.object({
   galleryUrls: z.string().optional(), // Comma separated URLs
 });
 
-export async function createPortfolioEntry(formData: FormData) {
+export async function createShowcaseEntry(formData: FormData) {
   try {
     await requireAdmin();
   } catch (error) {
@@ -87,29 +87,29 @@ export async function createPortfolioEntry(formData: FormData) {
   });
 
   revalidatePath("/cars");
-  revalidatePath("/admin/portfolio");
+  revalidatePath("/admin/showcase");
   revalidatePath("/sitemap.xml");
   
-  redirect("/admin/portfolio");
+  redirect("/admin/showcase");
 }
 
-export async function deletePortfolioEntry(id: string) {
+export async function deleteShowcaseEntry(id: string) {
   try {
     await requireAdmin();
     await db.delete(cars).where(eq(cars.id, id));
     revalidatePath("/cars");
-    revalidatePath("/admin/portfolio");
+    revalidatePath("/admin/showcase");
     return { success: true };
   } catch (error) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
     }
-    console.error("Failed to delete portfolio entry:", error);
+    console.error("Failed to delete showcase entry:", error);
     return { error: "فشل في حذف العمل" };
   }
 }
 
-export async function updatePortfolioEntry(id: string, formData: FormData) {
+export async function updateShowcaseEntry(id: string, formData: FormData) {
   try {
     await requireAdmin();
   } catch (error) {
@@ -166,7 +166,7 @@ export async function updatePortfolioEntry(id: string, formData: FormData) {
 
   revalidatePath("/cars");
   revalidatePath(`/cars/${id}`); // Potentially need to find the slug, but revalidatePath is fine with IDs or we can just revalidate all
-  revalidatePath("/admin/portfolio");
+  revalidatePath("/admin/showcase");
   
-  redirect("/admin/portfolio");
+  redirect("/admin/showcase");
 }
