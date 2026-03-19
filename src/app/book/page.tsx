@@ -8,6 +8,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/book",
   },
+  openGraph: {
+    title: "احجز موعدك | The Drive Center",
+    description: "احجز كشف أو خدمة ضبط زوايا وترصيص في مركز The Drive بالمحلة الكبرى.",
+    url: "/book",
+  },
+  twitter: {
+    title: "احجز موعدك | The Drive Center",
+    description: "احجز كشف أو خدمة ضبط زوايا وترصيص في مركز The Drive بالمحلة الكبرى.",
+  },
 };
 
 export default function BookPage() {

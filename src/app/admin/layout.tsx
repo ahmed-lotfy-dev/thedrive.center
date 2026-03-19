@@ -1,6 +1,23 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+      "max-snippet": 0,
+      "max-image-preview": "none",
+      "max-video-preview": -1,
+    },
+  },
+};
 
 export default async function AdminLayout({
   children,

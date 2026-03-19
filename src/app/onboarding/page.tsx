@@ -3,6 +3,17 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Car } from "lucide-react";
 import { OnboardingForm } from "./client-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "إكمال البيانات",
+  description: "أكمل بيانات سيارتك لتفعيل تجربتك داخل The Drive Center.",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
 
 export default async function OnboardingPage() {
   const session = await auth.api.getSession({

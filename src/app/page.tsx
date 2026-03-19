@@ -11,6 +11,27 @@ import { siteSettingQueries } from "@/db/queries/site-settings";
 import { getRandomAdvice } from "@/app/admin/advices/actions";
 import { AdvicePopup } from "@/components/shared/AdvicePopup";
 import { isComingSoonModeEnabled, isMaintenanceModeEnabled } from "@/lib/site-state";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "The Drive Center | مركز متخصص في ضبط الزوايا والترصيص بالمحلة الكبرى",
+  description:
+    "The Drive Center في المحلة الكبرى لخدمات ضبط الزوايا والترصيص والفحص الشامل قبل شراء أو بيع السيارات، مع حجز سريع ومتابعة دقيقة.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "The Drive Center | مركز متخصص في ضبط الزوايا والترصيص بالمحلة الكبرى",
+    description:
+      "احجز خدمتك الآن في The Drive Center بالمحلة الكبرى لخدمات ضبط الزوايا والترصيص والفحص الشامل.",
+    url: "/",
+  },
+  twitter: {
+    title: "The Drive Center | مركز متخصص في ضبط الزوايا والترصيص بالمحلة الكبرى",
+    description:
+      "احجز خدمتك الآن في The Drive Center بالمحلة الكبرى لخدمات ضبط الزوايا والترصيص والفحص الشامل.",
+  },
+};
 
 export default async function Home() {
   const isMaintenanceMode = isMaintenanceModeEnabled();

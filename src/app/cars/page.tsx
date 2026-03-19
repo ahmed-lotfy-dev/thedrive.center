@@ -2,11 +2,22 @@ import { Suspense } from "react";
 import { getShowcaseCars } from "@/lib/api/showcase";
 import { CarsGalleryView } from "@/features/cars/components/CarsGalleryView";
 
-export const metadata = {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
   title: "سجل التميز | The Drive Center",
   description: "استعرض سجل السيارات التي تم خدمتها في مركز ذا درايف، واطلع على تفاصيل ضبط الزوايا والترصيص والفحص الشامل.",
   alternates: {
     canonical: "/cars",
+  },
+  openGraph: {
+    title: "سجل التميز | The Drive Center",
+    description: "استعرض سجل السيارات التي تم خدمتها في مركز ذا درايف، واطلع على تفاصيل الأعمال المنفذة.",
+    url: "/cars",
+  },
+  twitter: {
+    title: "سجل التميز | The Drive Center",
+    description: "استعرض سجل السيارات التي تم خدمتها في مركز ذا درايف، واطلع على تفاصيل الأعمال المنفذة.",
   },
 };
 

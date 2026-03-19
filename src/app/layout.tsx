@@ -77,11 +77,20 @@ export const metadata: Metadata = {
     siteName: GOOGLE_BUSINESS_NAME,
     title: `${GOOGLE_BUSINESS_NAME} | مركز متخصص في ضبط الزوايا والترصيص`,
     description: "خدمة احترافية لضبط الزوايا والترصيص وفحص السيارات قبل الشراء أو البيع داخل المحلة الكبرى.",
+    images: [
+      {
+        url: "/active-hero-image.webp",
+        width: 1200,
+        height: 630,
+        alt: GOOGLE_BUSINESS_NAME,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${GOOGLE_BUSINESS_NAME} | مركز متخصص في ضبط الزوايا والترصيص`,
     description: "مركز The Drive في المحلة الكبرى - تشخيص دقيق وخدمة سريعة.",
+    images: ["/active-hero-image.webp"],
   },
   robots: {
     index: true,
@@ -93,6 +102,11 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-video-preview": -1,
     },
+  },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
   },
 };
 

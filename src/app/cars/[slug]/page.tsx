@@ -4,12 +4,13 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { ShowcaseCar, ShowcaseCarWithMedia } from "@/types/showcase";
 import { CarDetailsView } from "@/features/cars/components/CarDetailsView";
+import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   const car = (await db.query.cars.findFirst({
     where: eq(cars.slug, slug),
@@ -26,6 +27,18 @@ export async function generateMetadata({
       canonical: `/cars/${slug}`,
     },
     openGraph: {
+      title: `${car.title} | The Drive Center`,
+      description:
+        car.description?.substring(0, 160) ||
+        `تم ضبط زوايا وترصيص ${car.title} بأعلى جودة.`,
+      url: `/cars/${slug}`,
+      images: [car.coverImageUrl],
+    },
+    twitter: {
+      title: `${car.title} | The Drive Center`,
+      description:
+        car.description?.substring(0, 160) ||
+        `تم ضبط زوايا وترصيص ${car.title} بأعلى جودة.`,
       images: [car.coverImageUrl],
     },
   };
