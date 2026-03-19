@@ -12,24 +12,40 @@ import { getRandomAdvice } from "@/app/admin/advices/actions";
 import { AdvicePopup } from "@/components/shared/AdvicePopup";
 import { isComingSoonModeEnabled, isMaintenanceModeEnabled } from "@/lib/site-state";
 import type { Metadata } from "next";
+import {
+  BUSINESS_ADDRESS,
+  BUSINESS_CITY,
+  BUSINESS_PHONE,
+  GOOGLE_BUSINESS_NAME,
+} from "@/lib/google-business";
 
 export const metadata: Metadata = {
-  title: "The Drive Center | مركز متخصص في ضبط الزوايا والترصيص بالمحلة الكبرى",
+  title: "مركز ترصيص وضبط زوايا في المحلة الكبرى | The Drive Center",
   description:
-    "The Drive Center في المحلة الكبرى لخدمات ضبط الزوايا والترصيص والفحص الشامل قبل شراء أو بيع السيارات، مع حجز سريع ومتابعة دقيقة.",
+    "The Drive Center مركز ترصيص وضبط زوايا في المحلة الكبرى يقدم ضبط زوايا كمبيوتر، ترصيص، فحص شامل قبل الشراء والبيع، وحجز سريع أونلاين.",
+  keywords: [
+    "مركز ترصيص المحلة الكبرى",
+    "مركز ضبط زوايا المحلة الكبرى",
+    "ترصيص في المحلة الكبرى",
+    "ضبط زوايا في المحلة الكبرى",
+    "فحص شامل سيارات المحلة الكبرى",
+    "كشف سيارة قبل الشراء المحلة الكبرى",
+    "ضبط زوايا كمبيوتر المحلة",
+    "The Drive Center",
+  ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "The Drive Center | مركز متخصص في ضبط الزوايا والترصيص بالمحلة الكبرى",
+    title: "مركز ترصيص وضبط زوايا في المحلة الكبرى | The Drive Center",
     description:
-      "احجز خدمتك الآن في The Drive Center بالمحلة الكبرى لخدمات ضبط الزوايا والترصيص والفحص الشامل.",
+      "مركز متخصص في ضبط الزوايا والترصيص والفحص الشامل قبل الشراء والبيع داخل المحلة الكبرى مع حجز سريع أونلاين.",
     url: "/",
   },
   twitter: {
-    title: "The Drive Center | مركز متخصص في ضبط الزوايا والترصيص بالمحلة الكبرى",
+    title: "مركز ترصيص وضبط زوايا في المحلة الكبرى | The Drive Center",
     description:
-      "احجز خدمتك الآن في The Drive Center بالمحلة الكبرى لخدمات ضبط الزوايا والترصيص والفحص الشامل.",
+      "مركز متخصص في ضبط الزوايا والترصيص والفحص الشامل قبل الشراء والبيع داخل المحلة الكبرى.",
   },
 };
 
@@ -50,8 +66,63 @@ export default async function Home() {
     getRandomAdvice()
   ]);
 
+  const homeFaqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "إيه الفرق بين فحص القلم والجهاز الرقمي والـ UV؟",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "القلم يكشف المعجون السميك فقط، والجهاز الرقمي يقيس سمك البوية بدقة، أما الـ UV فيكشف الترميمات والرش التجميلي المخفي بدقة أعلى.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "هل بتحتاج أحجز موعد مسبق؟",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "يفضل الحجز المسبق لضمان عدم الانتظار وتوافر الفنيين المتخصصين في الوقت المناسب.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "الفحص بياخد وقت قد إيه؟",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "الفحص الشامل الدقيق يستغرق غالبًا من 45 إلى 60 دقيقة حسب حالة السيارة ونطاق الفحص المطلوب.",
+        },
+      },
+    ],
+  };
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Wheel alignment, tire balancing, and pre-purchase inspection",
+    name: `${GOOGLE_BUSINESS_NAME} - ضبط زوايا وترصيص وفحص شامل`,
+    areaServed: BUSINESS_CITY,
+    provider: {
+      "@type": "AutoRepair",
+      name: GOOGLE_BUSINESS_NAME,
+      address: BUSINESS_ADDRESS,
+      telephone: `+2${BUSINESS_PHONE}`,
+    },
+  };
+
   return (
     <main dir="rtl" className="overflow-x-hidden pb-10">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
       <Hero imageUrl={heroImageUrl} />
       <Services />
       <Process />
