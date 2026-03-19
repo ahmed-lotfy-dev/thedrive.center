@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import {
   BUSINESS_ADDRESS,
@@ -11,10 +11,30 @@ import {
   GOOGLE_PLACE_URL,
 } from "@/lib/google-business";
 
-const cairo = Cairo({
-  subsets: ["arabic"],
+const cairo = localFont({
+  src: [
+    {
+      path: "./fonts/Cairo-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Cairo-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Cairo-SemiBold.ttf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Cairo-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   variable: "--font-cairo",
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -80,6 +100,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { isSiteStateScreenEnabled } from "@/lib/site-state";
 
 export default function RootLayout({
   children,
@@ -109,20 +130,20 @@ export default function RootLayout({
     telephone: `+2${BUSINESS_PHONE}`,
   };
 
-  const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
+  const isSiteStateScreenMode = isSiteStateScreenEnabled();
 
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" disableTransitionOnChange>
-          {!isMaintenanceMode && <Navbar />}
+          {!isSiteStateScreenMode && <Navbar />}
           <script
             type="application/ld+json"
             suppressHydrationWarning
             dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
           />
           {children}
-          {!isMaintenanceMode && <Footer />}
+          {!isSiteStateScreenMode && <Footer />}
           <Toaster dir="rtl" position="top-center" />
         </ThemeProvider>
       </body>

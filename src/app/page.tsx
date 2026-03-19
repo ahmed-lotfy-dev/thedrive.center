@@ -5,15 +5,22 @@ import { FAQ } from "@/features/landing/components/FAQ";
 import { CTA } from "@/features/landing/components/CTA";
 import { LocationSection } from "@/features/landing/components/LocationSection";
 import { ComingSoon } from "@/features/maintenance/components/ComingSoon";
+import { MaintenanceMode } from "@/features/maintenance/components/MaintenanceMode";
 
 import { siteSettingQueries } from "@/db/queries/site-settings";
 import { getRandomAdvice } from "@/app/admin/advices/actions";
 import { AdvicePopup } from "@/components/shared/AdvicePopup";
+import { isComingSoonModeEnabled, isMaintenanceModeEnabled } from "@/lib/site-state";
 
 export default async function Home() {
-  const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
+  const isMaintenanceMode = isMaintenanceModeEnabled();
+  const isComingSoonMode = isComingSoonModeEnabled();
 
   if (isMaintenanceMode) {
+    return <MaintenanceMode />;
+  }
+
+  if (isComingSoonMode) {
     return <ComingSoon />;
   }
 

@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { isMaintenanceModeEnabled } from "@/lib/site-state";
 
 function isAdminRole(role?: string | null) {
   return role === "admin" || role === "owner";
@@ -13,12 +14,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(newPathname, request.url));
   }
 
-  const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true";
+  const isMaintenanceMode = isMaintenanceModeEnabled();
   const isPublicAsset =
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.includes(".");
   const isExcludedPath =
+    pathname.startsWith("/admin") ||
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/onboarding") ||
     pathname.startsWith("/sign-in");
