@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { 
-  searchCustomerCars, 
   deleteCustomerCarAction, 
   archiveCustomerCarAction, 
   unlinkCustomerCarAction 
@@ -25,6 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formatLicensePlate } from "@/lib/utils";
 import { getCarMakerLabel, getVehicleTypeLabel } from "@/lib/constants";
 import {
@@ -53,18 +53,24 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AddCarForm } from "./AddCarForm";
 
+import type { searchCustomerCars } from "@/features/maintenance/actions";
+
 type SearchCustomerCarsResult = Awaited<ReturnType<typeof searchCustomerCars>>;
 type SearchableCustomerCar = SearchCustomerCarsResult["data"][number];
 
 interface AdminCarManagerProps {
   initialCars: SearchableCustomerCar[];
+  initialSearch: string;
 }
 
-export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
+export function AdminCarManager({ initialCars, initialSearch }: AdminCarManagerProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [cars, setCars] = useState(initialCars);
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState(initialSearch);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   
   const getCarDisplayName = (car: SearchableCustomerCar) => {
     const make = car.make === "Unknown" ? "سيارة" : getCarMakerLabel(car.make);
@@ -73,41 +79,36 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
     return `${make} ${model}`;
   };
   
-  const debouncedSearch = useDebounce(search, 150);
-  const lastSearchedRef = useRef("");
-
-  const handleSearch = useCallback(async (query: string) => {
-    if (query === lastSearchedRef.current && query !== "") return;
-    
-    setLoading(true);
-    lastSearchedRef.current = query;
-    const result = await searchCustomerCars(query);
-    setLoading(false);
-    
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      setCars(result.data);
-    }
-  }, []);
+  const debouncedSearch = useDebounce(search, 250);
 
   useEffect(() => {
-    if (debouncedSearch !== lastSearchedRef.current) {
-      const timeoutId = window.setTimeout(() => {
-        void handleSearch(debouncedSearch);
-      }, 0);
+    setCars(initialCars);
+  }, [initialCars]);
 
-      return () => window.clearTimeout(timeoutId);
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
+
+  useEffect(() => {
+    if (debouncedSearch === initialSearch) {
+      return;
     }
-  }, [debouncedSearch, handleSearch]);
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    if (debouncedSearch.trim()) {
+      nextParams.set("search", debouncedSearch.trim());
+    } else {
+      nextParams.delete("search");
+    }
+    nextParams.set("page", "1");
+
+    startTransition(() => {
+      router.replace(`${pathname}?${nextParams.toString()}`, { scroll: false });
+    });
+  }, [debouncedSearch, initialSearch, pathname, router, searchParams]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearch(value);
-
-    if (value.length === 1 || value === "") {
-      handleSearch(value);
-    }
+    setSearch(e.target.value);
   };
 
   const [confirmDialog, setConfirmDialog] = useState<{
@@ -127,7 +128,7 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
 
     if (result?.success) {
       toast.success("تم تنفيذ العملية بنجاح");
-      handleSearch(search); // Refresh list
+      router.refresh();
     } else {
       toast.error(result?.error || "حدث خطأ ما");
     }
@@ -145,7 +146,7 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
             className="rounded-2xl h-12 bg-muted/50 border-border/50 pr-10 focus:border-emerald-500/50 transition-all font-bold placeholder:text-muted-foreground/50"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            {loading ? (
+            {isPending ? (
               <Loader2 className="size-5 text-emerald-500 animate-spin" />
             ) : (
               <Search className="size-5 text-zinc-500" />
@@ -169,6 +170,7 @@ export function AdminCarManager({ initialCars }: AdminCarManagerProps) {
             <AddCarForm onSuccess={(newCar) => {
               setCars(prev => [{ ...newCar, user: null }, ...prev]);
               setIsDialogOpen(false);
+              router.refresh();
             }} />
           </DialogContent>
         </Dialog>

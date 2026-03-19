@@ -55,7 +55,7 @@ export default async function ShowcaseDashboardPage({ searchParams }: ShowcaseDa
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {allCars.map((car) => (
-          <Card key={car.id} className="group overflow-hidden border-border/50 bg-card/40 backdrop-blur-md rounded-4xl hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 hover:border-emerald-500/20">
+          <Card key={car.id} className="group overflow-hidden gap-0 py-0 border-border/50 bg-card/40 backdrop-blur-md rounded-4xl hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 hover:border-emerald-500/20">
             <div className="relative aspect-video">
               <Image
                 src={car.coverImageUrl}

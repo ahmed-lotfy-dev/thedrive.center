@@ -6,37 +6,55 @@ import { appointmentQueries } from "@/db/queries/appointments";
 import { userQueries } from "@/db/queries/users";
 import { BookingCharts } from "@/features/admin/components/BookingCharts";
 import { RecentActivity } from "@/features/admin/components/RecentActivity";
-import {  subDays, isSameDay, format } from "date-fns";
+import { subDays, format, startOfDay } from "date-fns";
 import { ar } from "date-fns/locale";
 
 export default async function AdminDashboard() {
-  const [appointments, users] = await Promise.all([appointmentQueries.findAll(), userQueries.findAll()]);
+  const today = new Date();
+  const chartStartDate = startOfDay(subDays(today, 6));
+  const recentWindowStart = startOfDay(today);
 
-  const pendingAppointments = appointments.filter((a) => a.status === "pending");
-  const completedAppointments = appointments.filter((a) => a.status === "completed");
-  const newRequestsCount = pendingAppointments.length;
-  const usersCount = users.length;
+  const [
+    totalAppointments,
+    completedAppointmentsCount,
+    usersCount,
+    recentActivities,
+    dailyCounts,
+    newRequestsCount,
+  ] = await Promise.all([
+    appointmentQueries.countAll(),
+    appointmentQueries.countByStatus("completed"),
+    userQueries.countAll(),
+    appointmentQueries.findRecent(6),
+    appointmentQueries.getDailyCountsSince(chartStartDate),
+    appointmentQueries.countCreatedSince(recentWindowStart),
+  ]);
+
   const completionRate =
-    appointments.length > 0 ? Math.round((completedAppointments.length / appointments.length) * 100) : 0;
+    totalAppointments > 0 ? Math.round((completedAppointmentsCount / totalAppointments) * 100) : 0;
+
+  const dailyCountsMap = new Map(
+    dailyCounts.map((entry) => [entry.day, entry.count]),
+  );
 
   // Process Chart Data (Last 7 Days)
   const chartData = Array.from({ length: 7 }, (_, i) => {
-    const date = subDays(new Date(), 6 - i);
+    const date = subDays(today, 6 - i);
     const dayName = format(date, "EEEE", { locale: ar });
-    const count = appointments.filter((a) => a.createdAt && isSameDay(new Date(a.createdAt), date)).length;
-    return { day: dayName, count };
+    const dateKey = format(date, "yyyy-MM-dd");
+    return { day: dayName, count: dailyCountsMap.get(dateKey) ?? 0 };
   });
 
   const stats = [
     {
       title: "إجمالي طلبات الحجز",
-      value: appointments.length.toString(),
+      value: totalAppointments.toString(),
       icon: CalendarDays,
       description: `${newRequestsCount} طلب جديد`,
     },
     {
       title: "الحجوزات المكتملة",
-      value: completedAppointments.length.toString(),
+      value: completedAppointmentsCount.toString(),
       icon: CheckCircle2,
       description: "طلبات تم تنفيذها",
     },
@@ -87,7 +105,7 @@ export default async function AdminDashboard() {
           <BookingCharts data={chartData} />
         </div>
         <div className="lg:col-span-5">
-          <RecentActivity activities={appointments.slice(0, 6)} />
+          <RecentActivity activities={recentActivities} />
         </div>
       </div>
     </div>

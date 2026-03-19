@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { AddServiceRecordModal } from "@/features/maintenance/components/admin/AddServiceRecordModal";
 import { MaintenanceUpdateForm } from "@/features/maintenance/components/admin/MaintenanceUpdateForm";
 import { ServiceHistoryTimeline } from "@/features/maintenance/components/ServiceHistoryTimeline";
+import { PaginationControls } from "@/components/shared/PaginationControls";
 import Link from "next/link";
 import { formatLicensePlate } from "@/lib/utils";
 
@@ -37,6 +38,10 @@ export type CarDetailsRecord = {
 
 interface CarDetailViewProps {
   car: CarDetailsRecord;
+  serviceHistoryMeta?: {
+    currentPage: number;
+    totalPages: number;
+  };
 }
 
 function sortServiceRecords(records: CarDetailsServiceRecord[]) {
@@ -46,7 +51,7 @@ function sortServiceRecords(records: CarDetailsServiceRecord[]) {
   );
 }
 
-export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
+export function CarDetailView({ car: initialCar, serviceHistoryMeta }: CarDetailViewProps) {
   const [car, setCar] = useState(initialCar);
   const [showServiceModal, setShowServiceModal] = useState(false);
 
@@ -112,7 +117,7 @@ export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
             
             <div className="bg-black/20 rounded-4xl border border-white/5 p-6 flex-1 max-h-[450px] overflow-y-auto scrollbar-hide shadow-inner shadow-black/20">
               {car.serviceRecords && car.serviceRecords.length > 0 ? (
-                <ServiceHistoryTimeline records={car.serviceRecords.slice(0, 4)} />
+                <ServiceHistoryTimeline records={car.serviceRecords} />
               ) : (
                 <div className="flex flex-col justify-center items-center text-center py-12">
                   <p className="text-zinc-500 text-sm mb-4">لا يوجد سجل خدمات سابق لهذه السيارة بعد.</p>
@@ -126,6 +131,13 @@ export function CarDetailView({ car: initialCar }: CarDetailViewProps) {
                 </div>
               )}
             </div>
+            {serviceHistoryMeta && serviceHistoryMeta.totalPages > 1 && (
+              <PaginationControls
+                currentPage={serviceHistoryMeta.currentPage}
+                totalPages={serviceHistoryMeta.totalPages}
+                baseUrl={`/admin/customer-cars/${car.id}`}
+              />
+            )}
           </div>
         </div>
 

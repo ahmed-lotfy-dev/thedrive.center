@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { user } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, count } from "drizzle-orm";
 
 export const userQueries = {
   /**
@@ -8,6 +8,11 @@ export const userQueries = {
    */
   findAll: async () => {
     return db.select().from(user).orderBy(desc(user.createdAt));
+  },
+
+  countAll: async () => {
+    const [result] = await db.select({ value: count() }).from(user);
+    return result?.value ?? 0;
   },
 
   /**
