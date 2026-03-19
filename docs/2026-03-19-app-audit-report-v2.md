@@ -40,6 +40,7 @@ The current report should no longer say “not ready” for the same reasons as 
 - Admin role logic is centralized and consistent
 - Cairo is self-hosted instead of fetched from Google at build time
 - Booking now validates invalid/past dates server-side
+- Booking now blocks duplicate active appointments for the same car on the same day
 - Vehicle-type/model corruption in booking flow is fixed
 - Multi-step appointment and showcase writes use transactions
 - Maintenance mode no longer blocks admin access
@@ -52,6 +53,16 @@ The current report should no longer say “not ready” for the same reasons as 
 - Per-car service history now uses server-side pagination
 - Admin customer cars now use server-side pagination
 - Admin dashboard no longer loads full appointments/users tables for stats and recent activity
+- Public booking and sensitive write paths now have DB-backed rate limiting
+- DB-side check constraints now protect the main enum-like business fields for new writes
+- Existing production rows were audited and cleaned, and the new DB constraints were validated successfully
+- Focused regression tests now cover:
+  - admin authorization and write guards
+  - booking actions
+  - upload authorization and rate limiting
+  - onboarding behavior
+  - notification event processing
+  - maintenance admin mutations
 - Core indexes were added for:
   - `appointments.date`
   - `appointments.status`
@@ -66,14 +77,14 @@ The current report should no longer say “not ready” for the same reasons as 
 
 #### 1. Schema Hardening
 
-Application-level enums and validation now exist, which is good, but the database still relies heavily on `text` columns instead of DB-native enums or `CHECK` constraints.
+Application-level enums and validation now exist, and the main enum-like business fields now also have DB-side `CHECK` constraints for new writes.
 
 That means:
 
 - the app prevents many invalid values
-- the database itself still does not fully enforce them
+- the database now enforces the main allowed-value boundaries on new data
 
-This is no longer a severe application-layer bug, but it is still a legitimate schema-quality follow-up.
+This is no longer a severe application-layer bug. The remaining schema work is mostly about richer future rules, not basic allowed-value enforcement.
 
 #### 2. Booking Rules
 
@@ -85,7 +96,6 @@ The current booking model is safe for an MVP if you treat it as:
 What is still not implemented:
 
 - true slot scheduling
-- overlap detection
 - business-hour enforcement
 - blackout dates
 
@@ -93,25 +103,27 @@ That is acceptable if the client operates manually today. It should be tracked a
 
 #### 3. Test Coverage
 
-Tests pass, but coverage is still very small. The codebase is not well protected yet against regressions in:
+Tests pass, and focused server-side coverage now exists for the main critical flows:
 
 - auth and admin authorization
 - booking mutations
 - onboarding
-- upload authorization
+- upload authorization and rate limiting
 - notification event flows
+- maintenance admin mutations
 
-This is one of the clearest remaining quality gaps.
+Coverage is still not exhaustive, but this is no longer one of the biggest quality gaps.
 
 #### 4. Rate Limiting / Abuse Controls
 
-There is still no clear evidence of rate limiting for:
+DB-backed rate limiting now exists for:
 
 - public booking
+- onboarding and car-linking writes
 - upload-related endpoints
-- notification-processing triggers
+- core admin mutation actions
 
-This is a real remaining hardening item, especially for public-facing forms.
+This item is now materially fixed for the main write surfaces.
 
 #### 5. Production Build Confidence
 
@@ -163,8 +175,6 @@ What remains true is:
 
 ### What Still Needs Work
 
-- rate limiting is still missing or not clearly implemented
-- DB-level data constraints are still weaker than they should be
 - audit logging for critical admin changes is still absent
 
 ## Release Readiness
@@ -199,8 +209,7 @@ If the live deploy succeeds after the latest fixes, I would not treat the app as
 
 - hardening
 - observability
-- test coverage
-- database enforcement quality
+- deployed verification
 
 not the earlier critical trust-boundary failures.
 
@@ -208,15 +217,12 @@ not the earlier critical trust-boundary failures.
 
 ### Strongly Recommended
 
-1. Add rate limiting for public booking and sensitive endpoints
-2. Add focused tests for:
-   - admin authorization
-   - appointment creation/status changes
-   - onboarding
-   - upload authorization
-   - notification event processing
-3. Add DB-level constraints and indexes for core business fields
-4. Add audit logging for critical admin mutations if accountability matters to the client
+1. Add focused production-like smoke checks for:
+   - upload flows
+   - booking flows
+   - notification behavior
+2. Add audit logging for critical admin mutations if accountability matters to the client
+3. Expand coverage toward broader integration-style flows where it adds real confidence
 
 ### Product Follow-Up, Not Immediate Blockers
 
@@ -232,7 +238,7 @@ The first audit was right to flag the trust-boundary and release-process issues.
 Today, the app looks like:
 
 - a solid MVP with materially improved security and consistency
-- still worth hardening at the database and operational layers
+- still worth final deployed verification and light operational hardening
 - much closer to client handoff than the first report suggested
 
 So the correct read is not “everything is perfect.” It is:
