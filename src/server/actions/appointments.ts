@@ -347,11 +347,6 @@ export async function updateAppointmentStatus(id: string, status: string) {
       };
     }
 
-    await enforceRateLimit(rateLimitPolicies.adminWrite, {
-      headers: requestHeaders,
-      userId: session.user.id,
-    });
-
     const validatedStatus = appointmentStatusSchema.parse(status) as AppointmentStatusValue;
     const { updated, notificationEventId } = await db.transaction(async (tx) => {
       const [appointment] = await tx
@@ -416,12 +411,6 @@ export async function updateAppointmentStatus(id: string, status: string) {
       appointmentId: id,
       status,
     });
-    if (error instanceof RateLimitError) {
-      return {
-        success: false,
-        error: error.result.message,
-      };
-    }
     return {
       success: false,
       error: "Failed to update appointment",
@@ -444,11 +433,6 @@ export async function deleteAppointmentAction(id: string) {
       };
     }
 
-    await enforceRateLimit(rateLimitPolicies.adminWrite, {
-      headers: requestHeaders,
-      userId: session.user.id,
-    });
-
     await appointmentQueries.delete(id);
     revalidatePath("/admin/appointments");
 
@@ -465,12 +449,6 @@ export async function deleteAppointmentAction(id: string) {
       error,
       appointmentId: id,
     });
-    if (error instanceof RateLimitError) {
-      return {
-        success: false,
-        error: error.result.message,
-      };
-    }
     return {
       success: false,
       error: "Failed to delete appointment",

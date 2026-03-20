@@ -6,7 +6,6 @@ import crypto from "crypto";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { MAX_UPLOAD_SIZE_BYTES, validateUploadRequest } from "@/lib/upload-policy";
-import { checkRateLimit, rateLimitPolicies } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
 function isAdminRole(role?: string | null) {
@@ -24,27 +23,6 @@ export async function POST(request: Request) {
         action: "upload_sign",
       });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const rateLimit = await checkRateLimit(rateLimitPolicies.adminUploadSign, {
-      headers: requestHeaders,
-      userId: session.user.id,
-    });
-
-    if (!rateLimit.allowed) {
-      logger.warn("upload.sign_rate_limited", {
-        userId: session.user.id,
-        retryAfterSeconds: rateLimit.retryAfterSeconds,
-      });
-      return NextResponse.json(
-        { error: rateLimit.message },
-        {
-          status: 429,
-          headers: {
-            "Retry-After": String(rateLimit.retryAfterSeconds),
-          },
-        },
-      );
     }
 
     const { filename, contentType, size } = await request.json();
@@ -107,27 +85,6 @@ export async function DELETE(request: Request) {
         action: "upload_delete",
       });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const rateLimit = await checkRateLimit(rateLimitPolicies.adminUploadDelete, {
-      headers: requestHeaders,
-      userId: session.user.id,
-    });
-
-    if (!rateLimit.allowed) {
-      logger.warn("upload.delete_rate_limited", {
-        userId: session.user.id,
-        retryAfterSeconds: rateLimit.retryAfterSeconds,
-      });
-      return NextResponse.json(
-        { error: rateLimit.message },
-        {
-          status: 429,
-          headers: {
-            "Retry-After": String(rateLimit.retryAfterSeconds),
-          },
-        },
-      );
     }
 
     const { filename } = await request.json();

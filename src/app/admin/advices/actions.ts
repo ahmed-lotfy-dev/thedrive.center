@@ -3,17 +3,11 @@
 import { adviceQueries } from "@/db/queries/advices";
 import { revalidatePath } from "next/cache";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
-import { headers } from "next/headers";
-import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
 export async function createAdvice(content: string) {
   try {
-    const session = await requireAdmin();
-    await enforceRateLimit(rateLimitPolicies.adminWrite, {
-      headers: await headers(),
-      userId: session.user.id,
-    });
+    await requireAdmin();
     await adviceQueries.create({ content });
     revalidatePath("/admin/advices");
     revalidatePath("/");
@@ -25,9 +19,6 @@ export async function createAdvice(content: string) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
     }
-    if (error instanceof RateLimitError) {
-      return { error: error.result.message };
-    }
     logger.error("admin.advice.create_failed", {
       error,
     });
@@ -37,11 +28,7 @@ export async function createAdvice(content: string) {
 
 export async function updateAdviceState(id: string, isActive: boolean) {
   try {
-    const session = await requireAdmin();
-    await enforceRateLimit(rateLimitPolicies.adminWrite, {
-      headers: await headers(),
-      userId: session.user.id,
-    });
+    await requireAdmin();
 
     const updatedAdvice = await adviceQueries.update(id, { isActive });
     if (!updatedAdvice) {
@@ -59,9 +46,6 @@ export async function updateAdviceState(id: string, isActive: boolean) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
     }
-    if (error instanceof RateLimitError) {
-      return { error: error.result.message };
-    }
     logger.error("admin.advice.update_failed", {
       error,
       adviceId: id,
@@ -73,11 +57,7 @@ export async function updateAdviceState(id: string, isActive: boolean) {
 
 export async function deleteAdvice(id: string) {
   try {
-    const session = await requireAdmin();
-    await enforceRateLimit(rateLimitPolicies.adminWrite, {
-      headers: await headers(),
-      userId: session.user.id,
-    });
+    await requireAdmin();
     await adviceQueries.delete(id);
     revalidatePath("/admin/advices");
     revalidatePath("/");
@@ -88,9 +68,6 @@ export async function deleteAdvice(id: string) {
   } catch (error) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
-    }
-    if (error instanceof RateLimitError) {
-      return { error: error.result.message };
     }
     logger.error("admin.advice.delete_failed", {
       error,

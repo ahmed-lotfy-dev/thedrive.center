@@ -77,14 +77,6 @@ describe("maintenance actions", () => {
     vi.resetAllMocks();
     headersMock.mockResolvedValue(new Headers({ "x-forwarded-for": "127.0.0.1" }));
     getSessionMock.mockResolvedValue({ user: { id: "admin-1", role: "admin" } });
-    enforceRateLimitMock.mockResolvedValue({
-      allowed: true,
-      limit: 100,
-      remaining: 99,
-      retryAfterSeconds: 0,
-      resetAt: new Date(),
-      message: "",
-    });
 
     insertReturningMock.mockResolvedValue([{ id: "car-1", plateNumber: "سما123" }]);
     insertValuesMock.mockReturnValue({

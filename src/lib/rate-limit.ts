@@ -106,6 +106,8 @@ export async function checkRateLimit(
   const blockDurationMs = policy.blockDurationMs ?? policy.windowMs;
   const windowSeconds = toSeconds(policy.windowMs);
   const blockSeconds = toSeconds(blockDurationMs);
+  const windowInterval = sql.raw(`interval '${windowSeconds} seconds'`);
+  const blockInterval = sql.raw(`interval '${blockSeconds} seconds'`);
 
   const result = await db.execute(sql`
     INSERT INTO rate_limit_buckets (
@@ -133,7 +135,7 @@ export async function checkRateLimit(
         WHEN rate_limit_buckets.blocked_until IS NOT NULL
           AND rate_limit_buckets.blocked_until > ${now}
           THEN rate_limit_buckets.count
-        WHEN rate_limit_buckets.window_started_at <= ${now} - ${sql.raw(`interval '${windowSeconds} seconds'`)}
+        WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
           THEN 1
         ELSE rate_limit_buckets.count + 1
       END,
@@ -141,7 +143,7 @@ export async function checkRateLimit(
         WHEN rate_limit_buckets.blocked_until IS NOT NULL
           AND rate_limit_buckets.blocked_until > ${now}
           THEN rate_limit_buckets.window_started_at
-        WHEN rate_limit_buckets.window_started_at <= ${now} - ${sql.raw(`interval '${windowSeconds} seconds'`)}
+        WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
           THEN ${now}
         ELSE rate_limit_buckets.window_started_at
       END,
@@ -149,10 +151,10 @@ export async function checkRateLimit(
         WHEN rate_limit_buckets.blocked_until IS NOT NULL
           AND rate_limit_buckets.blocked_until > ${now}
           THEN rate_limit_buckets.blocked_until
-        WHEN rate_limit_buckets.window_started_at <= ${now} - ${sql.raw(`interval '${windowSeconds} seconds'`)}
+        WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
           THEN NULL
         WHEN rate_limit_buckets.count + 1 > ${policy.limit}
-          THEN ${now} + ${sql.raw(`interval '${blockSeconds} seconds'`)}
+          THEN ${now} + ${blockInterval}
         ELSE NULL
       END,
       updated_at = ${now}
