@@ -135,6 +135,12 @@ export async function updateShowcaseEntry(id: string, formData: FormData) {
   const { galleryUrls, title, description, coverImageUrl, videoUrl, serviceType } = result.data;
   const validatedServiceType = serviceType as ServiceTypeValue;
   const imageMediaType: CarMediaTypeValue = "image";
+  const existingCar = await db.query.cars.findFirst({
+    where: eq(cars.id, id),
+    columns: {
+      slug: true,
+    },
+  });
 
   await db.transaction(async (tx) => {
     await tx.update(cars)
@@ -165,7 +171,9 @@ export async function updateShowcaseEntry(id: string, formData: FormData) {
   });
 
   revalidatePath("/cars");
-  revalidatePath(`/cars/${id}`); // Potentially need to find the slug, but revalidatePath is fine with IDs or we can just revalidate all
+  if (existingCar?.slug) {
+    revalidatePath(`/cars/${existingCar.slug}`);
+  }
   revalidatePath("/admin/showcase");
   
   redirect("/admin/showcase");
