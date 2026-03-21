@@ -41,22 +41,35 @@ export function UserMenu({ session }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="rounded-3xl pr-2 pl-5 h-12 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/20 bg-black/5 dark:bg-white/5 transition-all hover:bg-black/10 flex items-center gap-3 group cursor-pointer">
+        <Button
+          variant="ghost"
+          className="rounded-3xl pr-2 pl-5 h-12 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/20 bg-black/5 dark:bg-white/5 transition-all hover:bg-black/10 flex items-center gap-3 group cursor-pointer"
+        >
           <Avatar className="size-9 border-2 border-emerald-500/30 transition-transform group-hover:scale-105">
             <AvatarImage src={session.user.image || ""} />
             <AvatarFallback className="text-xs bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-black">
               {session.user.name?.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm font-black hidden lg:inline text-foreground/80 dark:text-emerald-50/90 group-hover:text-foreground dark:group-hover:text-white transition-colors">{session.user.name}</span>
+          <span className="text-sm font-black hidden lg:inline text-foreground/80 dark:text-emerald-50/90 group-hover:text-foreground dark:group-hover:text-white transition-colors">
+            {session.user.name}
+          </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64 rounded-3xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border-black/5 dark:border-white/10 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-2xl">
-        <DropdownMenuLabel className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">لوحة التحكم</DropdownMenuLabel>
+      <DropdownMenuContent
+        align="end"
+        className="w-64 rounded-3xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border-black/5 dark:border-white/10 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-2xl"
+      >
+        <DropdownMenuLabel className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+          لوحة التحكم
+        </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-black/5 dark:bg-white/10 mx-2 mb-2" />
-        <DropdownMenuItem asChild className="p-0 focus:bg-emerald-500/5 dark:focus:bg-emerald-500/10 focus:text-emerald-700 dark:focus:text-emerald-400">
-          <Link 
-            href="/dashboard/garage" 
+        <DropdownMenuItem
+          asChild
+          className="p-0 focus:bg-emerald-500/5 dark:focus:bg-emerald-500/10 focus:text-emerald-700 dark:focus:text-emerald-400"
+        >
+          <Link
+            href="/dashboard/garage"
             className="group/item cursor-pointer rounded-2xl p-4 flex items-center gap-4 font-bold transition-all duration-300 w-full
               text-zinc-700 dark:text-zinc-200 
               hover:text-emerald-700 dark:hover:text-emerald-400
@@ -66,16 +79,19 @@ export function UserMenu({ session }: UserMenuProps) {
             <div className="size-8 rounded-lg bg-emerald-500/10 group-hover/item:bg-emerald-500/20 flex items-center justify-center transition-colors">
               <LayoutDashboard className="h-4 w-4 text-emerald-600 dark:text-emerald-500 transition-colors" />
             </div>
-            <span className="transition-colors">كراجي (My Garage)</span>
+            <span className="transition-colors">عربياتي (My Garage)</span>
           </Link>
         </DropdownMenuItem>
-        
+
         {canOpenAdmin && (
           <>
             <DropdownMenuSeparator className="bg-black/5 dark:bg-white/10 mx-2 mb-2" />
-            <DropdownMenuItem asChild className="p-0 focus:bg-emerald-500/5 dark:focus:bg-emerald-500/10 focus:text-emerald-700 dark:focus:text-emerald-400">
-              <Link 
-                href="/admin" 
+            <DropdownMenuItem
+              asChild
+              className="p-0 focus:bg-emerald-500/5 dark:focus:bg-emerald-500/10 focus:text-emerald-700 dark:focus:text-emerald-400"
+            >
+              <Link
+                href="/admin"
                 className="group/item cursor-pointer rounded-2xl p-4 flex items-center gap-4 font-bold transition-all duration-300 w-full
                   text-zinc-700 dark:text-zinc-200 
                   hover:text-emerald-700 dark:hover:text-emerald-400
@@ -88,9 +104,12 @@ export function UserMenu({ session }: UserMenuProps) {
                 <span className="transition-colors">إدارة المركز</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild className="p-0 focus:bg-emerald-500/5 dark:focus:bg-emerald-500/10 focus:text-emerald-700 dark:focus:text-emerald-400">
-              <Link 
-                href="/admin/customer-cars" 
+            <DropdownMenuItem
+              asChild
+              className="p-0 focus:bg-emerald-500/5 dark:focus:bg-emerald-500/10 focus:text-emerald-700 dark:focus:text-emerald-400"
+            >
+              <Link
+                href="/admin/customer-cars"
                 className="group/item cursor-pointer rounded-2xl p-4 flex items-center gap-4 font-bold transition-all duration-300 w-full
                   text-zinc-700 dark:text-zinc-200 
                   hover:text-emerald-700 dark:hover:text-emerald-400

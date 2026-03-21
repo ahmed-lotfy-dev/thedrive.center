@@ -218,7 +218,7 @@ export function Navbar() {
                         className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-zinc-200 hover:bg-emerald-500/20 active:bg-emerald-500/30 transition-all"
                       >
                         <LayoutDashboard className="size-4 text-emerald-500" />
-                        كراجي (My Garage)
+                        عربياتي (My Garage)
                       </Link>
                       
                       {canOpenAdmin && (
