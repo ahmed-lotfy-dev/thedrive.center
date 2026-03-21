@@ -10,6 +10,8 @@ import {
   GOOGLE_MAPS_COORDS,
   GOOGLE_PLACE_URL,
 } from "@/lib/google-business";
+import { seoKeywords } from "@/lib/seo-keywords";
+import { getSafeSiteUrl } from "@/lib/site-url";
 
 const cairo = localFont({
   src: [
@@ -38,19 +40,6 @@ const cairo = localFont({
   display: "swap",
 });
 
-function getSafeSiteUrl(raw: string | undefined) {
-  const value = raw?.trim();
-  if (!value) return "https://example.com";
-
-  // Accept plain domains from env and force https for metadataBase safety.
-  const normalized = value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`;
-  try {
-    return new URL(normalized).toString();
-  } catch {
-    return "https://example.com";
-  }
-}
-
 const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL);
 const [latitude, longitude] = GOOGLE_MAPS_COORDS.split(",").map((value) => Number(value.trim()));
 
@@ -62,14 +51,7 @@ export const metadata: Metadata = {
   },
   description:
     "مركز The Drive في المحلة الكبرى لخدمات ضبط الزوايا والترصيص والفحص الشامل قبل البيع والشراء بأحدث الأجهزة.",
-  keywords: [
-    "مركز ترصيص في المحلة الكبرى",
-    "ضبط زوايا في المحلة الكبرى",
-    "فحص شامل سيارات قبل الشراء",
-    "كشف سيارة قبل البيع",
-    "The Drive",
-    "مركز لضبط الزوايا والترصيص",
-  ],
+  keywords: seoKeywords,
   openGraph: {
     type: "website",
     locale: "ar_EG",

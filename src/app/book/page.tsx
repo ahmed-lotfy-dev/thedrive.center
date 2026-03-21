@@ -1,27 +1,54 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { AppointmentForm } from "@/features/appointments/components/AppointmentForm";
+import { seoKeywords } from "@/lib/seo-keywords";
+import { GOOGLE_BUSINESS_NAME } from "@/lib/google-business";
 
 export const metadata: Metadata = {
-  title: "احجز موعدك",
-  description: "احجز كشف أو خدمة ضبط زوايا وترصيص في مركز The Drive بالمحلة الكبرى.",
+  title: "احجز فحص أو ضبط زوايا أو ترصيص | The Drive Center",
+  description:
+    "احجز فحص شامل أو ضبط زوايا أو ترصيص أو تكويد باور ستيرنج في The Drive Center بالمحلة الكبرى مع تأكيد سريع للموعد.",
+  keywords: seoKeywords,
   alternates: {
     canonical: "/book",
   },
   openGraph: {
-    title: "احجز موعدك | The Drive Center",
-    description: "احجز كشف أو خدمة ضبط زوايا وترصيص في مركز The Drive بالمحلة الكبرى.",
+    title: "احجز فحص أو ضبط زوايا أو ترصيص | The Drive Center",
+    description:
+      "احجز فحص شامل أو ضبط زوايا أو ترصيص أو تكويد باور ستيرنج في The Drive Center بالمحلة الكبرى.",
     url: "/book",
+    images: ["/active-hero-image.webp"],
   },
   twitter: {
-    title: "احجز موعدك | The Drive Center",
-    description: "احجز كشف أو خدمة ضبط زوايا وترصيص في مركز The Drive بالمحلة الكبرى.",
+    title: "احجز فحص أو ضبط زوايا أو ترصيص | The Drive Center",
+    description:
+      "احجز فحص شامل أو ضبط زوايا أو ترصيص أو تكويد باور ستيرنج في The Drive Center بالمحلة الكبرى.",
+    images: ["/active-hero-image.webp"],
   },
 };
 
 export default function BookPage() {
+  const bookPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `حجز خدمات ${GOOGLE_BUSINESS_NAME}`,
+    serviceType: [
+      "ضبط زوايا كمبيوتر",
+      "ترصيص واتزان",
+      "فحص شامل قبل البيع والشراء",
+      "تكويد باور ستيرنج",
+    ],
+    areaServed: "المحلة الكبرى",
+    url: "/book",
+  };
+
   return (
     <main className="min-h-screen pt-28 pb-16">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(bookPageJsonLd) }}
+      />
       <section className="container mx-auto px-4" data-animate>
         <div className="surface-soft p-8 md:p-10 text-center">
           <h1 className="text-4xl md:text-5xl font-semibold text-balance">احجز ميعادك في أقل من دقيقة</h1>

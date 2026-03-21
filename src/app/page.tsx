@@ -18,21 +18,13 @@ import {
   BUSINESS_PHONE,
   GOOGLE_BUSINESS_NAME,
 } from "@/lib/google-business";
+import { seoKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
   title: "مركز ترصيص وضبط زوايا في المحلة الكبرى | The Drive Center",
   description:
     "The Drive Center مركز ترصيص وضبط زوايا في المحلة الكبرى يقدم ضبط زوايا كمبيوتر، ترصيص، فحص شامل قبل الشراء والبيع، وحجز سريع أونلاين.",
-  keywords: [
-    "مركز ترصيص المحلة الكبرى",
-    "مركز ضبط زوايا المحلة الكبرى",
-    "ترصيص في المحلة الكبرى",
-    "ضبط زوايا في المحلة الكبرى",
-    "فحص شامل سيارات المحلة الكبرى",
-    "كشف سيارة قبل الشراء المحلة الكبرى",
-    "ضبط زوايا كمبيوتر المحلة",
-    "The Drive Center",
-  ],
+  keywords: seoKeywords,
   alternates: {
     canonical: "/",
   },

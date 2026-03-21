@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next";
+import { getSafeSiteUrl } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center";
+  const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
 
   return {
     rules: {
@@ -10,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/admin/", "/api/"],
     },
     host: siteUrl,
-    sitemap: `${siteUrl.endsWith("/") ? siteUrl : siteUrl + "/"}sitemap.xml`,
+    sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

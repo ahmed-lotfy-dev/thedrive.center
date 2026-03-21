@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
 import { db } from "@/db";
+import { getSafeSiteUrl } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center";
-  const baseUrl = siteUrl.endsWith("/") ? siteUrl : `${siteUrl}/`;
+  const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
+  const baseUrl = `${siteUrl}/`;
 
   // Static routes
   const routes = ["", "cars", "book"].map((route) => ({

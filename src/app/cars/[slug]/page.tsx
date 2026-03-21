@@ -5,6 +5,14 @@ import { notFound } from "next/navigation";
 import { ShowcaseCar, ShowcaseCarWithMedia } from "@/types/showcase";
 import { CarDetailsView } from "@/features/cars/components/CarDetailsView";
 import type { Metadata } from "next";
+import { seoKeywords } from "@/lib/seo-keywords";
+
+function getServiceSeoLabel(serviceType?: string) {
+  if (serviceType === "alignment_balancing") return "ضبط زوايا وترصيص";
+  if (serviceType === "inspection") return "فحص شامل سيارات";
+  if (serviceType === "steering_coding") return "تكويد باور ستيرنج";
+  return "خدمة سيارات";
+}
 
 export async function generateMetadata({
   params,
@@ -18,27 +26,25 @@ export async function generateMetadata({
 
   if (!car) return { title: "غير موجود" };
 
+  const serviceLabel = getServiceSeoLabel(car.serviceType);
+  const fallbackDescription = `شاهد تفاصيل ${serviceLabel} لسيارة ${car.title} في The Drive Center بالمحلة الكبرى.`;
+
   return {
-    title: `${car.title} | The Drive Center`,
-    description:
-      car.description?.substring(0, 160) ||
-      `تم ضبط زوايا وترصيص ${car.title} بأعلى جودة.`,
+    title: `${car.title} | ${serviceLabel} | The Drive Center`,
+    description: car.description?.substring(0, 160) || fallbackDescription,
+    keywords: seoKeywords,
     alternates: {
       canonical: `/cars/${slug}`,
     },
     openGraph: {
-      title: `${car.title} | The Drive Center`,
-      description:
-        car.description?.substring(0, 160) ||
-        `تم ضبط زوايا وترصيص ${car.title} بأعلى جودة.`,
+      title: `${car.title} | ${serviceLabel} | The Drive Center`,
+      description: car.description?.substring(0, 160) || fallbackDescription,
       url: `/cars/${slug}`,
       images: [car.coverImageUrl],
     },
     twitter: {
-      title: `${car.title} | The Drive Center`,
-      description:
-        car.description?.substring(0, 160) ||
-        `تم ضبط زوايا وترصيص ${car.title} بأعلى جودة.`,
+      title: `${car.title} | ${serviceLabel} | The Drive Center`,
+      description: car.description?.substring(0, 160) || fallbackDescription,
       images: [car.coverImageUrl],
     },
   };
@@ -59,8 +65,21 @@ export default async function CarDetailPage({
 
   if (!car) notFound();
 
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `${getServiceSeoLabel(car.serviceType)} - ${car.title}`,
+    description: car.description || `تفاصيل خدمة ${getServiceSeoLabel(car.serviceType)} لهذه السيارة.`,
+    url: `/cars/${car.slug}`,
+  };
+
   return (
     <div className="bg-background">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
       <CarDetailsView car={car} />
     </div>
   );
