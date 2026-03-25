@@ -9,6 +9,9 @@ import {
   GOOGLE_BUSINESS_NAME,
   GOOGLE_MAPS_COORDS,
   GOOGLE_PLACE_URL,
+  FACEBOOK_URL,
+  TIKTOK_URL,
+  INSTAGRAM_URL,
 } from "@/lib/google-business";
 import { seoKeywords } from "@/lib/seo-keywords";
 import { getSafeSiteUrl } from "@/lib/site-url";
@@ -108,12 +111,16 @@ export default function RootLayout({
     "@type": "AutoRepair",
     name: GOOGLE_BUSINESS_NAME,
     description: "مركز متخصص في خدمات ضبط الزوايا والترصيص والفحص الشامل للسيارات في المحلة الكبرى.",
+    image: `${siteUrl}/active-hero-image.webp`,
+    priceRange: "ج.م",
+    openingHours: "Mo-Su 09:00-22:00",
     areaServed: BUSINESS_CITY,
     address: {
       "@type": "PostalAddress",
       streetAddress: BUSINESS_ADDRESS,
       addressLocality: BUSINESS_CITY,
       addressRegion: BUSINESS_REGION,
+      postalCode: "31951",
       addressCountry: "EG",
     },
     geo: {
@@ -121,9 +128,36 @@ export default function RootLayout({
       latitude,
       longitude,
     },
-    sameAs: GOOGLE_PLACE_URL ? [GOOGLE_PLACE_URL] : [],
+    sameAs: [
+      GOOGLE_PLACE_URL,
+      FACEBOOK_URL,
+      TIKTOK_URL,
+      INSTAGRAM_URL
+    ].filter(Boolean),
     url: siteUrl,
     telephone: `+2${BUSINESS_PHONE}`,
+  };
+
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: GOOGLE_BUSINESS_NAME,
+    url: siteUrl,
+    logo: `${siteUrl}/icon.png`,
+    description: "مركز The Drive Center لصيانة وفحص السيارات في المحلة الكبرى.",
+    telephone: `+2${BUSINESS_PHONE}`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: BUSINESS_ADDRESS,
+      addressLocality: BUSINESS_CITY,
+      addressRegion: BUSINESS_REGION,
+      addressCountry: "EG",
+    },
+    sameAs: [
+      FACEBOOK_URL,
+      TIKTOK_URL,
+      INSTAGRAM_URL
+    ].filter(Boolean)
   };
 
   const isSiteStateScreenMode = isSiteStateScreenEnabled();
@@ -137,6 +171,11 @@ export default function RootLayout({
             type="application/ld+json"
             suppressHydrationWarning
             dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+          />
+          <script
+            type="application/ld+json"
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
           />
           {children}
           {!isSiteStateScreenMode && <Footer />}
