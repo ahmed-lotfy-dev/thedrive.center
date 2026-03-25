@@ -8,10 +8,10 @@ import type { Metadata } from "next";
 import { seoKeywords } from "@/lib/seo-keywords";
 
 function getServiceSeoLabel(serviceType?: string) {
-  if (serviceType === "alignment_balancing") return "ضبط زوايا وترصيص";
-  if (serviceType === "inspection") return "فحص شامل سيارات";
-  if (serviceType === "steering_coding") return "تكويد باور ستيرنج";
-  return "خدمة سيارات";
+  if (serviceType === "alignment_balancing") return "مركز ضبط و ظبط زوايا وترصيص";
+  if (serviceType === "inspection") return "مركز فحص سيارات شامل";
+  if (serviceType === "steering_coding") return "مركز تكويد باور ستيرنج";
+  return "مركز خدمات سيارات";
 }
 
 export async function generateMetadata({

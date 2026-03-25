@@ -12,8 +12,8 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.8,
@@ -26,10 +26,10 @@ const sectionVariants: Variants = {
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { 
+    transition: {
       type: "spring",
       stiffness: 100,
       damping: 15
@@ -80,8 +80,8 @@ export function Services() {
   return (
     <div className="space-y-12 md:space-y-20">
       {/* SECTION 1: COMPREHENSIVE INSPECTION HIGHLIGHT */}
-      <motion.section 
-        id="services" 
+      <motion.section
+        id="services"
         className="container mx-auto px-4 md:px-6 pt-12 scroll-mt-24"
         initial="hidden"
         whileInView="visible"
@@ -91,79 +91,79 @@ export function Services() {
         <Card className="relative overflow-hidden rounded-4xl md:rounded-[4rem] bg-card/40 backdrop-blur-3xl border border-border/50 shadow-2xl transition-colors duration-500 py-12 md:py-20 lg:py-24">
           <CardContent className="p-0">
             <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 via-transparent to-emerald-500/5 pointer-events-none opacity-50 dark:opacity-100" />
-            
+
             <div className="grid lg:grid-cols-12 gap-12 px-8 relative z-10">
               {/* Text Side */}
               <motion.div className="lg:col-span-5 space-y-8" variants={itemVariants}>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 backdrop-blur-md">
                   <Search className="w-4 h-4" />
-                  <span className="text-sm font-black tracking-widest uppercase">الخدمة الأقوى لدينا</span>
+                  <span className="text-sm font-black tracking-widest uppercase">الميزة الأهم والحصرية لدينا</span>
                 </div>
-                
+
                 <h2 className="text-[clamp(2.25rem,5vw,3.75rem)] font-black text-zinc-900 dark:text-white leading-[1.1]">
                   الفحص <span className="text-emerald-500">الشامل</span> <br />قبل البيع والشراء
                 </h2>
-                
+
                 <p className="text-[clamp(1.125rem,1.5vw,1.25rem)] text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium">
                   بنقدم لك أدق تقرير فني في مصر لحالة الهيكل (البوية) والميكانيكا والعفشة، عشان تشتري وأنت مطمن ١٠٠٪.
                 </p>
-                
+
                 <div className="space-y-4">
-                   {[
-                     "كشف كامل على دواخل وخوارج السيارة",
-                     "تحديد أماكن الرش والمعجون وتصليحات الحوادث",
-                     "تقرير مفصل يوضح حالة كل جزء بدقة",
-                     "فحص بالكمبيوتر لجميع أنظمة السيارة"
-                   ].map((item) => (
-                     <div key={item} className="flex items-center gap-3 text-zinc-800 dark:text-zinc-200">
-                       <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
-                       <span className="font-bold">{item}</span>
-                     </div>
-                   ))}
+                  {[
+                    "كشف كامل على دواخل وخوارج السيارة",
+                    "تحديد أماكن الرش والمعجون وتصليحات الحوادث",
+                    "تقرير مفصل يوضح حالة كل جزء بدقة",
+                    "فحص بالكمبيوتر لجميع أنظمة السيارة"
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-3 text-zinc-800 dark:text-zinc-200">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                      <span className="font-bold">{item}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="pt-6">
                   <Button asChild size="lg" className="h-16 rounded-3xl px-10 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-lg shadow-xl shadow-emerald-500/20 group">
-                     <Link href="/book">
-                       احجز فحص عربيتك دلوقتي
-                       <ChevronLeft className="mr-2 w-5 h-5 transition-transform group-hover:-translate-x-1" />
-                     </Link>
+                    <Link href="/book">
+                      احجز فحص عربيتك دلوقتي
+                      <ChevronLeft className="mr-2 w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                    </Link>
                   </Button>
                 </div>
               </motion.div>
 
               {/* Visual/Tools Side */}
               <div className="lg:col-span-7 grid md:grid-cols-3 gap-4 lg:gap-6">
-                 {inspectionTools.map((tool, idx) => (
-                   <motion.div 
-                     key={idx} 
-                     variants={itemVariants}
-                     className={cn(
-                       "relative h-75 md:h-100 lg:h-112.5 rounded-3xl overflow-hidden group border border-border/50 shadow-lg",
-                       idx === 1 ? "md:-translate-y-8" : ""
-                     )}
-                   >
-                     <Image 
-                       src={tool.image} 
-                       alt={tool.title} 
-                       fill 
-                       className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                       sizes="(max-width: 768px) 100vw, 33vw"
-                     />
-                     <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
-                     <div className="absolute inset-0 border-2 border-transparent group-hover:border-emerald-500/50 transition-colors rounded-3xl" />
-                     
-                     <div className="absolute bottom-6 left-4 right-4 text-right">
-                       <Badge className="bg-emerald-500/20 border-emerald-500/50 text-emerald-400 mb-2 font-black text-[10px] uppercase">
-                          {tool.level}
-                       </Badge>
-                       <h3 className="text-lg font-black text-white mb-1">{tool.title}</h3>
-                       <p className="text-[11px] text-zinc-400 font-medium leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity">
-                          {tool.description}
-                       </p>
-                     </div>
-                   </motion.div>
-                 ))}
+                {inspectionTools.map((tool, idx) => (
+                  <motion.div
+                    key={idx}
+                    variants={itemVariants}
+                    className={cn(
+                      "relative h-75 md:h-100 lg:h-112.5 rounded-3xl overflow-hidden group border border-border/50 shadow-lg",
+                      idx === 1 ? "md:-translate-y-8" : ""
+                    )}
+                  >
+                    <Image
+                      src={tool.image}
+                      alt={tool.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 border-2 border-transparent group-hover:border-emerald-500/50 transition-colors rounded-3xl" />
+
+                    <div className="absolute bottom-6 left-4 right-4 text-right">
+                      <Badge className="bg-emerald-500/20 border-emerald-500/50 text-emerald-400 mb-2 font-black text-[10px] uppercase">
+                        {tool.level}
+                      </Badge>
+                      <h3 className="text-lg font-black text-white mb-1">{tool.title}</h3>
+                      <p className="text-[11px] text-zinc-400 font-medium leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity">
+                        {tool.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </CardContent>
@@ -171,8 +171,8 @@ export function Services() {
       </motion.section>
 
       {/* SECTION 2: MAINTENANCE SERVICES */}
-      <motion.section 
-        id="maintenance-services" 
+      <motion.section
+        id="maintenance-services"
         className="container mx-auto px-4 py-12 md:py-24"
         initial="hidden"
         whileInView="visible"
@@ -189,7 +189,7 @@ export function Services() {
             </h2>
           </motion.div>
           <motion.div variants={itemVariants}>
-            <p 
+            <p
               className="max-w-md text-[clamp(1rem,1.5vw,1.125rem)] leading-relaxed text-muted-foreground font-medium border-r-4 border-emerald-500/20 pr-6"
             >
               بجانب الفحص، نقدم خدمات الضبط الدقيق بأحدث الأجهزة المتطورة لضمان أقصى درجات الثبات.

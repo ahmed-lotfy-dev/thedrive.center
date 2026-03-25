@@ -72,16 +72,16 @@ export function Hero({ imageUrl }: HeroProps) {
           >
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-sm">
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-bold tracking-wide">المركز الأول في المـحـلـة الكـبـرى</span>
+              <span className="text-sm font-bold tracking-wide">أفضل مركز فحص سيارات في المـحـلـة الكـبـرى</span>
             </motion.div>
             
             <motion.h1 variants={itemVariants} className="text-[clamp(2.25rem,4.5vw,4rem)] font-extrabold text-foreground leading-[1.15] tracking-tight text-balance">
               مركز <span className="text-transparent bg-clip-text bg-linear-to-l from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400 drop-shadow-sm">The Drive Center</span><br />
-              لضبط الزوايا والترصيص
+              فحص شامل بأحدث ٣ أجهزة
             </motion.h1>
             
             <motion.p variants={itemVariants} className="text-[clamp(1rem,1.5vw,1.25rem)] text-muted-foreground/90 max-w-[95%] leading-relaxed font-medium">
-              فحص آلي حديث بأعلى دقة، ترصيص متطور، وتكويد باور ستيرنج لضمان ثبات تام وأداء مثالي لعربيتك على الطريق.
+              نضمن لك أدق تقرير فحص سيارات قبل البيع والشراء، بالإضافة لخدمات مركز ضبط زوايا (مركز ظبط زوايا) وبالإضافة لمركز الترصيص المتطور.
             </motion.p>
             
             <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-start md:justify-start gap-4 pt-4">

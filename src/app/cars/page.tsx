@@ -7,24 +7,24 @@ import { GOOGLE_BUSINESS_NAME } from "@/lib/google-business";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "أعمال ضبط الزوايا والترصيص والفحص | The Drive Center",
+  title: "مركز أعمالنا | مركز فحص سيارات | مركز ضبط زوايا | مركز ترصيص | The Drive Center",
   description:
-    "استعرض أعمال The Drive Center في ضبط الزوايا والترصيص والفحص الشامل، وشاهد حالات حقيقية لسيارات تم خدمتها في المحلة الكبرى.",
+    "استعرض أعمال مركز The Drive Center في فحص السيارات الشامل، ومركز ضبط و ظبط الزوايا، ومركز الترصيص. شاهد نتائج دقيقة لسيارات عملائنا في المحلة الكبرى.",
   keywords: seoKeywords,
   alternates: {
     canonical: "/cars",
   },
   openGraph: {
-    title: "أعمال ضبط الزوايا والترصيص والفحص | The Drive Center",
+    title: "مركز أعمالنا | مركز فحص سيارات | مركز ضبط زوايا | مركز ترصيص | The Drive Center",
     description:
-      "استعرض أعمال The Drive Center في ضبط الزوايا والترصيص والفحص الشامل، وشاهد حالات حقيقية لسيارات تم خدمتها.",
+      "استعرض أعمال مركز The Drive Center في فحص السيارات الشامل، ومركز ضبط و ظبط الزوايا، ومركز الترصيص.",
     url: "/cars",
     images: ["/active-hero-image.webp"],
   },
   twitter: {
-    title: "أعمال ضبط الزوايا والترصيص والفحص | The Drive Center",
+    title: "مركز أعمالنا | مركز فحص سيارات | مركز ضبط زوايا | مركز ترصيص | The Drive Center",
     description:
-      "استعرض أعمال The Drive Center في ضبط الزوايا والترصيص والفحص الشامل، وشاهد حالات حقيقية لسيارات تم خدمتها.",
+      "استعرض أعمال مركز The Drive Center في فحص السيارات الشامل، ومركز ضبط و ظبط الزوايا، ومركز الترصيص.",
     images: ["/active-hero-image.webp"],
   },
 };

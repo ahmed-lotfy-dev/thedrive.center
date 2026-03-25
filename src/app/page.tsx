@@ -21,23 +21,23 @@ import {
 import { seoKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
-  title: "مركز ترصيص وضبط زوايا في المحلة الكبرى | The Drive Center",
+  title: "مركز فحص سيارات قبل البيع والشراء | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | The Drive Center",
   description:
-    "The Drive Center مركز ترصيص وضبط زوايا في المحلة الكبرى يقدم ضبط زوايا كمبيوتر، ترصيص، فحص شامل قبل الشراء والبيع، وحجز سريع أونلاين.",
+    "The Drive Center: أفضل مركز فحص سيارات شامل قبل البيع والشراء، مركز ضبط زوايا بالكمبيوتر، ومركز ترصيص عجلات. ندعم أدق تقنيات ضبط و ظبط الزوايا لضمان الثبات.",
   keywords: seoKeywords,
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "مركز ترصيص وضبط زوايا في المحلة الكبرى | The Drive Center",
+    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | The Drive Center",
     description:
-      "مركز متخصص في ضبط الزوايا والترصيص والفحص الشامل قبل الشراء والبيع داخل المحلة الكبرى مع حجز سريع أونلاين.",
+      "مركز متخصص في فحص السيارات، ضبط وزوايا (ضبط و ظبط)، وترصيص العجلات بأحدث الأجهزة العالمية في المحلة الكبرى.",
     url: "/",
   },
   twitter: {
-    title: "مركز ترصيص وضبط زوايا في المحلة الكبرى | The Drive Center",
+    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | The Drive Center",
     description:
-      "مركز متخصص في ضبط الزوايا والترصيص والفحص الشامل قبل الشراء والبيع داخل المحلة الكبرى.",
+      "مركز متخصص في فحص السيارات، ضبط وزوايا (ضبط و ظبط)، وترصيص العجلات في المحلة الكبرى.",
   },
 };
 
@@ -83,7 +83,7 @@ export default async function Home() {
         name: "الفحص بياخد وقت قد إيه؟",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "الفحص الشامل الدقيق يستغرق غالبًا من 45 إلى 60 دقيقة حسب حالة السيارة ونطاق الفحص المطلوب.",
+          text: "الفحص الشامل الدقيق يستغرق غالبًا من ٤٥ إلى ٦٠ دقيقة حسب حالة السيارة ونطاق الفحص المطلوب.",
         },
       },
     ],
@@ -92,15 +92,51 @@ export default async function Home() {
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    serviceType: "Wheel alignment, tire balancing, and pre-purchase inspection",
-    name: `${GOOGLE_BUSINESS_NAME} - ضبط زوايا وترصيص وفحص شامل`,
+    serviceType: "Car Inspection, Wheel Alignment, Tire Balancing",
+    name: `${GOOGLE_BUSINESS_NAME} - فحص شامل بـ ٣ أجهزة، ضبط زوايا وترصيص`,
+    description: "فحص شامل للسيارات قبل البيع والشراء بأحدث ٣ أجهزة (قلم فحص البوية، جهاز قياس سمك الدهان، وماسح الأشعة UV) لضمان أعلى دقة في التقرير.",
     areaServed: BUSINESS_CITY,
     provider: {
       "@type": "AutoRepair",
       name: GOOGLE_BUSINESS_NAME,
-      address: BUSINESS_ADDRESS,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: BUSINESS_ADDRESS,
+        addressLocality: BUSINESS_CITY,
+        addressCountry: "EG",
+      },
       telephone: `+2${BUSINESS_PHONE}`,
     },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "خدمات The Drive Center",
+      itemListElement: [
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "مركز فحص شامل قبل البيع والشراء",
+            description: "كشف كامل على الهيكل والميكانيكا والعفشة بـ ٣ أجهزة متطورة."
+          }
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "مركز ضبط زوايا (ظبط زوايا)",
+            description: "ضبط و ظبط زوايا دقيق لثبات السيارة وتقليل استهلاك الكاوتش."
+          }
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "مركز ترصيص واتزان",
+            description: "حل مشاكل الاهتزاز والرعشة على السرعات العالية."
+          }
+        }
+      ]
+    }
   };
 
   return (

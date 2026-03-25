@@ -5,24 +5,24 @@ import { seoKeywords } from "@/lib/seo-keywords";
 import { GOOGLE_BUSINESS_NAME } from "@/lib/google-business";
 
 export const metadata: Metadata = {
-  title: "احجز فحص أو ضبط زوايا أو ترصيص | The Drive Center",
+  title: "مركز فحص سيارات قبل البيع والشراء | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | احجز ميعادك",
   description:
-    "احجز فحص شامل أو ضبط زوايا أو ترصيص أو تكويد باور ستيرنج في The Drive Center بالمحلة الكبرى مع تأكيد سريع للموعد.",
+    "احجز ميعادك الآن في مركز The Drive Center: أفضل مركز فحص سيارات شامل قبل البيع والشراء، مركز ضبط و ظبط زوايا بالكمبيوتر، ومركز ترصيص عجلات.",
   keywords: seoKeywords,
   alternates: {
     canonical: "/book",
   },
   openGraph: {
-    title: "احجز فحص أو ضبط زوايا أو ترصيص | The Drive Center",
+    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | الحجز أونلاين",
     description:
-      "احجز فحص شامل أو ضبط زوايا أو ترصيص أو تكويد باور ستيرنج في The Drive Center بالمحلة الكبرى.",
+      "احجز ميعاد فحص شامل بـ ٣ أجهزة، أو مركز ضبط وزوايا (ضبط و ظبط) وترصيص في The Drive Center.",
     url: "/book",
     images: ["/active-hero-image.webp"],
   },
   twitter: {
-    title: "احجز فحص أو ضبط زوايا أو ترصيص | The Drive Center",
+    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | الحجز أونلاين",
     description:
-      "احجز فحص شامل أو ضبط زوايا أو ترصيص أو تكويد باور ستيرنج في The Drive Center بالمحلة الكبرى.",
+      "احجز ميعاد فحص شامل بـ ٣ أجهزة، أو مركز ضبط وزوايا (ضبط و ظبط) وترصيص.",
     images: ["/active-hero-image.webp"],
   },
 };
@@ -33,11 +33,12 @@ export default function BookPage() {
     "@type": "Service",
     name: `حجز خدمات ${GOOGLE_BUSINESS_NAME}`,
     serviceType: [
+      "فحص سيارات شامل قبل البيع والشراء بـ ٣ أجهزة",
       "ضبط زوايا كمبيوتر",
       "ترصيص واتزان",
-      "فحص شامل قبل البيع والشراء",
       "تكويد باور ستيرنج",
     ],
+    description: "احجز أفضل خدمة فحص سيارات قبل البيع والشراء في المحلة الكبرى باستخدام أحدث أجهزة كشف البوية والـ UV.",
     areaServed: "المحلة الكبرى",
     url: "/book",
   };
