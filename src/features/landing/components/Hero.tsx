@@ -7,6 +7,7 @@ import { Sparkles, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, type Variants } from "motion/react";
 import { Card } from "@/components/ui/card";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -51,6 +52,7 @@ interface HeroProps {
 
 export function Hero({ imageUrl }: HeroProps) {
   const activeImage = imageUrl && imageUrl.trim() !== "" ? imageUrl : "/active-hero-image.webp";
+  const prefersReducedMotion = useReducedMotion();
   
   return (
     <section className="relative px-4 pb-20 pt-28 md:pt-40 overflow-hidden min-h-screen flex items-center border-b border-border/40">
@@ -62,29 +64,30 @@ export function Hero({ imageUrl }: HeroProps) {
       <div className="container relative z-10 mx-auto mb-8 px-4 md:px-6">
         <motion.div 
           className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+          variants={prefersReducedMotion ? undefined : containerVariants}
+          initial={prefersReducedMotion ? undefined : "hidden"}
+          animate={prefersReducedMotion ? undefined : "visible"}
+          transition={prefersReducedMotion ? { duration: 0 } : undefined}
         >
           <motion.div 
             className="w-full lg:w-[55%] space-y-6 md:space-y-8 relative z-20 text-right"
-            variants={containerVariants}
+            variants={prefersReducedMotion ? undefined : containerVariants}
           >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-sm">
+            <motion.div variants={prefersReducedMotion ? undefined : itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-sm">
               <Sparkles className="w-4 h-4" />
               <span className="text-sm font-bold tracking-wide">أفضل مركز فحص سيارات في المـحـلـة الكـبـرى</span>
             </motion.div>
             
-            <motion.h1 variants={itemVariants} className="text-[clamp(2.25rem,4.5vw,4rem)] font-extrabold text-foreground leading-[1.15] tracking-tight text-balance">
+            <motion.h1 variants={prefersReducedMotion ? undefined : itemVariants} className="text-[clamp(2.25rem,4.5vw,4rem)] font-extrabold text-foreground leading-[1.15] tracking-tight text-balance">
               مركز <span className="text-transparent bg-clip-text bg-linear-to-l from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-400 drop-shadow-sm">The Drive Center</span><br />
               فحص شامل بأحدث ٣ أجهزة
             </motion.h1>
             
-            <motion.p variants={itemVariants} className="text-[clamp(1rem,1.5vw,1.25rem)] text-muted-foreground/90 max-w-[95%] leading-relaxed font-medium">
+            <motion.p variants={prefersReducedMotion ? undefined : itemVariants} className="text-[clamp(1rem,1.5vw,1.25rem)] text-muted-foreground/90 max-w-[95%] leading-relaxed font-medium">
               نضمن لك أدق تقرير فحص سيارات قبل البيع والشراء، بالإضافة لخدمات مركز ضبط زوايا (مركز ظبط زوايا) وبالإضافة لمركز الترصيص المتطور.
             </motion.p>
             
-            <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-start md:justify-start gap-4 pt-4">
+            <motion.div variants={prefersReducedMotion ? undefined : itemVariants} className="flex flex-wrap items-center justify-start md:justify-start gap-4 pt-4">
               <Button
                 asChild
                 size="lg"
@@ -111,13 +114,13 @@ export function Hero({ imageUrl }: HeroProps) {
               </Button>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 pt-8">
+            <motion.div variants={prefersReducedMotion ? undefined : itemVariants} className="flex flex-wrap items-center gap-3 pt-8">
               {[
                 { val: "99%", label: "دقة الفحص" },
                 { val: "100+", label: "عميل راضي" },
                 { val: "أحدث", label: "الأجهزة المتطورة" }
-              ].map((stat, i) => (
-                <Card key={i} className="flex flex-col p-4 rounded-2xl bg-card border border-border/50 shadow-sm min-w-30 py-4">
+              ].map((stat) => (
+                <Card key={stat.label} className="flex flex-col p-4 rounded-2xl bg-card border border-border/50 shadow-sm min-w-30 py-4">
                   <div className="text-2xl md:text-3xl font-black text-foreground drop-shadow-sm">
                     {stat.val.replace(/[%+]/g, '')}
                     <span className="text-emerald-500">{stat.val.match(/[%+]/)?.[0]}</span>
@@ -130,7 +133,7 @@ export function Hero({ imageUrl }: HeroProps) {
 
           <motion.div 
             className="w-full lg:w-[45%] relative lg:h-150 flex items-center justify-center p-4 lg:p-0"
-            variants={imageVariants}
+            variants={prefersReducedMotion ? undefined : imageVariants}
           >
             <div className="w-full relative">
               <div className="absolute inset-0 -m-6 bg-linear-to-tr from-emerald-500/20 to-emerald-500/20 rounded-[3rem] blur-2xl -z-10 opacity-60" />

@@ -10,6 +10,7 @@ import { headers } from "next/headers";
 import { normalizePlateNumber } from "@/lib/utils";
 import { isKnownCarMaker } from "@/lib/constants";
 import { enforceRateLimit, RateLimitError, rateLimitPolicies } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 const onboardingSchema = z.object({
   make: z.string().min(1, "ماركة السيارة مطلوبة").refine(isKnownCarMaker, "ماركة السيارة غير مدعومة"),
@@ -108,7 +109,7 @@ export async function submitOnboarding(
     if (error instanceof RateLimitError) {
       return { error: error.result.message };
     }
-    console.error("Onboarding error:", error);
+    logger.error("Onboarding error", { error });
     return { error: "حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى." };
   }
 

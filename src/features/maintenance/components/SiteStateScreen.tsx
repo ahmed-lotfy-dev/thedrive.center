@@ -74,14 +74,20 @@ export function SiteStateScreen({
   const whatsappUrl = getWhatsAppUrl("أهلاً، أريد التواصل مع The Drive Center.");
 
   useEffect(() => {
-    if (!showCountdown || countdown.expired) return;
+    if (!showCountdown) return;
 
     const id = window.setInterval(() => {
-      setCountdown(getCountdownState(targetDate));
+      setCountdown((prev) => {
+        const next = getCountdownState(targetDate);
+        if (next.expired && !prev.expired) {
+          window.clearInterval(id);
+        }
+        return next;
+      });
     }, 1000);
 
     return () => window.clearInterval(id);
-  }, [targetDate, countdown.expired, showCountdown]);
+  }, [targetDate, showCountdown]);
 
   return (
     <div

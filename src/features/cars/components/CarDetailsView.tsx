@@ -16,17 +16,13 @@ import {
 } from "lucide-react";
 import { ShowcaseCarWithMedia } from "@/types/showcase";
 import { SERVICE_TYPES } from "@/lib/constants";
-import { authClient } from "@/lib/auth-client";
 
 interface CarDetailsViewProps {
   car: ShowcaseCarWithMedia;
+  isManagement?: boolean;
 }
 
-export function CarDetailsView({ car }: CarDetailsViewProps) {
-  const { data: session } = authClient.useSession();
-  const userRole = (session?.user as { role?: string } | undefined)?.role;
-  const isManagement = userRole === "admin" || userRole === "owner";
-
+export function CarDetailsView({ car, isManagement = false }: CarDetailsViewProps) {
   const serviceLabel =
     SERVICE_TYPES.find((s) => s.value === car.serviceType)?.label ||
     car.serviceType;

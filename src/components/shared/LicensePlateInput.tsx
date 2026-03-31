@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/input-otp";
 import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 interface LicensePlateInputProps {
   value?: string;
@@ -128,50 +128,51 @@ export function LicensePlateInput({
         </AnimatePresence>
       </div>
 
-      <div className="flex items-center gap-3 group/plate">
-        {/* Letters Group (2-3 Chars) */}
-        <div className="flex flex-col items-center gap-2">
-          <InputOTP
-            ref={lettersInputRef}
-            maxLength={3}
-            value={letters}
-            onChange={handleLettersChange}
-            disabled={disabled}
-            containerClassName="group"
-          >
-            <InputOTPGroup className="gap-1.5">
-              {[0, 1, 2].map((i) => (
-                <LicenseSlot key={i} index={i} isLetterGroup forceValue={letters[i]} />
-              ))}
-            </InputOTPGroup>
-          </InputOTP>
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">الحروف</span>
-        </div>
+      <div className="flex items-center justify-center w-full">
+        <div className="flex items-center justify-center gap-1 sm:gap-2 group/plate w-full">
+          {/* Letters Group (2-3 Chars) */}
+          <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+            <InputOTP
+              ref={lettersInputRef}
+              maxLength={3}
+              value={letters}
+              onChange={handleLettersChange}
+              disabled={disabled}
+              containerClassName="group"
+            >
+              <InputOTPGroup className="gap-1 sm:gap-1.5">
+                {[0, 1, 2].map((i) => (
+                  <LicenseSlot key={i} index={i} isLetterGroup forceValue={letters[i]} />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">الحروف</span>
+          </div>
 
-        {/* Central Dash */}
-        <div className="flex items-center justify-center pt-2">
-          <div className="w-5 h-1.5 bg-muted rounded-full group-focus-within/plate:bg-emerald-500/50 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.1)]" />
-        </div>
+          {/* Central Dash */}
+          <div className="flex items-center justify-center pt-2">
+            <div className="w-3 h-1 sm:w-5 sm:h-1.5 bg-muted rounded-full group-focus-within/plate:bg-emerald-500/50 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.1)]" />
+          </div>
 
-        {/* Numbers Group (3-4 Chars) */}
-        <div className="flex flex-col items-center gap-2">
-          <InputOTP
-            ref={numbersInputRef}
-            maxLength={4}
-            value={numbers}
-            onChange={handleNumbersChange}
-            onKeyDown={handleNumbersKeyDown}
-            disabled={disabled}
-            containerClassName="group"
-            dir="ltr"
-          >
-            <InputOTPGroup className="gap-1.5">
-              {[0, 1, 2, 3].map((i) => (
-                <LicenseSlot key={i} index={i} forceValue={numbers[i]} />
-              ))}
-            </InputOTPGroup>
-          </InputOTP>
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">الأرقام</span>
+          {/* Numbers Group (3-4 Chars) */}
+          <div dir="ltr" className="flex flex-col items-center gap-1.5 sm:gap-2">
+            <InputOTP
+              ref={numbersInputRef}
+              maxLength={4}
+              value={numbers}
+              onChange={handleNumbersChange}
+              onKeyDown={handleNumbersKeyDown}
+              disabled={disabled}
+              containerClassName="group"
+            >
+              <InputOTPGroup className="gap-1 sm:gap-1.5">
+                {[0, 1, 2, 3].map((i) => (
+                  <LicenseSlot key={i} index={i} forceValue={numbers[i]} />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">الأرقام</span>
+          </div>
         </div>
       </div>
     </div>
@@ -199,7 +200,7 @@ function LicenseSlot({
     <InputOTPSlot
       index={index}
       className={cn(
-        "h-16 w-12 text-2xl font-black border-2 border-border/30 bg-muted/30 transition-all",
+        "h-11 w-9 sm:h-16 sm:w-12 text-lg sm:text-2xl font-black border-2 border-border/30 bg-muted/30 transition-all",
         "rounded-2xl first:rounded-2xl last:rounded-2xl border-l-2 first:border-l-2",
         "data-[active=true]:border-emerald-500/60 data-[active=true]:ring-4 data-[active=true]:ring-emerald-500/10 data-[active=true]:scale-110 data-[active=true]:bg-card data-[active=true]:shadow-[0_0_20px_rgba(16,185,129,0.15)]",
         "group-hover:border-border/60",

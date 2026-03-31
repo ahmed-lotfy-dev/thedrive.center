@@ -118,12 +118,14 @@ export function ImageGalleryViewer({ images, carTitle }: ImageGalleryViewerProps
                 <button
                   onClick={handlePrev}
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-zinc-900/70 hover:bg-zinc-800 backdrop-blur-md text-white rounded-full p-3 transition-all hover:scale-110 cursor-pointer border border-white/10"
+                  aria-label="الصورة السابقة"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>
                 <button
                   onClick={handleNext}
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-zinc-900/70 hover:bg-zinc-800 backdrop-blur-md text-white rounded-full p-3 transition-all hover:scale-110 cursor-pointer border border-white/10"
+                  aria-label="الصورة التالية"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>

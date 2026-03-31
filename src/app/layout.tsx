@@ -44,7 +44,7 @@ const cairo = localFont({
 });
 
 const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL);
-const [latitude, longitude] = GOOGLE_MAPS_COORDS.split(",").map((value) => Number(value.trim()));
+  const [latitude, longitude] = GOOGLE_MAPS_COORDS.split(",").map((value) => Number(value.trim()));
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

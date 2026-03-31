@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { db } from "@/db";
 import { getSafeSiteUrl } from "@/lib/site-url";
+import { logger } from "@/lib/logger";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
@@ -33,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [...routes, ...carRoutes];
   } catch (error) {
-    console.error("Error generating sitemap:", error);
+    logger.error("Error generating sitemap", { error });
     return routes;
   }
 }

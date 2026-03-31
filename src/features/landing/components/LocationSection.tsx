@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, Star, Facebook, Lightbulb } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion, type Variants } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import {
   FACEBOOK_URL,
   INSTAGRAM_URL,
@@ -15,55 +16,66 @@ import {
   getDirectionsUrl,
   getMapEmbedUrl,
   getReviewsUrl,
+  BUSINESS_PHONE,
 } from "@/lib/google-business";
 
-const sectionVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1],
-      staggerChildren: 0.1,
-      delayChildren: 0.1
-    }
-  }
-};
+function InstagramIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  )
+}
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { 
-      type: "spring",
-      stiffness: 100,
-      damping: 15
-    }
-  }
-};
+function TikTokIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
+    </svg>
+  )
+}
 
 export function LocationSection() {
   const mapSrc = getMapEmbedUrl();
   const directionsUrl = getDirectionsUrl();
   const reviewsUrl = getReviewsUrl();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.section
       id="location"
       className="container mx-auto px-4 py-20 md:py-32"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
-      variants={sectionVariants}
+      initial={prefersReducedMotion ? undefined : "hidden"}
+      whileInView={prefersReducedMotion ? undefined : "visible"}
+      viewport={prefersReducedMotion ? undefined : { once: true, margin: "-50px" }}
     >
       <div className="grid gap-12 lg:grid-cols-2 items-start">
-        <div className="space-y-6">
-          <motion.div className="space-y-4" variants={itemVariants}>
-            <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
-              موقعنا وتواصلنا
-            </Badge>
+        <motion.div
+          className="space-y-6"
+          initial={prefersReducedMotion ? undefined : { y: 20, opacity: 0 }}
+          whileInView={prefersReducedMotion ? undefined : { y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        >
+          <motion.div
+            className="space-y-4"
+            initial={prefersReducedMotion ? undefined : { y: 15, opacity: 0 }}
+            whileInView={prefersReducedMotion ? undefined : { y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          >
+            <motion.div
+              initial={prefersReducedMotion ? undefined : { scale: 0.9, opacity: 0 }}
+              whileInView={prefersReducedMotion ? undefined : { scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.15 }}
+            >
+              <Badge variant="outline" className="text-emerald-500 border-emerald-500/20 bg-emerald-500/5 px-4 h-8 rounded-full font-bold">
+                موقعنا وتواصلنا
+              </Badge>
+            </motion.div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white leading-tight">
               نورنا في <span className="text-emerald-500">المحلة الكبرى</span>
             </h2>
@@ -72,8 +84,14 @@ export function LocationSection() {
             </p>
           </motion.div>
 
-          <motion.div className="flex flex-col gap-4" variants={itemVariants}>
-            <Card className="relative overflow-hidden bg-card/40 backdrop-blur-xl border-border/50 group/addr">
+          <motion.div
+            className="flex flex-col gap-4"
+            initial={prefersReducedMotion ? undefined : { y: 15, opacity: 0 }}
+            whileInView={prefersReducedMotion ? undefined : { y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+          >
+            <Card className="relative overflow-hidden bg-card/40 backdrop-blur-xl border-emerald-500/10 group/addr hover:border-emerald-500/30 transition-all duration-500">
               <CardContent className="">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20 group-hover/addr:scale-110 transition-transform">
@@ -103,29 +121,49 @@ export function LocationSection() {
             </Card>
 
             <div className="grid grid-cols-2 gap-4">
-              <Card className="bg-card/40 backdrop-blur-xl border-border/50 group/time">
-                <CardContent className="p-4 flex flex-col items-center text-center">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 border border-emerald-500/20 group-hover/time:rotate-12 transition-transform">
-                    <Clock className="size-5 text-emerald-500" />
-                  </div>
-                  <h3 className="text-[10px] font-medium text-muted-foreground mb-1 uppercase tracking-widest">المواعيد</h3>
-                  <p className="font-bold text-foreground">يومياً 10ص - 10م</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={prefersReducedMotion ? undefined : { y: 15, opacity: 0 }}
+                whileInView={prefersReducedMotion ? undefined : { y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+              >
+                <Card className="bg-card/40 backdrop-blur-xl border-emerald-500/10 group/time hover:border-emerald-500/30 transition-all duration-500">
+                  <CardContent className="p-4 flex flex-col items-center text-center">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 border border-emerald-500/20 group-hover/time:rotate-12 transition-transform">
+                      <Clock className="size-5 text-emerald-500" />
+                    </div>
+                    <h3 className="text-[10px] font-medium text-muted-foreground mb-1 uppercase tracking-widest">المواعيد</h3>
+                    <p className="font-bold text-foreground">يومياً 10ص - 10م</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              <Card className="bg-card/40 backdrop-blur-xl border-border/50 group/phone">
-                <CardContent className="p-4 flex flex-col items-center text-center">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 border border-emerald-500/20 group-hover/phone:scale-110 transition-transform">
-                    <Phone className="size-5 text-emerald-500" />
-                  </div>
-                  <h3 className="text-[10px] font-medium text-muted-foreground mb-1 uppercase tracking-widest">التواصل</h3>
-                  <p className="font-bold text-foreground dir-ltr underline decoration-emerald-500/30 underline-offset-4 decoration-2">01017131414</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={prefersReducedMotion ? undefined : { y: 15, opacity: 0 }}
+                whileInView={prefersReducedMotion ? undefined : { y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
+              >
+                <Card className="bg-card/40 backdrop-blur-xl border-emerald-500/10 group/phone hover:border-emerald-500/30 transition-all duration-500">
+                  <CardContent className="p-4 flex flex-col items-center text-center">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 border border-emerald-500/20 group-hover/phone:scale-110 transition-transform">
+                      <Phone className="size-5 text-emerald-500" />
+                    </div>
+                    <h3 className="text-[10px] font-medium text-muted-foreground mb-1 uppercase tracking-widest">التواصل</h3>
+                    <p className="font-bold text-foreground dir-ltr underline decoration-emerald-500/30 underline-offset-4 decoration-2">{BUSINESS_PHONE}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </motion.div>
 
-          <motion.div className="flex flex-wrap items-center gap-2 pt-2" variants={itemVariants}>
+          <motion.div
+            className="flex flex-wrap items-center gap-2 pt-2"
+            initial={prefersReducedMotion ? undefined : { y: 15, opacity: 0 }}
+            whileInView={prefersReducedMotion ? undefined : { y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+          >
             <Button asChild size="lg" className="rounded-2xl h-12 px-6 bg-emerald-600 hover:bg-emerald-500 text-sm font-bold shadow-lg shadow-emerald-500/20 group">
               <Link href={directionsUrl} target="_blank" rel="noopener noreferrer">
                 افتح الخريطة
@@ -139,7 +177,7 @@ export function LocationSection() {
               </Link>
             </Button>
 
-            {/* Premium Social Icons - UI/UX Pro Max Redesign */}
+            {/* Premium Social Icons */}
             <div className="flex items-center gap-3 pt-2">
               {[
                 {
@@ -150,29 +188,19 @@ export function LocationSection() {
                 },
                 {
                   name: "Instagram",
-                  icon: (props: SVGProps<SVGSVGElement>) => (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                    </svg>
-                  ),
+                  icon: InstagramIcon,
                   href: INSTAGRAM_URL,
                   hoverClass: "hover:bg-gradient-to-tr hover:from-[#f9ce34]/10 hover:via-[#ee2a7b]/10 hover:to-[#6228d7]/10 hover:text-[#e4405f] hover:border-[#e4405f]/20"
                 },
                 {
                   name: "TikTok",
-                  icon: (props: SVGProps<SVGSVGElement>) => (
-                    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-                      <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
-                    </svg>
-                  ),
+                  icon: TikTokIcon,
                   href: TIKTOK_URL,
                   hoverClass: "hover:bg-zinc-900/10 dark:hover:bg-white/10 hover:text-foreground hover:border-foreground/20"
                 }
-              ].map((social, idx) => (
+              ].map((social) => (
                 <Button
-                  key={idx}
+                  key={social.name}
                   asChild
                   variant="outline"
                   className={cn(
@@ -189,11 +217,14 @@ export function LocationSection() {
               ))}
             </div>
           </motion.div>
-        </div>
+        </motion.div>
 
         <motion.div
           className="relative group p-2 rounded-[3.5rem] bg-zinc-200/50 dark:bg-zinc-800/50 border-4 border-white dark:border-white/5 shadow-2xl overflow-hidden"
-          variants={itemVariants}
+          initial={prefersReducedMotion ? undefined : { y: 30, opacity: 0 }}
+          whileInView={prefersReducedMotion ? undefined : { y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
           <iframe
             src={mapSrc}

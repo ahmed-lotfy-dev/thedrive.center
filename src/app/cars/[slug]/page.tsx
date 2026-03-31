@@ -6,6 +6,8 @@ import { ShowcaseCar, ShowcaseCarWithMedia } from "@/types/showcase";
 import { CarDetailsView } from "@/features/cars/components/CarDetailsView";
 import type { Metadata } from "next";
 import { seoKeywords } from "@/lib/seo-keywords";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 function getServiceSeoLabel(serviceType?: string) {
   if (serviceType === "alignment_balancing") return "مركز ضبط و ظبط زوايا وترصيص";
@@ -65,6 +67,10 @@ export default async function CarDetailPage({
 
   if (!car) notFound();
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
+  const isManagement = userRole === "admin" || userRole === "owner";
+
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -80,7 +86,7 @@ export default async function CarDetailPage({
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
-      <CarDetailsView car={car} />
+      <CarDetailsView car={car} isManagement={isManagement} />
     </div>
   );
 }

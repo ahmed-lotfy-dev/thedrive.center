@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const signInSchema = z.object({
   email: z.string({ message: "البريد الإلكتروني مطلوب" }).min(1, "البريد الإلكتروني مطلوب").email("البريد الإلكتروني غير صحيح"),
@@ -59,7 +60,7 @@ export function CredentialsSignIn() {
           window.location.href = "/";
         },
         onError: (ctx) => {
-          alert(ctx.error.message);
+          toast.error(ctx.error.message);
           setIsLoading(false);
         },
       }

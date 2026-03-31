@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const signUpSchema = z
   .object({
@@ -48,7 +49,7 @@ export function CredentialsSignUp() {
           window.location.href = "/";
         },
         onError: (ctx) => {
-          alert(ctx.error.message);
+          toast.error(ctx.error.message);
           setIsLoading(false);
         },
       }

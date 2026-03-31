@@ -1,4 +1,5 @@
 import { WhatsAppProvider } from "../whatsapp.provider";
+import { logger } from "@/lib/logger";
 
 export class OfficialApiProvider implements WhatsAppProvider {
   private accessToken: string;
@@ -64,7 +65,7 @@ export class OfficialApiProvider implements WhatsAppProvider {
         messageId: data.messages?.[0]?.id 
       };
     } catch (error: unknown) {
-      console.error("WhatsApp API Error:", error);
+      logger.error("WhatsApp API Error", { error });
       return { success: false, error: error instanceof Error ? error.message : "Unknown WhatsApp API error" };
     }
   }

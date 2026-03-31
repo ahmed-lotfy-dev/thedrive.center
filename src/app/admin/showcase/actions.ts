@@ -8,6 +8,7 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
 import { AuthorizationError, requireAdmin } from "@/lib/server-auth";
+import { logger } from "@/lib/logger";
 import {
   isKnownServiceType,
   type CarMediaTypeValue,
@@ -104,7 +105,7 @@ export async function deleteShowcaseEntry(id: string) {
     if (error instanceof AuthorizationError) {
       return { error: "Unauthorized" };
     }
-    console.error("Failed to delete showcase entry:", error);
+    logger.error("Failed to delete showcase entry", { error });
     return { error: "فشل في حذف العمل" };
   }
 }

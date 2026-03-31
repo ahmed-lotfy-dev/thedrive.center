@@ -169,7 +169,8 @@ export function Navbar() {
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             className="inline-flex md:hidden size-10 md:size-12 items-center justify-center rounded-xl md:rounded-2xl border border-border/50 bg-muted/50 hover:bg-muted transition-all active:scale-90"
-            aria-label="القائمة"
+            aria-label={isOpen ? "اغلاق القائمة" : "فتح القائمة"}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X className="size-5 md:size-6 text-foreground dark:text-white" /> : <Menu className="size-5 md:size-6 text-foreground dark:text-white" />}
           </button>

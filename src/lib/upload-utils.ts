@@ -1,4 +1,5 @@
 import { MAX_UPLOAD_SIZE_BYTES, validateUploadRequest } from "@/lib/upload-policy";
+import { logger } from "@/lib/logger";
 
 export async function resizeImage(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.9): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -104,6 +105,6 @@ export async function deleteFromR2(url: string) {
 
     return await response.json();
   } catch (error) {
-    console.error("Error in deleteFromR2:", error);
+    logger.error("Error in deleteFromR2", { error });
   }
 }

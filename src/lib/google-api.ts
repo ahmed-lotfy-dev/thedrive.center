@@ -2,6 +2,7 @@
 import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
 import { GOOGLE_PLACE_ID, GOOGLE_RATING, GOOGLE_REVIEWS_COUNT } from "./google-business";
+import { logger } from "@/lib/logger";
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -16,7 +17,7 @@ export interface GoogleBusinessStats {
  */
 export async function fetchGoogleBusinessStats(): Promise<GoogleBusinessStats | null> {
   if (!GOOGLE_MAPS_API_KEY || !GOOGLE_PLACE_ID) {
-    console.warn("Google Maps API Key or Place ID missing. Using fallback values.");
+    logger.warn("Google Maps API Key or Place ID missing. Using fallback values.");
     return null;
   }
 
@@ -39,10 +40,10 @@ export async function fetchGoogleBusinessStats(): Promise<GoogleBusinessStats | 
       };
     }
 
-    console.error("Google Places API error:", data.error?.status, data.error?.message);
+    logger.error("Google Places API error", { status: data.error?.status, message: data.error?.message });
     return null;
   } catch (error) {
-    console.error("Failed to fetch Google Business stats:", error);
+    logger.error("Failed to fetch Google Business stats", { error });
     return null;
   }
 }
@@ -73,9 +74,9 @@ export async function syncStatsToDatabase() {
         set: { value: stats.reviewsCount, updatedAt: new Date() },
       });
 
-    console.log("Successfully synced Google Business stats to database.");
+    logger.info("Successfully synced Google Business stats to database");
   } catch (error) {
-    console.error("Failed to sync stats to database:", error);
+    logger.error("Failed to sync stats to database", { error });
   }
 }
 

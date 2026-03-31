@@ -10,7 +10,7 @@ import {
   Wrench,
   PlusCircle
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn, formatLicensePlate } from "@/lib/utils";

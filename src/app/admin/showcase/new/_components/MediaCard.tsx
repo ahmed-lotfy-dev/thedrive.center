@@ -88,7 +88,7 @@ function CoverImageSection({
         <div className="relative aspect-video rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
           <Image
             src={coverImageUrl}
-            alt="Cover Preview"
+            alt="صورة الغلاف"
             fill
             sizes="(max-width: 1024px) 100vw, 66vw"
             className="object-cover"
@@ -142,10 +142,10 @@ function GallerySection({
       <Label>معرض الصور (Gallery)</Label>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {galleryUrls.map((url, i) => (
-          <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+          <div key={url} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
             <Image
               src={url}
-              alt={`Gallery ${i + 1}`}
+              alt={`صورة المعرض ${i + 1}`}
               fill
               sizes="(max-width: 768px) 50vw, 25vw"
               className="object-cover"

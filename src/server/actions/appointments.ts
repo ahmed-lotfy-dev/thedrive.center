@@ -324,7 +324,7 @@ export async function getAppointments(page: number = 1, limit: number = 12): Pro
       ...paginatedAppointments,
     };
   } catch (error) {
-    console.error("Error fetching appointments:", error);
+    logger.error("Error fetching appointments", { error });
     return {
       success: false,
       error: "Failed to fetch appointments",

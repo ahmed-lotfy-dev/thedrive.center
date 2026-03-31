@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { resizeImage, uploadToR2, deleteFromR2 } from "@/lib/upload-utils";
 import { createShowcaseEntry, updateShowcaseEntry } from "../actions";
@@ -15,6 +16,7 @@ interface ShowcaseFormProps {
 }
 
 export function ShowcaseForm({ initialData }: ShowcaseFormProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
   const [coverImageUrl, setCoverImageUrl] = useState(initialData?.coverImageUrl || "");
@@ -53,13 +55,13 @@ export function ShowcaseForm({ initialData }: ShowcaseFormProps) {
     }
   }
 
-  function handleRemoveCover() {
-    deleteFromR2(coverImageUrl);
+  async function handleRemoveCover() {
+    await deleteFromR2(coverImageUrl);
     setCoverImageUrl("");
   }
 
-  function handleRemoveGalleryItem(index: number) {
-    deleteFromR2(galleryUrls[index]);
+  async function handleRemoveGalleryItem(index: number) {
+    await deleteFromR2(galleryUrls[index]);
     setGalleryUrls((prev) => prev.filter((_, idx) => idx !== index));
   }
 
@@ -81,6 +83,7 @@ export function ShowcaseForm({ initialData }: ShowcaseFormProps) {
         toast.error(typeof result.error === "string" ? result.error : "حدث خطأ أثناء حفظ البيانات");
       } else {
         toast.success(isEdit ? "تم تحديث البيانات بنجاح" : "تم إضافة العمل بنجاح");
+        router.push("/admin/showcase");
       }
     });
   }

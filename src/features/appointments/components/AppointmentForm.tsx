@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -54,6 +54,7 @@ export function AppointmentForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session } = authClient.useSession();
   const sessionUser = session?.user as SessionUser | undefined;
+  const sessionInitialized = useRef(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -69,16 +70,14 @@ export function AppointmentForm() {
     },
   });
 
-  // Update form if session loads or params change
-  useEffect(() => {
-    if (sessionUser) {
-      form.setValue("guestName", sessionUser.name || "");
-      form.setValue("guestEmail", sessionUser.email || "");
-      if (sessionUser.phone) {
-        form.setValue("guestPhone", sessionUser.phone);
-      }
+  if (sessionUser && !sessionInitialized.current) {
+    sessionInitialized.current = true;
+    form.setValue("guestName", sessionUser.name || "");
+    form.setValue("guestEmail", sessionUser.email || "");
+    if (sessionUser.phone) {
+      form.setValue("guestPhone", sessionUser.phone);
     }
-  }, [sessionUser, form]);
+  }
 
   async function onSubmit(values: FormValues) {
     setIsSubmitting(true);
@@ -104,7 +103,8 @@ export function AppointmentForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 bg-card p-8 rounded-2xl border shadow-lg">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 bg-card p-4 sm:p-8 rounded-2xl border shadow-lg">
+        <fieldset disabled={isSubmitting} className="space-y-8">
         <div className="space-y-2">
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-primary/10 p-3 rounded-xl">
@@ -331,6 +331,7 @@ export function AppointmentForm() {
             تأكيد الحجز
           </Button>
         </div>
+        </fieldset>
       </form>
     </Form>
   );

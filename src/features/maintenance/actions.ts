@@ -81,7 +81,7 @@ export async function getUserCars(page: number = 1, limit: number = 6) {
       error: null 
     };
   } catch (error) {
-    console.error("Error fetching user cars:", error);
+    logger.error("Error fetching user cars", { error });
     return { data: [], meta: { totalPages: 0 }, error: "Failed to fetch cars" };
   }
 }
@@ -298,7 +298,7 @@ export async function searchCustomerCars(query: string, page: number = 1, limit:
       error: null 
     };
   } catch (error) {
-    console.error("Error searching cars:", error);
+    logger.error("Error searching cars", { error });
     return { data: [], meta: { totalPages: 0 }, error: "Search failed" };
   }
 }

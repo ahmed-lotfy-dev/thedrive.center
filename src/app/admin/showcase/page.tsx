@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { DeleteAction } from "./DeleteAction";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { PaginationControls } from "@/components/shared/PaginationControls";
+import { getServiceTypeLabel } from "@/lib/constants";
 
 interface ShowcaseDashboardProps {
   searchParams: Promise<{
@@ -61,13 +62,12 @@ export default async function ShowcaseDashboardPage({ searchParams }: ShowcaseDa
                 src={car.coverImageUrl}
                 alt={car.title}
                 fill
+                loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute top-4 right-4 flex gap-2">
                 <Badge className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground font-black h-8 px-3 rounded-xl shadow-lg">
-                  {car.serviceType === 'alignment_balancing' ? 'ضبط زوايا' :
-                    car.serviceType === 'inspection' ? 'فحص شامل' :
-                      car.serviceType === 'steering_coding' ? 'تكويد طارة' : car.serviceType}
+                  {getServiceTypeLabel(car.serviceType)}
                 </Badge>
               </div>
             </div>

@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ShowcaseCar } from "@/types/showcase";
+import { getServiceTypeLabel } from "@/lib/constants";
 
 interface CarCardProps {
   car: ShowcaseCar;
@@ -13,9 +14,7 @@ interface CarCardProps {
 }
 
 export function CarCard({ car, index }: CarCardProps) {
-  const serviceLabel = car.serviceType === 'alignment_balancing' ? 'ضبط زوايا وترصيص' :
-    car.serviceType === 'inspection' ? 'فحص شامل' :
-      car.serviceType === 'steering_coding' ? 'تكويد طارة' : car.serviceType;
+  const serviceLabel = getServiceTypeLabel(car.serviceType);
 
   return (
     <Link href={`/cars/${car.slug}`} className="group block">

@@ -40,9 +40,9 @@ export function HeroImageClient({ initialImageUrl }: HeroImageClientProps) {
     }
   }
 
-  function handleRemove() {
+  async function handleRemove() {
     if (imageUrl) {
-      deleteFromR2(imageUrl);
+      await deleteFromR2(imageUrl);
       setImageUrl("");
     }
   }

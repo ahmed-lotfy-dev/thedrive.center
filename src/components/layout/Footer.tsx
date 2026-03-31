@@ -14,26 +14,12 @@ import {
   getReviewsUrl,
   GOOGLE_RATING,
   GOOGLE_REVIEWS_COUNT,
+  BUSINESS_PHONE_WHATSAPP,
 } from "@/lib/google-business";
 import { Clock3, Facebook, MapPin, Phone, Star } from "lucide-react";
-import { getDynamicStats } from "@/app/actions/stats";
 
 export function Footer() {
   const pathname = usePathname();
-  const [stats, setStats] = React.useState<{
-    rating: string;
-    reviewsCount: string;
-  } | null>(null);
-
-  React.useEffect(() => {
-    if (pathname?.startsWith("/admin")) return;
-
-    async function loadStats() {
-      const data = await getDynamicStats();
-      if (data) setStats(data);
-    }
-    void loadStats();
-  }, [pathname]);
 
   if (pathname?.startsWith("/admin")) {
     return null;
@@ -117,7 +103,7 @@ export function Footer() {
                 </div>
                 <div className="flex flex-col gap-1 pt-1" dir="ltr">
                   <a
-                    href="https://wa.me/201017131414"
+                    href={`https://wa.me/${BUSINESS_PHONE_WHATSAPP}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-emerald-500 font-black transition-colors text-base tracking-tighter"
@@ -225,7 +211,7 @@ export function Footer() {
                     ))}
                   </div>
                   <span className="text-sm font-black text-foreground">
-                    {stats?.rating || GOOGLE_RATING}
+                    {GOOGLE_RATING}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -236,7 +222,7 @@ export function Footer() {
                   </div>
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                     Google Business Verified •{" "}
-                    {stats?.reviewsCount || GOOGLE_REVIEWS_COUNT}+ Reviews
+                    {GOOGLE_REVIEWS_COUNT}+ Reviews
                   </span>
                 </div>
               </Link>

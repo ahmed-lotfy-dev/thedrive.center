@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CarCard } from "@/features/maintenance/components/CarCard";
 import { LinkCarForm } from "@/features/maintenance/components/LinkCarForm";
 import { Plus, Car as CarIcon, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 
 import { PaginationControls } from "@/components/shared/PaginationControls";
@@ -20,12 +20,7 @@ interface GarageDashboardProps {
 }
 
 export function GarageDashboard({ initialCars, meta }: GarageDashboardProps) {
-  const [cars, setCars] = useState(initialCars);
   const [showLinkForm, setShowLinkForm] = useState(false);
-
-  useEffect(() => {
-    setCars(initialCars);
-  }, [initialCars]);
 
   return (
     <div className="space-y-10">
@@ -72,7 +67,7 @@ export function GarageDashboard({ initialCars, meta }: GarageDashboardProps) {
         )}
       </AnimatePresence>
 
-      {cars.length === 0 ? (
+      {initialCars.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center bg-zinc-900/30 rounded-4xl border border-dashed border-white/10">
           <div className="size-20 bg-zinc-800 rounded-full flex items-center justify-center mb-6">
             <CarIcon className="size-10 text-zinc-500" />
@@ -101,7 +96,7 @@ export function GarageDashboard({ initialCars, meta }: GarageDashboardProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {cars.map((car) => (
+          {initialCars.map((car) => (
             <CarCard key={car.id} car={car} />
           ))}
         </div>
