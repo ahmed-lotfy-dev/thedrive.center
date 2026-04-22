@@ -6,17 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { uploadToR2, deleteFromR2, resizeImage } from "@/lib/upload-utils";
-import { updateHeroImage } from "./actions";
-import { ImagePlus, Trash2, Loader2, Globe, Info } from "lucide-react";
+import { uploadToR2, deleteFromR2, resizeImage, resizeImageForMobile } from "@/lib/upload-utils";
+import { updateHeroImage, updateHeroImageMobile } from "./actions";
+import { ImagePlus, Trash2, Loader2, Globe, Info, Smartphone, Monitor } from "lucide-react";
 import Image from "next/image";
 
 interface HeroImageClientProps {
   initialImageUrl: string | null;
+  initialMobileUrl: string | null;
 }
 
-export function HeroImageClient({ initialImageUrl }: HeroImageClientProps) {
+export function HeroImageClient({ initialImageUrl, initialMobileUrl }: HeroImageClientProps) {
   const [imageUrl, setImageUrl] = useState(initialImageUrl || "");
+  const [mobileImageUrl, setMobileImageUrl] = useState(initialMobileUrl || "");
   const [isUploading, setIsUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -25,13 +27,24 @@ export function HeroImageClient({ initialImageUrl }: HeroImageClientProps) {
     if (!file) return;
 
     setIsUploading(true);
-    const toastId = toast.loading("جاري رفع الصورة...");
+    const toastId = toast.loading("جاري رفع الصورتين...");
 
     try {
-      const optimizedBlob = await resizeImage(file);
-      const url = await uploadToR2(optimizedBlob, `hero-image-${Date.now()}.webp`);
-      setImageUrl(url);
-      toast.success("تم رفع الصورة بنجاح", { id: toastId });
+      const timestamp = Date.now();
+      
+      const [desktopBlob, mobileBlob] = await Promise.all([
+        resizeImage(file, 1920, 1920, 0.85),
+        resizeImageForMobile(file, 0.75)
+      ]);
+
+      const [desktopUrl, mobileUrl] = await Promise.all([
+        uploadToR2(desktopBlob, `hero-image-${timestamp}.webp`),
+        uploadToR2(mobileBlob, `hero-image-mobile-${timestamp}.webp`)
+      ]);
+
+      setImageUrl(desktopUrl);
+      setMobileImageUrl(mobileUrl);
+      toast.success("تم رفع الصورتين (سطح + موبايل) بنجاح", { id: toastId });
     } catch (error) {
       console.error("Upload error:", error);
       toast.error("فشل رفع الصورة", { id: toastId });
@@ -45,15 +58,23 @@ export function HeroImageClient({ initialImageUrl }: HeroImageClientProps) {
       await deleteFromR2(imageUrl);
       setImageUrl("");
     }
+    if (mobileImageUrl) {
+      await deleteFromR2(mobileImageUrl);
+      setMobileImageUrl("");
+    }
   }
 
   function handleSave() {
     startTransition(async () => {
-      const result = await updateHeroImage(imageUrl);
-      if (result.success) {
-        toast.success("تم حفظ التغييرات بنجاح");
+      const [desktopResult, mobileResult] = await Promise.all([
+        updateHeroImage(imageUrl),
+        updateHeroImageMobile(mobileImageUrl)
+      ]);
+      
+      if (desktopResult.success && mobileResult.success) {
+        toast.success("تم حفظ الصورتين بنجاح");
       } else {
-        toast.error(result.error);
+        toast.error("فشل حفظ إحدى الصور");
       }
     });
   }

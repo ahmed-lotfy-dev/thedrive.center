@@ -48,10 +48,14 @@ const imageVariants: Variants = {
 
 interface HeroProps {
   imageUrl?: string | null;
+  mobileImageUrl?: string | null;
 }
 
-export function Hero({ imageUrl }: HeroProps) {
+export function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
   const activeImage = imageUrl && imageUrl.trim() !== "" ? imageUrl : "/active-hero-image.webp";
+  const activeMobileImage = mobileImageUrl && mobileImageUrl.trim() !== "" 
+    ? mobileImageUrl 
+    : "/active-hero-image-mobile.webp";
   const prefersReducedMotion = useReducedMotion();
   
   return (
@@ -138,14 +142,20 @@ export function Hero({ imageUrl }: HeroProps) {
             <div className="w-full relative">
               <div className="absolute inset-0 -m-6 bg-linear-to-tr from-emerald-500/20 to-emerald-500/20 rounded-[3rem] blur-2xl -z-10 opacity-60" />
               <div className="relative w-full aspect-4/3 lg:aspect-square rounded-4xl overflow-hidden shadow-2xl border-4 border-white/50 dark:border-white/10 bg-black/5 group">
-                <Image
-                  src={activeImage}
-                  alt="مركز خدمة The Drive Center"
-                  fill
-                  priority
-                  className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-105"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
+                <picture>
+                  <source
+                    media="(max-width: 800px)"
+                    srcSet={activeMobileImage}
+                  />
+                  <Image
+                    src={activeImage}
+                    alt="مركز خدمة The Drive Center"
+                    fill
+                    priority
+                    className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-105"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </picture>
               </div>
             </div>
           </motion.div>

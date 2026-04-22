@@ -1,31 +1,30 @@
 import { MAX_UPLOAD_SIZE_BYTES, validateUploadRequest } from "@/lib/upload-policy";
 import { logger } from "@/lib/logger";
 
-export async function resizeImage(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.9): Promise<Blob> {
+export async function resizeImage(
+  file: File,
+  maxWidth = 1920,
+  maxHeight = 1920,
+  quality = 0.85
+): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.src = URL.createObjectURL(file);
+    const src = URL.createObjectURL(file);
+    img.src = src;
     img.onload = () => {
-      let width = img.width;
-      let height = img.height;
-
-      if (width > height) {
-        if (width > maxWidth) {
-          height *= maxWidth / width;
-          width = maxWidth;
-        }
-      } else {
-        if (height > maxHeight) {
-          width *= maxHeight / height;
-          height = maxHeight;
-        }
-      }
+      URL.revokeObjectURL(src);
+      const { width: resizedWidth, height: resizedHeight } = calculateSize(
+        img.width,
+        img.height,
+        maxWidth,
+        maxHeight
+      );
 
       const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = resizedWidth;
+      canvas.height = resizedHeight;
       const ctx = canvas.getContext("2d");
-      ctx?.drawImage(img, 0, 0, width, height);
+      ctx?.drawImage(img, 0, 0, resizedWidth, resizedHeight);
 
       canvas.toBlob(
         (blob) => {
@@ -39,8 +38,42 @@ export async function resizeImage(file: File, maxWidth = 1920, maxHeight = 1920,
         quality
       );
     };
-    img.onerror = (err) => reject(err);
+    img.onerror = () => {
+      URL.revokeObjectURL(src);
+      reject(new Error("Failed to load image"));
+    };
   });
+}
+
+export async function resizeImageForMobile(
+  file: File,
+  quality = 0.75
+): Promise<Blob> {
+  return resizeImage(file, 800, 800, quality);
+}
+
+function calculateSize(
+  originalWidth: number,
+  originalHeight: number,
+  maxWidth: number,
+  maxHeight: number
+): { width: number; height: number } {
+  let width = originalWidth;
+  let height = originalHeight;
+
+  if (width > height) {
+    if (width > maxWidth) {
+      height = Math.round((height * maxWidth) / width);
+      width = maxWidth;
+    }
+  } else {
+    if (height > maxHeight) {
+      width = Math.round((width * maxHeight) / height);
+      height = maxHeight;
+    }
+  }
+
+  return { width, height };
 }
 
 export async function uploadToR2(file: File | Blob, originalName: string) {

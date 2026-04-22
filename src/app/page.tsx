@@ -62,9 +62,13 @@ export default async function Home() {
   }
 
   let heroImageUrl: string | null = null;
+  let mobileImageUrl: string | null = null;
 
   try {
-    heroImageUrl = await siteSettingQueries.get("hero_image_url");
+    [heroImageUrl, mobileImageUrl] = await Promise.all([
+      siteSettingQueries.get("hero_image_url"),
+      siteSettingQueries.get("hero_image_mobile_url")
+    ]);
   } catch {
     // Silently fail - use defaults
   }
@@ -226,7 +230,7 @@ export default async function Home() {
           suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
         />
-      <Hero imageUrl={heroImageUrl} />
+      <Hero imageUrl={heroImageUrl} mobileImageUrl={mobileImageUrl} />
       <Services />
       <Process />
       <FAQ />
