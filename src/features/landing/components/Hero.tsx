@@ -148,7 +148,7 @@ export function Hero({ imageUrl, mobileImageUrl }: HeroProps) {
                   fill
                   priority
                   className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 1023px) 1px, 50vw"
                   quality={85}
                 />
               </div>
