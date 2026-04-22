@@ -19,6 +19,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { isSiteStateScreenEnabled } from "@/lib/site-state";
 import { WebMCPTools } from "@/components/shared/WebMCPTools";
 
@@ -175,21 +176,23 @@ export default function RootLayout({
       </head>
       <body className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" disableTransitionOnChange>
-          {!isSiteStateScreenMode && <Navbar />}
-          <script
-            type="application/ld+json"
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
-          />
-          <script
-            type="application/ld+json"
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-          />
-          {children}
-          {!isSiteStateScreenMode && <Footer />}
-          <Toaster dir="rtl" position="top-center" />
-          <WebMCPTools />
+          <QueryProvider>
+            {!isSiteStateScreenMode && <Navbar />}
+            <script
+              type="application/ld+json"
+              suppressHydrationWarning
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+            />
+            <script
+              type="application/ld+json"
+              suppressHydrationWarning
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+            />
+            {children}
+            {!isSiteStateScreenMode && <Footer />}
+            <Toaster dir="rtl" position="top-center" />
+            <WebMCPTools />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
