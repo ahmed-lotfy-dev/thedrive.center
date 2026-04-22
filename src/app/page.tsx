@@ -54,10 +54,17 @@ export default async function Home() {
     return <ComingSoon />;
   }
 
-  const [heroImageUrl, randomAdvice] = await Promise.all([
-    siteSettingQueries.get("hero_image_url"),
-    getRandomAdvice()
-  ]);
+  let heroImageUrl: string | null = null;
+  let randomAdvice: { id: string; content: string } | null = null;
+
+  try {
+    [heroImageUrl, randomAdvice] = await Promise.all([
+      siteSettingQueries.get("hero_image_url"),
+      getRandomAdvice()
+    ]);
+  } catch {
+    // Silently fail - use defaults
+  }
 
   const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
 
