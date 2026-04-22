@@ -230,7 +230,7 @@ export default async function Home() {
           suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
         />
-      <Hero imageUrl={heroImageUrl} mobileImageUrl={mobileImageUrl} />
+      <Hero imageUrl={heroImageUrl} />
       <Services />
       <Process />
       <FAQ />

@@ -35,7 +35,6 @@ export const metadata: Metadata = {
 export default async function FaresPage() {
   const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
   const heroImageUrl = await siteSettingQueries.get("hero_image_url");
-  const mobileImageUrl = await siteSettingQueries.get("hero_image_mobile_url");
 
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
@@ -83,7 +82,7 @@ export default async function FaresPage() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
       />
-      <Hero imageUrl={heroImageUrl} mobileImageUrl={mobileImageUrl} />
+      <Hero imageUrl={heroImageUrl} />
       <Process />
       <FAQ />
       <CTA />
