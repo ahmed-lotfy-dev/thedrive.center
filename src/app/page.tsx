@@ -9,6 +9,7 @@ import { MaintenanceMode } from "@/features/maintenance/components/MaintenanceMo
 
 import { siteSettingQueries } from "@/db/queries/site-settings";
 import { getRandomAdvice } from "@/app/admin/advices/actions";
+import { getSafeSiteUrl } from "@/lib/site-url";
 import { AdvicePopup } from "@/components/shared/AdvicePopup";
 import { isComingSoonModeEnabled, isMaintenanceModeEnabled } from "@/lib/site-state";
 import type { Metadata } from "next";
@@ -58,6 +59,8 @@ export default async function Home() {
     getRandomAdvice()
   ]);
 
+  const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
+
   const homeFaqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -87,6 +90,63 @@ export default async function Home() {
         },
       },
     ],
+  };
+
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AutoRepairShop",
+    name: GOOGLE_BUSINESS_NAME,
+    image: `${siteUrl}/og-image.png`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: BUSINESS_ADDRESS,
+      addressLocality: BUSINESS_CITY,
+      addressRegion: "الغربية",
+      postalCode: "31951",
+      addressCountry: "EG"
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: "30.9472165",
+      longitude: "31.155854"
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday", "Sunday"],
+        opens: "09:00",
+        closes: "20:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Friday",
+        opens: "14:00",
+        closes: "20:00"
+      }
+    ],
+    priceRange: "$$",
+    currenciesAccepted: "EGP",
+    paymentAccepted: ["Cash", "Credit Card", "Visa", "MasterCard"],
+    telephone: `+2${BUSINESS_PHONE}`,
+    url: siteUrl,
+    servesCuisine: "Automotive",
+    identifier: [
+      {
+        "@type": "PropertyValue",
+        name: "مركز ترصيص",
+        value: "مركز ترصيص العجلات في المحلة الكبرى"
+      },
+      {
+        "@type": "PropertyValue",
+        name: "مركز فحص",
+        value: "مركز فحص سيارات شامل قبل البيع والشراء"
+      },
+      {
+        "@type": "PropertyValue",
+        name: "مركز ضبط زوايا",
+        value: "مركز ضبط زوايا بالكمبيوتر في المحلة الكبرى"
+      }
+    ]
   };
 
   const serviceJsonLd = {
@@ -151,6 +211,11 @@ export default async function Home() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
+      <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        />
       <Hero imageUrl={heroImageUrl} />
       <Services />
       <Process />

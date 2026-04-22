@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = `${siteUrl}/`;
 
   // Static routes
-  const routes = ["", "cars", "book"].map((route) => ({
+  const routes = ["", "cars", "book", "fahs", "zawaiya", "tarses", "faq"].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
