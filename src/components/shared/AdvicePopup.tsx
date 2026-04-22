@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X,  Lightbulb, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,25 +11,32 @@ interface Advice {
 }
 
 interface AdvicePopupProps {
-  advice: Advice | null;
   delaySeconds?: number;
 }
 
-export function AdvicePopup({ advice, delaySeconds = 30 }: AdvicePopupProps) {
+export function AdvicePopup({ delaySeconds = 30 }: AdvicePopupProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [hasBeenDismissed, setHasBeenDismissed] = useState(false);
+  const [advice, setAdvice] = useState<Advice | null>(null);
+  const fetched = useRef(false);
+
+  useEffect(() => {
+    if (fetched.current) return;
+    fetched.current = true;
+
+    fetch("/api/advices/random")
+      .then((res) => res.ok ? res.json() : null)
+      .then(setAdvice)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!advice || hasBeenDismissed) return;
-
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, delaySeconds * 1000);
-
+    const timer = setTimeout(() => setIsVisible(true), delaySeconds * 1000);
     return () => clearTimeout(timer);
   }, [advice, delaySeconds, hasBeenDismissed]);
 
-  if (!advice || hasBeenDismissed) return null;
+  if (hasBeenDismissed || !advice) return null;
 
   return (
     <AnimatePresence>

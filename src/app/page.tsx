@@ -8,7 +8,6 @@ import { ComingSoon } from "@/features/maintenance/components/ComingSoon";
 import { MaintenanceMode } from "@/features/maintenance/components/MaintenanceMode";
 
 import { siteSettingQueries } from "@/db/queries/site-settings";
-import { getRandomAdvice } from "@/app/admin/advices/actions";
 import { getSafeSiteUrl } from "@/lib/site-url";
 import { AdvicePopup } from "@/components/shared/AdvicePopup";
 import { isComingSoonModeEnabled, isMaintenanceModeEnabled } from "@/lib/site-state";
@@ -55,13 +54,9 @@ export default async function Home() {
   }
 
   let heroImageUrl: string | null = null;
-  let randomAdvice: { id: string; content: string } | null = null;
 
   try {
-    [heroImageUrl, randomAdvice] = await Promise.all([
-      siteSettingQueries.get("hero_image_url"),
-      getRandomAdvice()
-    ]);
+    heroImageUrl = await siteSettingQueries.get("hero_image_url");
   } catch {
     // Silently fail - use defaults
   }
@@ -231,7 +226,7 @@ export default async function Home() {
       <LocationSection />
       
       {/* Dynamic Car Tips / Advice Pop-up */}
-      <AdvicePopup advice={randomAdvice} delaySeconds={30} />
+      <AdvicePopup delaySeconds={30} />
     </main>
   );
 }
