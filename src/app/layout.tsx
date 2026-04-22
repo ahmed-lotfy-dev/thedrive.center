@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import {
@@ -15,6 +15,12 @@ import {
 } from "@/lib/google-business";
 import { seoKeywords } from "@/lib/seo-keywords";
 import { getSafeSiteUrl } from "@/lib/site-url";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { isSiteStateScreenEnabled } from "@/lib/site-state";
+import { WebMCPTools } from "@/components/shared/WebMCPTools";
 
 const cairo = localFont({
   src: [
@@ -44,7 +50,7 @@ const cairo = localFont({
 });
 
 const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL);
-  const [latitude, longitude] = GOOGLE_MAPS_COORDS.split(",").map((value) => Number(value.trim()));
+const [latitude, longitude] = GOOGLE_MAPS_COORDS.split(",").map((value) => Number(value.trim()));
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -95,12 +101,10 @@ export const metadata: Metadata = {
   },
 };
 
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { isSiteStateScreenEnabled } from "@/lib/site-state";
-import { WebMCPTools } from "@/components/shared/WebMCPTools";
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function RootLayout({
   children,
@@ -165,6 +169,22 @@ export default function RootLayout({
 
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href={siteUrl} crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href={siteUrl} />
+        <link
+          rel="preload"
+          href="/fonts/Cairo-Regular.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/active-hero-image.webp"
+          as="image"
+        />
+      </head>
       <body className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" disableTransitionOnChange>
           {!isSiteStateScreenMode && <Navbar />}

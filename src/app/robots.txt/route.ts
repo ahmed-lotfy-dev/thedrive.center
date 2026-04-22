@@ -42,7 +42,6 @@ Allow: /
 
 Host: ${siteUrl}
 Sitemap: ${siteUrl}/sitemap.xml
-Content-Signal: ai-train=no, search=yes, ai-input=no
 `;
 
   return new Response(body, {
