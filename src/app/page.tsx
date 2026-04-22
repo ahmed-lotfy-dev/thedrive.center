@@ -1,6 +1,9 @@
 import { Hero } from "@/features/landing/components/Hero";
 import { Services } from "@/features/landing/components/Services";
 import { Process } from "@/features/landing/components/Process";
+import { FAQ } from "@/features/landing/components/FAQ";
+import { CTA } from "@/features/landing/components/CTA";
+import { LocationSection } from "@/features/landing/components/LocationSection";
 import { ComingSoon } from "@/features/maintenance/components/ComingSoon";
 import { MaintenanceMode } from "@/features/maintenance/components/MaintenanceMode";
 
@@ -17,17 +20,6 @@ import {
   GOOGLE_BUSINESS_NAME,
 } from "@/lib/google-business";
 import { seoKeywords } from "@/lib/seo-keywords";
-import dynamic from "next/dynamic";
-
-const FAQ = dynamic(() => import("@/features/landing/components/FAQ").then((mod) => mod.FAQ), {
-  loading: () => <div className="h-96 animate-pulse bg-card rounded-3xl m-4" />,
-});
-const CTA = dynamic(() => import("@/features/landing/components/CTA").then((mod) => mod.CTA), {
-  loading: () => <div className="h-64 animate-pulse bg-card rounded-3xl m-4" />,
-});
-const LocationSection = dynamic(() => import("@/features/landing/components/LocationSection").then((mod) => mod.LocationSection), {
-  loading: () => <div className="h-80 animate-pulse bg-card rounded-3xl m-4" />,
-});
 
 export const metadata: Metadata = {
   title: "مركز فحص سيارات قبل البيع والشراء | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | The Drive Center",

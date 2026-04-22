@@ -172,18 +172,6 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href={siteUrl} crossOrigin="anonymous" />
         <link rel="dns-prefetch" href={siteUrl} />
-        <link
-          rel="preload"
-          href="/fonts/Cairo-Regular.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/active-hero-image.webp"
-          as="image"
-        />
       </head>
       <body className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" disableTransitionOnChange>
