@@ -43,6 +43,15 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/",
+        headers: [
+          {
+            key: "Link",
+            value: "</.well-known/api-catalog>; rel=\"api-catalog\", </docs/api>; rel=\"service-doc\", </.well-known/openid-configuration>; rel=\"oidc-configuration\"",
+          },
+        ],
+      },
+      {
         source: "/(.*)",
         headers: [
           {

@@ -100,6 +100,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { isSiteStateScreenEnabled } from "@/lib/site-state";
+import { WebMCPTools } from "@/components/shared/WebMCPTools";
 
 export default function RootLayout({
   children,
@@ -180,6 +181,7 @@ export default function RootLayout({
           {children}
           {!isSiteStateScreenMode && <Footer />}
           <Toaster dir="rtl" position="top-center" />
+          <WebMCPTools />
         </ThemeProvider>
       </body>
     </html>
