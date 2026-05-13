@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Construction, Facebook, Instagram, MessageSquare, Wrench } from "lucide-react";
+import { Construction, MessageSquare, Wrench } from "lucide-react";
+import { FacebookIcon, InstagramIcon } from "@/components/ui/social-icons";
 import { Button } from "@/components/ui/button";
 import { getComingSoonLaunchDate } from "@/lib/site-state";
 import {
@@ -157,12 +158,12 @@ export function SiteStateScreen({
               <div className="flex items-center gap-3">
                 <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#1877F2] hover:bg-[#1877F2]/12 hover:text-[#1877F2] hover:shadow-[0_0_24px_rgba(24,119,242,0.28)]">
                   <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="group">
-                    <Facebook className="size-5 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.8} />
+                    <FacebookIcon className="size-5 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.8} />
                   </a>
                 </Button>
                 <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#ee2a7b]/70 hover:bg-[linear-gradient(135deg,rgba(249,206,52,0.18),rgba(238,42,123,0.28),rgba(98,40,215,0.24))] hover:text-white hover:shadow-[0_0_24px_rgba(238,42,123,0.24)]">
                   <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group">
-                    <Instagram className="size-5 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.8} />
+                    <InstagramIcon className="size-5 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.8} />
                   </a>
                 </Button>
                 <Button asChild variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#25F4EE] hover:bg-[linear-gradient(135deg,rgba(37,244,238,0.14),rgba(254,44,85,0.14))] hover:text-[#25F4EE] hover:shadow-[0_0_24px_rgba(37,244,238,0.18)]">

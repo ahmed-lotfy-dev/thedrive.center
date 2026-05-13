@@ -16,7 +16,8 @@ import {
   GOOGLE_REVIEWS_COUNT,
   BUSINESS_PHONE_WHATSAPP,
 } from "@/lib/google-business";
-import { Clock3, Facebook, MapPin, Phone, Star } from "lucide-react";
+import { Clock3, MapPin, Phone, Star } from "lucide-react";
+import { FacebookIcon } from "@/components/ui/social-icons";
 
 export function Footer() {
   const pathname = usePathname();
@@ -162,7 +163,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   title="فيسبوك"
                 >
-                  <Facebook className="size-5" />
+                  <FacebookIcon className="size-5" />
                 </Link>
               </Button>
               <Button

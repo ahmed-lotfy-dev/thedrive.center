@@ -1,6 +1,7 @@
 "use client";
 
-import { Phone, MapPin, Mail, Facebook, Instagram, Music2 } from "lucide-react";
+import { Phone, MapPin, Mail, Music2 } from "lucide-react";
+import { FacebookIcon, InstagramIcon } from "@/components/ui/social-icons";
 import { Button } from "@/components/ui/button";
 import { BUSINESS_ADDRESS, BUSINESS_PHONE, FACEBOOK_URL, INSTAGRAM_URL, TIKTOK_URL } from "@/lib/google-business";
 import Link from "next/link";
@@ -76,10 +77,10 @@ export function AboutUs() {
                 <Link href={TIKTOK_URL} target="_blank"><Music2 className="w-5 h-5" /></Link>
               </Button>
               <Button asChild variant="outline" size="icon" className="w-12 h-12 rounded-full border-zinc-200 dark:border-zinc-800 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all duration-300 shadow-sm">
-                <Link href={FACEBOOK_URL} target="_blank"><Facebook className="w-5 h-5" /></Link>
+                <Link href={FACEBOOK_URL} target="_blank"><FacebookIcon className="w-5 h-5" /></Link>
               </Button>
               <Button asChild variant="outline" size="icon" className="w-12 h-12 rounded-full border-zinc-200 dark:border-zinc-800 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all duration-300 shadow-sm">
-                <Link href={INSTAGRAM_URL} target="_blank"><Instagram className="w-5 h-5" /></Link>
+                <Link href={INSTAGRAM_URL} target="_blank"><InstagramIcon className="w-5 h-5" /></Link>
               </Button>
             </motion.div>
           </div>

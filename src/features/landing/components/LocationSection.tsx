@@ -4,7 +4,8 @@ import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, Star, Facebook, Lightbulb } from "lucide-react";
+import { MapPin, Phone, Clock, Star, Lightbulb } from "lucide-react";
+import { FacebookIcon, InstagramIcon } from "@/components/ui/social-icons";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "motion/react";
@@ -18,16 +19,6 @@ import {
   getReviewsUrl,
   BUSINESS_PHONE,
 } from "@/lib/google-business";
-
-function InstagramIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-    </svg>
-  )
-}
 
 function TikTokIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -182,7 +173,7 @@ export function LocationSection() {
               {[
                 {
                   name: "Facebook",
-                  icon: Facebook,
+                  icon: FacebookIcon,
                   href: FACEBOOK_URL,
                   hoverClass: "hover:bg-[#1877F2]/10 hover:text-[#1877F2] hover:border-[#1877F2]/20"
                 },
