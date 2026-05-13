@@ -71,10 +71,10 @@ export const metadata: Metadata = {
     description: "خدمة احترافية لضبط الزوايا والترصيص وفحص السيارات قبل الشراء أو البيع داخل المحلة الكبرى.",
     images: [
       {
-        url: "/active-hero-image.webp",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: GOOGLE_BUSINESS_NAME,
+        alt: "The Drive Center - فحص سيارات قبل الشراء وضبط زوايا وترصيص في المحلة الكبرى",
       },
     ],
   },
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${GOOGLE_BUSINESS_NAME} | مركز متخصص في ضبط الزوايا والترصيص`,
     description: "مركز The Drive في المحلة الكبرى - تشخيص دقيق وخدمة سريعة.",
-    images: ["/active-hero-image.webp"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -117,7 +117,7 @@ export default function RootLayout({
     "@type": "AutoRepair",
     name: GOOGLE_BUSINESS_NAME,
     description: "مركز متخصص في خدمات ضبط الزوايا والترصيص والفحص الشامل للسيارات في المحلة الكبرى.",
-    image: `${siteUrl}/active-hero-image.webp`,
+    image: `${siteUrl}/og-image.png`,
     priceRange: "ج.م",
     openingHours: "Mo-Su 09:00-22:00",
     areaServed: BUSINESS_CITY,

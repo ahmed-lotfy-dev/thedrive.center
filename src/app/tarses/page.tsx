@@ -12,7 +12,7 @@ import { CTA } from "@/features/landing/components/CTA";
 import { LocationSection } from "@/features/landing/components/LocationSection";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "مركز ترصيص عجلات | اتزان كاوتش | ترصيص واتزان في المحلة الكبرى",
@@ -105,15 +105,18 @@ export default async function Tarse2Page() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl font-black text-zinc-900 dark:text-white mb-6">
-                  علامات你需要 ترصيص؟
+                  إيه هو الترصيص ومتى تحتاجه؟
                 </h2>
+                <p className="mb-6 text-lg leading-9 text-zinc-600 dark:text-zinc-300">
+                  الترصيص هو ضبط اتزان العجل عشان وزن الإطار والجنط يبقى موزع بشكل صحيح أثناء الدوران. لما الاتزان يكون غير مضبوط، بتظهر رعشة في الدركسيون أو جسم العربية خصوصا على السرعات العالية. الخدمة بتساعد على راحة القيادة وحماية الإطارات والعفشة.
+                </p>
                 <ul className="space-y-4">
                   {[
-                    "رعشة في عجلة القيادة على скорость 120+",
-                    "اهتزاز في_body للسيارة",
-                    "استهلاك غير.uniform للإطارات",
+                    "رعشة في عجلة القيادة على السرعات العالية",
+                    "اهتزاز في جسم السيارة",
+                    "استهلاك غير منتظم للإطارات",
                     "ضوضاء غير طبيعية من العجلات",
-                    "عدم ثبات السيارة على السرعات"
+                    "عدم ثبات السيارة على الطريق"
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
@@ -134,6 +137,52 @@ export default async function Tarse2Page() {
           </CardContent>
         </Card>
       </div>
+
+      <section className="container mx-auto px-4 pb-8">
+        <Card className="border-emerald-500/20 bg-card/40">
+          <CardContent className="p-8 md:p-10">
+            <h2 className="mb-6 text-2xl font-black text-zinc-900 dark:text-white">
+              خطوات ترصيص العجل في The Drive Center
+            </h2>
+            <div className="grid gap-8 md:grid-cols-2">
+              <div>
+                <h3 className="mb-4 text-xl font-bold text-emerald-500">متى تعمل ترصيص؟</h3>
+                <div className="space-y-3">
+                  {[
+                    "بعد تركيب كاوتش جديد أو إصلاح إطار",
+                    "عند ظهور رعشة على سرعات متوسطة أو عالية",
+                    "بعد خبطة قوية في حفرة أو رصيف",
+                    "لو لاحظت تآكل غير منتظم في الإطارات",
+                    "قبل السفر لمسافة طويلة للاطمئنان على اتزان العجل",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <ChevronLeft className="mt-1 h-5 w-5 shrink-0 text-emerald-500" />
+                      <span className="leading-8 text-zinc-700 dark:text-zinc-300">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="mb-4 text-xl font-bold text-emerald-500">ماذا تتوقع من الخدمة؟</h3>
+                <div className="space-y-3">
+                  {[
+                    "فحص العجلة على جهاز الترصيص وتحديد مكان عدم الاتزان",
+                    "تركيب الأوزان المناسبة بدقة حسب قراءة الجهاز",
+                    "إعادة القياس للتأكد من اختفاء فرق الاتزان",
+                    "تنبيهك لو فيه مشكلة في الجنط أو الإطار تحتاج إصلاح",
+                    "خدمة مناسبة للسيارات الملاكي المستخدمة يوميا داخل المدينة أو السفر",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-500" />
+                      <span className="leading-8 text-zinc-700 dark:text-zinc-300">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
       <CTA />
       <LocationSection />

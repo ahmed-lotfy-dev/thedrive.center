@@ -1,6 +1,6 @@
 export function getSafeSiteUrl(raw: string | undefined) {
   const value = raw?.trim();
-  if (!value) return "https://example.com";
+  if (!value) return "https://thedrive.center";
 
   const normalized =
     value.startsWith("http://") || value.startsWith("https://")
@@ -10,6 +10,6 @@ export function getSafeSiteUrl(raw: string | undefined) {
   try {
     return new URL(normalized).toString().replace(/\/$/, "");
   } catch {
-    return "https://example.com";
+    return "https://thedrive.center";
   }
 }

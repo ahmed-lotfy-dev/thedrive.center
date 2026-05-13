@@ -1,0 +1,12 @@
+
+> thedrive.center@0.1.0 start
+> next start
+
+▲ Next.js 16.1.6
+- Local:         http://localhost:3006
+- Network:       http://192.168.1.5:3006
+
+✓ Starting...
+⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+✓ Ready in 930ms
+[MockWhatsApp] Initialized. Messages will be logged to console.

@@ -1,12 +1,11 @@
 import { seoKeywords } from "@/lib/seo-keywords";
 import { FAQContent } from "./FAQContent";
 import { faqs } from "./faq-data";
-import { getSafeSiteUrl } from "@/lib/site-url";
 
 export const metadata = {
   title: "أسئلة شائعة عن فحص السيارات وضبط الزوايا | FAQ | The Drive Center",
   description:
-    "إجابات على كل أسئلتك عن فحص السيارات قبل الشراء، ضبط الزوايا، والترصيص. اعرف الفرق بين أجهزة الفحص وأهم النصائح قبل buying.",
+    "إجابات على أهم أسئلة فحص السيارات قبل الشراء، ضبط الزوايا، والترصيص في المحلة الكبرى. اعرف خطوات الفحص ومتى تحتاج كل خدمة.",
   keywords: seoKeywords,
   alternates: {
     canonical: "/faq",
@@ -14,8 +13,6 @@ export const metadata = {
 };
 
 export default function FAQPage() {
-  const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
-
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

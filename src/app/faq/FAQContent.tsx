@@ -61,10 +61,10 @@ export function FAQContent() {
             transition={{ duration: 0.6 }}
           >
             <Badge variant="outline" className="mb-4 border-emerald-500/30 text-emerald-400">
-              احنا هنا.help
+              إجابات واضحة
             </Badge>
             <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-6">
-              oscope <span className="text-emerald-500">إجابة</span> على أسئلتك
+              أهم <span className="text-emerald-500">الإجابات</span> قبل زيارتك
             </h2>
             <p className="text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed">
               في The Drive Center، نؤمن إن العميل يستحق يفهم كل اللي بيحصل لعربيته. دي أشهر أسئلة بنجاوبها باستمرار.
@@ -72,7 +72,7 @@ export function FAQContent() {
             <div className="mt-8 p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
               <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400 font-bold">
                 <HelpCircle className="w-6 h-6" />
-                <span>مزاج سؤال؟ اتواصل معنا</span>
+                <span>عندك سؤال؟ تواصل معنا</span>
               </div>
               <a 
                 href={getWhatsAppUrl("مرحبا، عندي سؤال عن الفحص")}
