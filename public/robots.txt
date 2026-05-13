@@ -1,0 +1,53 @@
+User-Agent: *
+Allow: /
+
+# Block admin and API routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+# Allow sitemap and feeds explicitly
+Allow: /sitemap.xml
+Allow: /feed.xml
+Allow: /ai-sitemap.json
+Allow: /opensearch.xml
+
+# AI Crawlers
+User-Agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+User-Agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+User-Agent: Claude-Web
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+User-Agent: Google-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+User-Agent: FacebookBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+User-Agent: Twitterbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+# Sitemap
+Sitemap: https://thedrive.center/sitemap.xml
