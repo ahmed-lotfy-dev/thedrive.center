@@ -6,6 +6,7 @@ import { ShowcaseCar, ShowcaseCarWithMedia } from "@/types/showcase";
 import { CarDetailsView } from "@/features/cars/components/CarDetailsView";
 import type { Metadata } from "next";
 import { seoKeywords } from "@/lib/seo-keywords";
+import { GOOGLE_BUSINESS_NAME } from "@/lib/google-business";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -32,22 +33,28 @@ export async function generateMetadata({
   const fallbackDescription = `شاهد تفاصيل ${serviceLabel} لسيارة ${car.title} في The Drive Center بالمحلة الكبرى.`;
 
   return {
-    title: `${car.title} | ${serviceLabel} | The Drive Center`,
+    title: car.title,
     description: car.description?.substring(0, 160) || fallbackDescription,
     keywords: seoKeywords,
     alternates: {
       canonical: `/cars/${slug}`,
     },
     openGraph: {
-      title: `${car.title} | ${serviceLabel} | The Drive Center`,
+      title: car.title,
       description: car.description?.substring(0, 160) || fallbackDescription,
       url: `/cars/${slug}`,
-      images: [car.coverImageUrl],
+      siteName: GOOGLE_BUSINESS_NAME,
+      locale: "ar_EG",
+      type: "website",
+      images: car.coverImageUrl
+        ? [{ url: car.coverImageUrl, width: 1200, height: 630, alt: car.title }]
+        : [{ url: "/og-image.png", width: 1200, height: 630, alt: car.title }],
     },
     twitter: {
-      title: `${car.title} | ${serviceLabel} | The Drive Center`,
+      card: "summary_large_image",
+      title: car.title,
       description: car.description?.substring(0, 160) || fallbackDescription,
-      images: [car.coverImageUrl],
+      images: car.coverImageUrl ? [car.coverImageUrl] : ["/og-image.png"],
     },
   };
 }
@@ -79,12 +86,27 @@ export default async function CarDetailPage({
     url: `/cars/${car.slug}`,
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: "https://thedrive.center" },
+      { "@type": "ListItem", position: 2, name: "سجل التميز", item: "https://thedrive.center/cars" },
+      { "@type": "ListItem", position: 3, name: car.title, item: `https://thedrive.center/cars/${car.slug}` },
+    ],
+  };
+
   return (
     <div className="bg-background">
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <CarDetailsView car={car} isManagement={isManagement} />
     </div>

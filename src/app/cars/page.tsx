@@ -7,7 +7,7 @@ import { GOOGLE_BUSINESS_NAME } from "@/lib/google-business";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "مركز أعمالنا | مركز فحص سيارات | مركز ضبط زوايا | مركز ترصيص | The Drive Center",
+  title: "سجل التميز - أعمال فحص وضبط السيارات",
   description:
     "استعرض أعمال مركز The Drive Center في فحص السيارات الشامل، ومركز ضبط و ظبط الزوايا، ومركز الترصيص. شاهد نتائج دقيقة لسيارات عملائنا في المحلة الكبرى.",
   keywords: seoKeywords,
@@ -15,17 +15,21 @@ export const metadata: Metadata = {
     canonical: "/cars",
   },
   openGraph: {
-    title: "مركز أعمالنا | مركز فحص سيارات | مركز ضبط زوايا | مركز ترصيص | The Drive Center",
+    title: "سجل التميز - The Drive Center",
     description:
       "استعرض أعمال مركز The Drive Center في فحص السيارات الشامل، ومركز ضبط و ظبط الزوايا، ومركز الترصيص.",
     url: "/cars",
-    images: ["/active-hero-image.webp"],
+    siteName: GOOGLE_BUSINESS_NAME,
+    locale: "ar_EG",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "سجل التميز - The Drive Center" }],
   },
   twitter: {
-    title: "مركز أعمالنا | مركز فحص سيارات | مركز ضبط زوايا | مركز ترصيص | The Drive Center",
+    card: "summary_large_image",
+    title: "سجل التميز - The Drive Center",
     description:
       "استعرض أعمال مركز The Drive Center في فحص السيارات الشامل، ومركز ضبط و ظبط الزوايا، ومركز الترصيص.",
-    images: ["/active-hero-image.webp"],
+    images: ["/og-image.png"],
   },
 };
 
@@ -65,12 +69,26 @@ export default async function CarsGalleryPage({ searchParams }: CarsGalleryProps
     ],
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: "https://thedrive.center" },
+      { "@type": "ListItem", position: 2, name: "سجل التميز", item: "https://thedrive.center/cars" },
+    ],
+  };
+
   return (
     <main dir="rtl" className="min-h-screen bg-background pt-24 md:pt-32 pb-20">
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center text-muted-foreground animate-pulse font-black uppercase tracking-widest text-[10px]">جاري تحميل الأعمال...</div>}>
         <CarsGalleryView 

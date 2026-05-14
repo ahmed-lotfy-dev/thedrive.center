@@ -14,9 +14,10 @@ import Image from "next/image";
 import { Gauge, CheckCircle2, ChevronLeft } from "lucide-react";
 import * as motion from "motion/react-client";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "مركز ضبط زوايا بالكمبيوتر | مركز ظبط زوايا | ترصيص عجلات في المحلة الكبرى",
+  title: "مركز ضبط زوايا بالكمبيوتر في المحلة الكبرى",
   description:
     "مركز ضبط زوايا بالكمبيوتر في المحلة الكبرى. ضبط زوايا دقيق لثبات السيارة وتقليل استهلاك الكاوتش مع فحص العفشة والترصيص عند الحاجة.",
   keywords: seoKeywords,
@@ -24,10 +25,21 @@ export const metadata: Metadata = {
     canonical: "/zawaiya",
   },
   openGraph: {
-    title: "مركز ضبط زوايا بالكمبيوتر | مركز ظبط زوايا | The Drive Center",
+    title: "مركز ضبط زوايا بالكمبيوتر في المحلة الكبرى | The Drive Center",
     description:
       "مركز ضبط زوايا بالكمبيوتر في المحلة الكبرى. ضبط دقيق لثبات السيارة وتقليل استهلاك الإطارات.",
     url: "/zawaiya",
+    siteName: GOOGLE_BUSINESS_NAME,
+    locale: "ar_EG",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "مركز ضبط زوايا بالكمبيوتر - The Drive Center" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "مركز ضبط زوايا بالكمبيوتر في المحلة الكبرى | The Drive Center",
+    description:
+      "مركز ضبط زوايا بالكمبيوتر في المحلة الكبرى. ضبط دقيق لثبات السيارة وتقليل استهلاك الإطارات.",
+    images: ["/og-image.png"],
   },
 };
 
@@ -79,12 +91,26 @@ export default async function ZawaiyaPage() {
     ]
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "ضبط زوايا بالكمبيوتر", item: `${siteUrl}/zawaiya` },
+    ],
+  };
+
   return (
     <main dir="rtl" className="overflow-x-hidden pb-10">
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="relative h-[60vh] min-h-[500px] overflow-hidden">
         <Image
@@ -201,6 +227,16 @@ export default async function ZawaiyaPage() {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="container mx-auto px-4 pb-6">
+        <Card className="border-emerald-500/20 bg-card/40">
+          <CardContent className="p-6 md:p-8 text-center">
+            <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+              محتاج كمان <Link href="/fahs" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">فحص شامل للسيارة قبل البيع أو الشراء</Link> أو <Link href="/tarses" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">ترصيص واتزان</Link>؟ The Drive Center بتقدم كل الخدمات في مكان واحد — <Link href="/book" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">احجز موعدك</Link>.
+            </p>
           </CardContent>
         </Card>
       </section>

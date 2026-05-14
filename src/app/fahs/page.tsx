@@ -1,10 +1,8 @@
-import { Hero } from "@/features/landing/components/Hero";
 import { Process } from "@/features/landing/components/Process";
 import { FAQ } from "@/features/landing/components/FAQ";
 import { CTA } from "@/features/landing/components/CTA";
 import { LocationSection } from "@/features/landing/components/LocationSection";
 
-import { siteSettingQueries } from "@/db/queries/site-settings";
 import { seoKeywords } from "@/lib/seo-keywords";
 import { getSafeSiteUrl } from "@/lib/site-url";
 import type { Metadata } from "next";
@@ -16,9 +14,10 @@ import {
 } from "@/lib/google-business";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, ClipboardList, SearchCheck, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "مركز فحص شامل للسيارات قبل البيع والشراء | فحص كمبيوتر ومعاينة دقيق | The Drive Center",
+  title: "فحص شامل للسيارات قبل البيع والشراء مع كمبيوتر",
   description:
     "مركز فحص شامل للسيارات في المحلة الكبرى. فحص كمبيوتر، كشف حادث، فحص بوية، فحص ميكانيكا وعفشة مع تقرير مفصل قبل شراء أو بيع سيارة.",
   keywords: seoKeywords,
@@ -26,16 +25,26 @@ export const metadata: Metadata = {
     canonical: "/fahs",
   },
   openGraph: {
-    title: "مركز فحص شامل للسيارات | فحص كمبيوتر ومعاينة | The Drive Center",
+    title: "فحص شامل للسيارات قبل البيع والشراء | The Drive Center",
     description:
       "مركز فحص شامل للسيارات قبل البيع والشراء بأحدث الأجهزة. فحص كمبيوتر، كشف حادث وفحص بوية دقيق.",
     url: "/fahs",
+    siteName: GOOGLE_BUSINESS_NAME,
+    locale: "ar_EG",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "فحص شامل للسيارات - The Drive Center" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "فحص شامل للسيارات قبل البيع والشراء | The Drive Center",
+    description:
+      "مركز فحص شامل للسيارات قبل البيع والشراء بأحدث الأجهزة. فحص كمبيوتر، كشف حادث وفحص بوية دقيق.",
+    images: ["/og-image.png"],
   },
 };
 
 export default async function FaresPage() {
   const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
-  const heroImageUrl = await siteSettingQueries.get("hero_image_url");
 
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
@@ -76,14 +85,27 @@ export default async function FaresPage() {
     ]
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "فحص شامل للسيارات", item: `${siteUrl}/fahs` },
+    ],
+  };
+
   return (
-    <main dir="rtl" className="overflow-x-hidden pb-10">
+    <main dir="rtl" className="overflow-x-hidden pt-24 md:pt-32 pb-10">
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
       />
-      <Hero imageUrl={heroImageUrl} />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <section className="container mx-auto px-4 py-16 md:py-24">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-black text-zinc-900 dark:text-white md:text-5xl">
@@ -145,6 +167,15 @@ export default async function FaresPage() {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      </section>
+      <section className="container mx-auto px-4 pb-6">
+        <Card className="border-emerald-500/20 bg-card/40">
+          <CardContent className="p-6 md:p-8 text-center">
+            <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+              تقدم The Drive Center كمان خدمات <Link href="/zawaiya" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">ضبط زوايا بالكمبيوتر</Link> و <Link href="/tarses" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">ترصيص واتزان</Link> و <Link href="/book" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">تكويد باور ستيرنج</Link> — كلها في مكان واحد.
+            </p>
           </CardContent>
         </Card>
       </section>

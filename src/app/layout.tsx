@@ -9,6 +9,8 @@ import {
   GOOGLE_BUSINESS_NAME,
   GOOGLE_MAPS_COORDS,
   GOOGLE_PLACE_URL,
+  GOOGLE_RATING,
+  GOOGLE_REVIEWS_COUNT,
   FACEBOOK_URL,
   TIKTOK_URL,
   INSTAGRAM_URL,
@@ -142,6 +144,13 @@ export default function RootLayout({
     ].filter(Boolean),
     url: siteUrl,
     telephone: `+2${BUSINESS_PHONE}`,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: GOOGLE_RATING,
+      reviewCount: GOOGLE_REVIEWS_COUNT,
+      bestRating: "5",
+      worstRating: "1",
+    },
   };
 
   const organizationJsonLd = {
@@ -166,6 +175,16 @@ export default function RootLayout({
     ].filter(Boolean)
   };
 
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: GOOGLE_BUSINESS_NAME,
+    alternateName: "ذا درايف سنتر",
+    url: siteUrl,
+    description: "مركز متخصص في فحص السيارات وضبط الزوايا والترصيص في المحلة الكبرى.",
+    inLanguage: "ar",
+  };
+
   const isSiteStateScreenMode = isSiteStateScreenEnabled();
 
   return (
@@ -173,6 +192,12 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href={siteUrl} crossOrigin="anonymous" />
         <link rel="dns-prefetch" href={siteUrl} />
+        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+          <meta
+            name="google-site-verification"
+            content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}
+          />
+        )}
       </head>
       <body className={`${cairo.variable} font-sans antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" disableTransitionOnChange>
@@ -187,6 +212,11 @@ export default function RootLayout({
               type="application/ld+json"
               suppressHydrationWarning
               dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+            />
+            <script
+              type="application/ld+json"
+              suppressHydrationWarning
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
             />
             {children}
             {!isSiteStateScreenMode && <Footer />}

@@ -71,16 +71,34 @@ export function Footer() {
                 سجل التميز
               </Link>
               <Link
-                href="/#services"
-                className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block font-bold"
+                href="/fahs"
+                className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block"
               >
-                خدماتنا
+                فحص شامل للسيارات
+              </Link>
+              <Link
+                href="/zawaiya"
+                className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block"
+              >
+                ضبط زوايا بالكمبيوتر
+              </Link>
+              <Link
+                href="/tarses"
+                className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block"
+              >
+                ترصيص واتزان
               </Link>
               <Link
                 href="/book"
                 className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block"
               >
                 حجز موعد
+              </Link>
+              <Link
+                href="/faq"
+                className="hover:text-emerald-500 transition-colors hover:translate-x-1 duration-200 inline-block"
+              >
+                أسئلة شائعة
               </Link>
             </div>
           </div>

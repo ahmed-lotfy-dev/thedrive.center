@@ -13,9 +13,10 @@ import { LocationSection } from "@/features/landing/components/LocationSection";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "مركز ترصيص عجلات | اتزان كاوتش | ترصيص واتزان في المحلة الكبرى",
+  title: "مركز ترصيص عجلات واتزان في المحلة الكبرى",
   description:
     "مركز ترصيص عجلات واتزان في المحلة الكبرى. حل مشكلة الرعشة والاهتزاز على السرعات العالية. أجهزة حديثة.",
   keywords: seoKeywords,
@@ -23,10 +24,21 @@ export const metadata: Metadata = {
     canonical: "/tarses",
   },
   openGraph: {
-    title: "مركز ترصيص عجلات | اتزان كاوتش | The Drive Center",
+    title: "مركز ترصيص عجلات واتزان | The Drive Center",
     description:
       "مركز ترصيص عجلات واتزان في المحلة الكبرى. حل مشكلة الرعشة والاهتزاز.",
     url: "/tarses",
+    siteName: GOOGLE_BUSINESS_NAME,
+    locale: "ar_EG",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "مركز ترصيص عجلات - The Drive Center" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "مركز ترصيص عجلات واتزان | The Drive Center",
+    description:
+      "مركز ترصيص عجلات واتزان في المحلة الكبرى. حل مشكلة الرعشة والاهتزاز.",
+    images: ["/og-image.png"],
   },
 };
 
@@ -73,12 +85,26 @@ export default async function Tarse2Page() {
     ]
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "ترصيص عجلات واتزان", item: `${siteUrl}/tarses` },
+    ],
+  };
+
   return (
     <main dir="rtl" className="overflow-x-hidden pb-10">
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="relative h-[60vh] min-h-[500px] overflow-hidden">
         <Image
@@ -180,6 +206,16 @@ export default async function Tarse2Page() {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="container mx-auto px-4 pb-6">
+        <Card className="border-emerald-500/20 bg-card/40">
+          <CardContent className="p-6 md:p-8 text-center">
+            <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+              The Drive Center كمان بتقدم <Link href="/fahs" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">فحص شامل للسيارة قبل البيع والشراء</Link> و <Link href="/zawaiya" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">ضبط زوايا بالكمبيوتر</Link>. كل الخدمات في مكان واحد — <Link href="/book" className="text-emerald-500 hover:text-emerald-400 font-bold underline underline-offset-4">احجز موعدك</Link>.
+            </p>
           </CardContent>
         </Card>
       </section>

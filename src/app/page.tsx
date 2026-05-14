@@ -29,7 +29,7 @@ const LocationSection = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "مركز فحص سيارات قبل البيع والشراء | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | The Drive Center",
+  title: "أفضل مركز فحص سيارات شامل في المحلة الكبرى قبل البيع والشراء",
   description:
     "The Drive Center: أفضل مركز فحص سيارات شامل قبل البيع والشراء، مركز ضبط زوايا بالكمبيوتر، ومركز ترصيص عجلات. ندعم أدق تقنيات ضبط و ظبط الزوايا لضمان الثبات.",
   keywords: seoKeywords,
@@ -37,15 +37,21 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | The Drive Center",
+    title: "أفضل مركز فحص سيارات شامل في المحلة الكبرى",
     description:
       "مركز متخصص في فحص السيارات، ضبط وزوايا (ضبط و ظبط)، وترصيص العجلات بأحدث الأجهزة العالمية في المحلة الكبرى.",
     url: "/",
+    siteName: GOOGLE_BUSINESS_NAME,
+    locale: "ar_EG",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "The Drive Center - مركز فحص سيارات وضبط زوايا وترصيص في المحلة الكبرى" }],
   },
   twitter: {
-    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | The Drive Center",
+    card: "summary_large_image",
+    title: "أفضل مركز فحص سيارات شامل في المحلة الكبرى",
     description:
       "مركز متخصص في فحص السيارات، ضبط وزوايا (ضبط و ظبط)، وترصيص العجلات في المحلة الكبرى.",
+    images: ["/og-image.png"],
   },
 };
 

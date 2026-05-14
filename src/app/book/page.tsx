@@ -5,7 +5,7 @@ import { seoKeywords } from "@/lib/seo-keywords";
 import { GOOGLE_BUSINESS_NAME } from "@/lib/google-business";
 
 export const metadata: Metadata = {
-  title: "مركز فحص سيارات قبل البيع والشراء | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | احجز ميعادك",
+  title: "احجز موعدك - فحص سيارات شامل وضبط زوايا",
   description:
     "احجز ميعادك الآن في مركز The Drive Center: أفضل مركز فحص سيارات شامل قبل البيع والشراء، مركز ضبط و ظبط زوايا بالكمبيوتر، ومركز ترصيص عجلات.",
   keywords: seoKeywords,
@@ -13,17 +13,21 @@ export const metadata: Metadata = {
     canonical: "/book",
   },
   openGraph: {
-    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | الحجز أونلاين",
+    title: "احجز موعد فحص سيارات شامل | The Drive Center",
     description:
       "احجز ميعاد فحص شامل بـ ٣ أجهزة، أو مركز ضبط وزوايا (ضبط و ظبط) وترصيص في The Drive Center.",
     url: "/book",
-    images: ["/active-hero-image.webp"],
+    siteName: GOOGLE_BUSINESS_NAME,
+    locale: "ar_EG",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "احجز موعدك - The Drive Center" }],
   },
   twitter: {
-    title: "مركز فحص سيارات | مركز ضبط زوايا | مركز ظبط زوايا | مركز ترصيص | الحجز أونلاين",
+    card: "summary_large_image",
+    title: "احجز موعد فحص سيارات شامل | The Drive Center",
     description:
       "احجز ميعاد فحص شامل بـ ٣ أجهزة، أو مركز ضبط وزوايا (ضبط و ظبط) وترصيص.",
-    images: ["/active-hero-image.webp"],
+    images: ["/og-image.png"],
   },
 };
 
@@ -43,12 +47,26 @@ export default function BookPage() {
     url: "/book",
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: `https://thedrive.center` },
+      { "@type": "ListItem", position: 2, name: "حجز موعد", item: `https://thedrive.center/book` },
+    ],
+  };
+
   return (
     <main className="min-h-screen pt-28 pb-16">
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(bookPageJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <section className="container mx-auto px-4" data-animate>
         <div className="surface-soft p-8 md:p-10 text-center">
