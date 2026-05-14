@@ -11,11 +11,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/admin/", "/dashboard/", "/api/", "/onboarding", "/sign-in"],
       },
-      // Block AI crawlers entirely — crawl budget is better spent on Google
-      { userAgent: "GPTBot", disallow: "/" },
-      { userAgent: "Claude-Web", disallow: "/" },
-      { userAgent: "OAI-SearchBot", disallow: "/" },
-      { userAgent: "Google-Extended", disallow: "/" },
+      // Allow AI crawlers — we want to appear in ChatGPT, Claude, Gemini, Perplexity recommendations
+      { userAgent: "GPTBot", allow: "/" },
+      { userAgent: "Claude-Web", allow: "/" },
+      { userAgent: "OAI-SearchBot", allow: "/" },
+      { userAgent: "Google-Extended", allow: "/" },
       // Allow social preview crawlers
       { userAgent: "FacebookBot", allow: "/" },
       { userAgent: "Twitterbot", allow: "/" },
