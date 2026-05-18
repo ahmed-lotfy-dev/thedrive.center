@@ -3,6 +3,7 @@ import { getShowcaseCars } from "@/lib/api/showcase";
 import { CarsGalleryView } from "@/features/cars/components/CarsGalleryView";
 import { seoKeywords } from "@/lib/seo-keywords";
 import { GOOGLE_BUSINESS_NAME } from "@/lib/google-business";
+import type { ShowcaseCar } from "@/types/showcase";
 
 import type { Metadata } from "next";
 
@@ -47,12 +48,20 @@ export default async function CarsGalleryPage({ searchParams }: CarsGalleryProps
   const search = params.search || "";
   const serviceType = params.serviceType || "";
 
-  const { data: allCars, meta } = await getShowcaseCars({
-    page,
-    limit: 9,
-    search,
-    serviceType,
-  });
+  let allCars: ShowcaseCar[] = [];
+  let meta = { total: 0, page: 1, limit: 9, totalPages: 0, hasNextPage: false, hasPreviousPage: false };
+  try {
+    const result = await getShowcaseCars({
+      page,
+      limit: 9,
+      search,
+      serviceType,
+    });
+    allCars = result.data;
+    meta = result.meta;
+  } catch {
+    // Use defaults
+  }
 
   const collectionJsonLd = {
     "@context": "https://schema.org",

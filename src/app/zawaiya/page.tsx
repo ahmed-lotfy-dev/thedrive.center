@@ -45,7 +45,12 @@ export const metadata: Metadata = {
 
 export default async function ZawaiyaPage() {
   const siteUrl = getSafeSiteUrl(process.env.NEXT_PUBLIC_APP_URL || "https://thedrive.center");
-  const heroImageUrl = await siteSettingQueries.get("hero_image_url");
+  let heroImageUrl: string | null = null;
+  try {
+    heroImageUrl = await siteSettingQueries.get("hero_image_url");
+  } catch {
+    // Use default
+  }
 
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
