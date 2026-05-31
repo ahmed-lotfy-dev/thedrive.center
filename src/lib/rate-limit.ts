@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { db } from "@/db";
+import { db, ensureMigrations } from "@/db";
 
 type HeaderAccessor = Pick<Headers, "get">;
 
@@ -102,6 +102,7 @@ export async function checkRateLimit(
   },
 ): Promise<RateLimitResult> {
   const now = new Date();
+  await ensureMigrations();
   const key = getRateLimitKey(options.headers, options.userId);
   const blockDurationMs = policy.blockDurationMs ?? policy.windowMs;
   const windowSeconds = toSeconds(policy.windowMs);
@@ -109,80 +110,94 @@ export async function checkRateLimit(
   const windowInterval = sql.raw(`interval '${windowSeconds} seconds'`);
   const blockInterval = sql.raw(`interval '${blockSeconds} seconds'`);
 
-  const result = await db.execute(sql`
-    INSERT INTO rate_limit_buckets (
-      action,
-      key,
-      count,
-      window_started_at,
-      blocked_until,
-      created_at,
-      updated_at
-    )
-    VALUES (
-      ${policy.action},
-      ${key},
-      1,
-      ${now},
-      NULL,
-      ${now},
-      ${now}
-    )
-    ON CONFLICT (action, key)
-    DO UPDATE
-    SET
-      count = CASE
-        WHEN rate_limit_buckets.blocked_until IS NOT NULL
-          AND rate_limit_buckets.blocked_until > ${now}
-          THEN rate_limit_buckets.count
-        WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
-          THEN 1
-        ELSE rate_limit_buckets.count + 1
-      END,
-      window_started_at = CASE
-        WHEN rate_limit_buckets.blocked_until IS NOT NULL
-          AND rate_limit_buckets.blocked_until > ${now}
-          THEN rate_limit_buckets.window_started_at
-        WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
-          THEN ${now}
-        ELSE rate_limit_buckets.window_started_at
-      END,
-      blocked_until = CASE
-        WHEN rate_limit_buckets.blocked_until IS NOT NULL
-          AND rate_limit_buckets.blocked_until > ${now}
-          THEN rate_limit_buckets.blocked_until
-        WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
-          THEN NULL
-        WHEN rate_limit_buckets.count + 1 > ${policy.limit}
-          THEN ${now} + ${blockInterval}
-        ELSE NULL
-      END,
-      updated_at = ${now}
-    RETURNING count, window_started_at, blocked_until
-  `);
+  try {
+    const result = await db.execute(sql`
+      INSERT INTO rate_limit_buckets (
+        action,
+        key,
+        count,
+        window_started_at,
+        blocked_until,
+        created_at,
+        updated_at
+      )
+      VALUES (
+        ${policy.action},
+        ${key},
+        1,
+        ${now},
+        NULL,
+        ${now},
+        ${now}
+      )
+      ON CONFLICT (action, key)
+      DO UPDATE
+      SET
+        count = CASE
+          WHEN rate_limit_buckets.blocked_until IS NOT NULL
+            AND rate_limit_buckets.blocked_until > ${now}
+            THEN rate_limit_buckets.count
+          WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
+            THEN 1
+          ELSE rate_limit_buckets.count + 1
+        END,
+        window_started_at = CASE
+          WHEN rate_limit_buckets.blocked_until IS NOT NULL
+            AND rate_limit_buckets.blocked_until > ${now}
+            THEN rate_limit_buckets.window_started_at
+          WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
+            THEN ${now}
+          ELSE rate_limit_buckets.window_started_at
+        END,
+        blocked_until = CASE
+          WHEN rate_limit_buckets.blocked_until IS NOT NULL
+            AND rate_limit_buckets.blocked_until > ${now}
+            THEN rate_limit_buckets.blocked_until
+          WHEN rate_limit_buckets.window_started_at + ${windowInterval} <= ${now}
+            THEN NULL
+          WHEN rate_limit_buckets.count + 1 > ${policy.limit}
+            THEN ${now} + ${blockInterval}
+          ELSE NULL
+        END,
+        updated_at = ${now}
+      RETURNING count, window_started_at, blocked_until
+    `);
 
-  const row = result.rows[0] as {
-    count: number | string;
-    window_started_at: Date | string;
-    blocked_until: Date | string | null;
-  };
+    const row = result.rows[0] as {
+      count: number | string;
+      window_started_at: Date | string;
+      blocked_until: Date | string | null;
+    };
 
-  const count = Number(row.count);
-  const windowStartedAt = new Date(row.window_started_at);
-  const blockedUntil = row.blocked_until ? new Date(row.blocked_until) : null;
-  const resetAt = blockedUntil ?? new Date(windowStartedAt.getTime() + policy.windowMs);
-  const retryAfterMs = Math.max(0, resetAt.getTime() - now.getTime());
-  const allowed = !blockedUntil || blockedUntil.getTime() <= now.getTime();
-  const remaining = allowed ? Math.max(0, policy.limit - count) : 0;
+    const count = Number(row.count);
+    const windowStartedAt = new Date(row.window_started_at);
+    const blockedUntil = row.blocked_until ? new Date(row.blocked_until) : null;
+    const resetAt = blockedUntil ?? new Date(windowStartedAt.getTime() + policy.windowMs);
+    const retryAfterMs = Math.max(0, resetAt.getTime() - now.getTime());
+    const allowed = !blockedUntil || blockedUntil.getTime() <= now.getTime();
+    const remaining = allowed ? Math.max(0, policy.limit - count) : 0;
 
-  return {
-    allowed,
-    limit: policy.limit,
-    remaining,
-    retryAfterSeconds: retryAfterMs > 0 ? toSeconds(retryAfterMs) : 0,
-    resetAt,
-    message: policy.message,
-  };
+    return {
+      allowed,
+      limit: policy.limit,
+      remaining,
+      retryAfterSeconds: retryAfterMs > 0 ? toSeconds(retryAfterMs) : 0,
+      resetAt,
+      message: policy.message,
+    };
+  } catch {
+    // Rate limiter is a best-effort safeguard — never block the actual
+    // request if the table is missing, the DB is unreachable, or any
+    // other infrastructure error occurs.
+    return {
+      allowed: true,
+      limit: policy.limit,
+      remaining: policy.limit,
+      retryAfterSeconds: 0,
+      resetAt: new Date(now.getTime() + policy.windowMs),
+      message: policy.message,
+    };
+  }
 }
 
 export async function enforceRateLimit(
